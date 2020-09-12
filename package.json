@@ -1,0 +1,27 @@
+{
+  "name": "react-generator",
+  "version": "1.0.0",
+  "description": "Generate redux or components",
+  "main": "index.js",
+  "scripts": {
+    "g": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Michaeladze/react-generator.git"
+  },
+  "keywords": [
+    "generate",
+    "redux",
+    "components"
+  ],
+  "author": "Michael Kutateladze",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Michaeladze/react-generator/issues"
+  },
+  "homepage": "https://github.com/Michaeladze/react-generator#readme",
+  "dependencies": {
+    "inquirer": "^7.3.3"
+  }
+}
