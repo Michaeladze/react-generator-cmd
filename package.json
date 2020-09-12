@@ -1,11 +1,11 @@
 {
   "name": "react-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generate redux or components",
   "main": "index.js",
   "scripts": {
     "g": "node dist/index.js",
-    "release": "release-it"
+    "release": "release-it --no-git.requireCleanWorkingDir"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
   },
   "release-it": {
     "github": {
-      "release": true
+      "release": false
     }
   }
 }
