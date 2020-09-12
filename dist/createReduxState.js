@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { actionTemplate, effectTemplate, serviceTemplate, reducerTemplate, storeIndexTemplate } = require('./templates');
+const { actionTemplate, commonActionsTemplate, effectTemplate, serviceTemplate, reducerTemplate, storeIndexTemplate } = require('./templates');
 const { mkDir, mkFile } = require('./mk');
 const { appendImports } = require('./appendImports');
 
@@ -11,6 +11,7 @@ function createReduxState(answers, path) {
     const name = answers.name.charAt(0).toLowerCase() + answers.name.slice(1);
 
     createIndex(path);
+    createCommonActions(path);
     createAction(answers, path, name);
     if (answers.async) {
       createEffect(answers, path, name);
@@ -28,6 +29,16 @@ function createReduxState(answers, path) {
 function createIndex(path) {
   const file = path + '/index.ts';
   mkFile(file, storeIndexTemplate());
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function createCommonActions(path) {
+  path += '/_commonActions';
+  mkDir(path);
+
+  path += `/error.actions.ts`;
+  mkFile(path, commonActionsTemplate());
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

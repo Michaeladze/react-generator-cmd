@@ -173,6 +173,21 @@ observableMiddleware.run(combineEpics(
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+const commonActionsTemplate = () => {
+  return `import { createTypedAction } from 'redux-actions-ts';
+import { of } from 'rxjs';
+
+export const errorAction = createTypedAction<void>('[Error] ===!!!!!!!!!===');
+
+export const showErrorMessage = (e: Error) => {
+  console.log(e.message);
+  return of(errorAction());
+};
+`
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 const actionTemplate = (name, answers, imports = false) => {
   const imp = imports ? `import { createTypedAction } from 'redux-actions-ts';
 ${ typesImport(name, answers) }` : '';
@@ -193,7 +208,7 @@ const effectTemplate = (name, path, answers, imports = false) => {
   const imp = imports ? `import { ActionsObservable, ofType } from 'redux-observable';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Action } from 'redux-actions';
-import { showErrorMessage } from '../_commonActions/error';
+import { showErrorMessage } from '../_commonActions/error.actions';
 ${ typesImport(name, answers) }
 import { ${ answers.actionName } } from '../services/${ name }.services';
 import { ${ answers.actionName }Pending, ${ answers.actionName }Success } from '../actions/${ name }.actions';` : '';
@@ -287,5 +302,5 @@ export default ${ name }Reducer;`
 
 module.exports = {
   indexTemplate, tsxTemplate, actionTemplate, effectTemplate, serviceTemplate, reducerTemplate, storeIndexTemplate, basicTypes,
-  typesImport
+  typesImport, commonActionsTemplate
 }
