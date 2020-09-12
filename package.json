@@ -1,6 +1,6 @@
 {
   "name": "react-generator-cmd",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Generate redux or components",
   "main": "index.js",
   "scripts": {
@@ -22,11 +22,14 @@
     "url": "https://github.com/Michaeladze/react-generator/issues"
   },
   "homepage": "https://github.com/Michaeladze/react-generator#readme",
-  "dependencies": {
+  "devDependencies": {
     "inquirer": "^7.3.3",
     "release-it": "^14.0.2"
   },
   "release-it": {
+    "npm": {
+      "publishPath": "./dist"
+    },
     "github": {
       "release": false
     }

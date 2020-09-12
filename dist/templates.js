@@ -105,11 +105,11 @@ const typesImport = (name, answers, needPending = true) => {
   let result = '';
   let hasPending = false;
 
-  const pt = answers.pendingType && replaceParentheses(answers.pendingType);
-  const st = answers.successType && replaceParentheses(answers.successType);
+  const pt = answers.pendingType ? replaceParentheses(answers.pendingType) : '';
+  const st = answers.successType ? replaceParentheses(answers.successType) : '';
 
-  const checkPending = !basicTypes[pt];
-  const checkSuccess = !basicTypes[st];
+  const checkPending = !basicTypes[pt] && pt !== '';
+  const checkSuccess = !basicTypes[st] && st !== '';
 
   if (checkPending || checkSuccess) {
     result += 'import { ';
