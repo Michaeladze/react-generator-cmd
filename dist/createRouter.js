@@ -8,7 +8,7 @@ function createRouter(answers, path) {
 
   mkFile(`${path}/config.tsx`, routerConfigTemplate());
   mkFile(`${path}/Router.tsx`, routerTemplate());
-  mkFile(`${path}/RouterWithSubRoutes.tsx`, routerWithSubRoutesTemplate());
+  mkFile(`${path}/RouteWithSubRoutes.tsx`, routerWithSubRoutesTemplate());
 
   const indexPath = './src/index.tsx';
   fs.readFile(indexPath, { encoding: 'utf8' }, (err, data) => {
