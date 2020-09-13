@@ -188,6 +188,42 @@ export const showErrorMessage = (e: Error) => {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+const typesTemplate = (name, answers, fileData) => {
+  const pt = answers.pendingType ? replaceParentheses(answers.pendingType) : '';
+  const st = answers.successType ? replaceParentheses(answers.successType) : '';
+
+  const checkPending = !basicTypes[pt] && pt !== '';
+  const checkSuccess = !basicTypes[st] && st !== '';
+
+  let pendingInterface = '';
+  let successInterface = '';
+
+  if (checkPending) {
+    pendingInterface = `export interface ${pt} {
+}\n\n`;
+  }
+
+  if (checkSuccess) {
+    successInterface = `export interface ${st} {
+}\n\n`;
+  }
+
+  if (fileData) {
+    fileData.forEach((l) => {
+      if (l.includes(pt)) {
+        pendingInterface = '';
+      }
+      if (l.includes(st)) {
+        successInterface = '';
+      }
+    })
+  }
+
+  return `${pendingInterface}${successInterface}`;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 const actionTemplate = (name, answers, imports = false) => {
   const imp = imports ? `import { createTypedAction } from 'redux-actions-ts';
 ${ typesImport(name, answers) }` : '';
@@ -302,5 +338,5 @@ export default ${ name }Reducer;`
 
 module.exports = {
   indexTemplate, tsxTemplate, actionTemplate, effectTemplate, serviceTemplate, reducerTemplate, storeIndexTemplate, basicTypes,
-  typesImport, commonActionsTemplate
+  typesImport, commonActionsTemplate, typesTemplate
 }

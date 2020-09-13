@@ -1,4 +1,4 @@
-# react-generator
+# react-generator-cmd
 
 Install dependencies in your project
 ```js

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { actionTemplate, commonActionsTemplate, effectTemplate, serviceTemplate, reducerTemplate, storeIndexTemplate } = require('./templates');
+const { actionTemplate, commonActionsTemplate, effectTemplate, serviceTemplate, reducerTemplate, storeIndexTemplate, typesTemplate } = require('./templates');
 const { mkDir, mkFile } = require('./mk');
 const { appendImports } = require('./appendImports');
 
@@ -12,6 +12,7 @@ function createReduxState(answers, path) {
 
     createIndex(path);
     createCommonActions(path);
+    createTypes(answers, path, name);
     createAction(answers, path, name);
     if (answers.async) {
       createEffect(answers, path, name);
@@ -39,6 +40,23 @@ function createCommonActions(path) {
 
   path += `/error.actions.ts`;
   mkFile(path, commonActionsTemplate());
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function createTypes(answers, path, name) {
+  path += '/types';
+  mkDir(path);
+
+  path += `/${ name }.types.ts`;
+  mkFile(path, typesTemplate(name, answers), () => {
+
+    fs.readFile(path, { encoding: 'utf8' }, (err, data) => {
+      const writeStream = fs.createWriteStream(path, { flags: 'a' });
+      const fileData = data.split('\n');
+      writeStream.write(typesTemplate(name, answers, fileData));
+    });
+  });
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -149,7 +167,7 @@ function createState(answers, path, name) {
         }
 
         if (answers.async &&  lines[i].includes('[effects:end]')) {
-          lines[i - 1] = lines[i - 1].replace('', `  ${ answers.actionName }Effect$ \n`)
+          lines[i - 1] = lines[i - 1].replace('', `  ${ answers.actionName }Effect$, \n`)
         }
 
         if (!hasReducerImport && lines[i].includes('[types:end]')) {
