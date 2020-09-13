@@ -273,7 +273,7 @@ const serviceTemplate = (name, path, answers, imports = false) => {
   const pendingType = answers.pendingType || 'void';
 
   const imp = imports ? `import { map } from 'rxjs/operators';
-// import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import Axios from 'axios-observable';
 import { AxiosResponse } from 'axios';
 ${ typesImport(name, answers) }` : '';
