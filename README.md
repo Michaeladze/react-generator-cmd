@@ -4,9 +4,14 @@ Install dependencies in your project
 ```js
 yarn add redux react-redux redux-observable redux-actions redux-actions-ts axios axios-observable
 ```
-Install ddevDependencies in your project
+Install devDependencies in your project
 ```js
 yarn add -D redux-devtools-extension @types/redux-actions @types/react-redux
+```
+
+Install CLI
+```js
+yarn add -D react-generator-cmd
 ```
 
 Add script to package.json
