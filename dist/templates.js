@@ -61,7 +61,7 @@ const tsxTemplate = (name, answers) => {
   })
 
 
-  return `import React${childrenImport ? ', { ReactNode } ' : ''}from 'react';
+  return `import React${childrenImport ? ', { ReactNode } ' : ''} from 'react';
 import './${ name }.scss';
 ${storeImport}${locationImport}${historyImport}${formImport}
 
