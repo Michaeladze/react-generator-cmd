@@ -2,8 +2,7 @@ const inquirer = require('inquirer');
 const { mkDir } = require('./mk');
 const { createComponent } = require('./createComponent');
 const { createReduxState } = require('./createReduxState');
-
-const PATH = process.argv.slice(2)[0] || '';
+const { createRouter } = require('./createRouter');
 
 inquirer
   .prompt([
@@ -14,6 +13,7 @@ inquirer
       choices: [
         'Component',
         'Redux State',
+        'Router'
       ],
     },
     {
@@ -34,6 +34,7 @@ inquirer
       type: 'input',
       name: 'name',
       message: 'Как назвать файлы?',
+      when: (answers => answers.create !== 'Router')
     },
     {
       type: 'checkbox',
@@ -100,6 +101,10 @@ inquirer
     if (answers.create === 'Redux State') {
       answers.description = answers.description.charAt(0).toUpperCase() + answers.description.slice(1);
       createReduxState(answers, path);
+    }
+
+    if (answers.create === 'Router') {
+      createRouter(answers, path);
     }
   })
 
