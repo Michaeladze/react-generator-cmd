@@ -273,9 +273,9 @@ const serviceTemplate = (name, path, answers, imports = false) => {
   const pendingType = answers.pendingType || 'void';
 
   const imp = imports ? `import { map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-// import Axios from 'axios-observable';
-// import { AxiosResponse } from 'axios';
+// import { Observable, of } from 'rxjs';
+import Axios from 'axios-observable';
+import { AxiosResponse } from 'axios';
 ${ typesImport(name, answers) }` : '';
 
   const payload = pendingType !== 'void' ? `payload: ${pendingType}` : '';
@@ -283,8 +283,8 @@ ${ typesImport(name, answers) }` : '';
   return `${ imp } \n
 /** ${ answers.description } */
 export const ${ answers.actionName } = (${payload}): Observable<${ successType }> => {
-  return of([]).pipe(map((data: ${ successType }) => data));
-  // return Axios.get(\`/${answers.actionName}\`).pipe(map(({ data }: AxiosResponse<${successType}>) => data));
+  // return of([]).pipe(map((data: ${ successType }) => data));
+  return Axios.get(\`/${answers.actionName}\`).pipe(map(({ data }: AxiosResponse<${successType}>) => data));
 };
 `
 }
