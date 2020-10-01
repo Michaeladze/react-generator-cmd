@@ -4,6 +4,7 @@ const { createComponent } = require('./createComponent');
 const { createReduxState } = require('./createReduxState');
 const { createRouter } = require('./createRouter');
 const { createInterceptor } = require('./createInterceptor');
+const { createStyles } = require('./createStyles');
 
 inquirer
   .prompt([
@@ -42,6 +43,9 @@ inquirer
         },
         {
           name: 'Interceptor'
+        },
+        {
+          name: 'Styles'
         }
       ]
     },
@@ -125,6 +129,10 @@ inquirer
 
       if (answers.initParts.includes('Interceptor')) {
         createInterceptor(answers, path);
+      }
+
+      if (answers.initParts.includes('Styles')) {
+        createStyles(answers, path);
       }
     }
   })
