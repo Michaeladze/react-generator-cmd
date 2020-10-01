@@ -70,7 +70,7 @@ interface IProps {
 }
 
 const ${ name }: React.FC<IProps> = ({${childrenImport ? 'children' : ''}}: IProps) => {
-  ${storeImport ? 'const dispatcher = useDispatch();\n' : ''}${locationImport ? '  const location = useLocation();\n' : ''}${historyImport ? '  const history = useHistory();\n' : ''}
+  ${storeImport ? 'const dispatch = useDispatch();\n' : ''}${locationImport ? '  const location = useLocation();\n' : ''}${historyImport ? '  const history = useHistory();\n' : ''}
   ${storeImport ? 'const store = useSelector((store: IStore) => store);' : ''}
 
   // -------------------------------------------------------------------------------------------------------------------
