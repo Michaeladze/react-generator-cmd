@@ -3,6 +3,7 @@ const { mkDir } = require('./mk');
 const { createComponent } = require('./createComponent');
 const { createReduxState } = require('./createReduxState');
 const { createRouter } = require('./createRouter');
+const { createInterceptor } = require('./createInterceptor');
 
 inquirer
   .prompt([
@@ -13,7 +14,7 @@ inquirer
       choices: [
         'Component',
         'Redux State',
-        'Router'
+        'Init'
       ],
     },
     {
@@ -31,10 +32,24 @@ inquirer
       when: (answers) => answers.create === 'Component'
     },
     {
+      type: 'checkbox',
+      name: 'initParts',
+      message: 'Что добавить в проект?',
+      when: (answers => answers.create === 'Init'),
+      choices: [
+        {
+          name: 'Router'
+        },
+        {
+          name: 'Interceptor'
+        }
+      ]
+    },
+    {
       type: 'input',
       name: 'name',
       message: 'Как назвать файлы?',
-      when: (answers => answers.create !== 'Router')
+      when: (answers => answers.create !== 'Init')
     },
     {
       type: 'checkbox',
@@ -103,8 +118,14 @@ inquirer
       createReduxState(answers, path);
     }
 
-    if (answers.create === 'Router') {
-      createRouter(answers, path);
+    if (answers.initParts) {
+      if (answers.initParts.includes('Router')) {
+        createRouter(answers, path);
+      }
+
+      if (answers.initParts.includes('Interceptor')) {
+        createInterceptor(answers, path);
+      }
     }
   })
 
