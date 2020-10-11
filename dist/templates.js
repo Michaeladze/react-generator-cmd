@@ -152,16 +152,16 @@ export interface IStore {
 
 const observableMiddleware = createEpicMiddleware();
 
-/** Регистрируем редьюсеры */
+/** Register reducers */
 const reducers = combineReducers({
 
   /*[reducers:end] */
 })
 
-/** Создаем store */
+/** Create store */
 export const store = createStore(reducers, composeWithDevTools(applyMiddleware(observableMiddleware)));
 
-/** Регистрируем эффекты */
+/** Register effects */
 // @ts-ignore
 observableMiddleware.run(combineEpics(
   
@@ -177,7 +177,7 @@ const commonActionsTemplate = () => {
   return `import { createTypedAction } from 'redux-actions-ts';
 import { of } from 'rxjs';
 
-export const errorAction = createTypedAction<void>('[Error] ===!!!!!!!!!===');
+export const errorAction = createTypedAction<void>('[Error]');
 
 export const showErrorMessage = (e: Error) => {
   console.log(e.message);

@@ -11,7 +11,7 @@ inquirer
     {
       type: 'list',
       name: 'create',
-      message: 'Что нужно создать?',
+      message: 'What needs to be created?',
       choices: [
         'Component',
         'Redux State',
@@ -21,7 +21,7 @@ inquirer
     {
       type: 'list',
       name: 'component',
-      message: 'Что нужно создать?',
+      message: 'What type of component?',
       choices: [
         '🔬 Atom',
         '🧬 Molecule',
@@ -35,7 +35,7 @@ inquirer
     {
       type: 'checkbox',
       name: 'initParts',
-      message: 'Что добавить в проект?',
+      message: 'Init project with:',
       when: (answers => answers.create === 'Init'),
       choices: [
         {
@@ -52,13 +52,13 @@ inquirer
     {
       type: 'input',
       name: 'name',
-      message: 'Как назвать файлы?',
+      message: 'How to name files?',
       when: (answers => answers.create !== 'Init')
     },
     {
       type: 'checkbox',
       name: 'componentOptions',
-      message: 'Что добавить в компонент?',
+      message: 'Create component with:',
       choices: [
         {
           name: 'Redux'
@@ -81,31 +81,31 @@ inquirer
     {
       type: 'confirm',
       name: 'async',
-      message: 'Асинхронный?',
+      message: 'Async?',
       when: (answers) => answers.create === 'Redux State'
     },
     {
       type: 'input',
       name: 'actionName',
-      message: 'Как назвать экшены?',
+      message: 'How to name Actions?',
       when: (answers) => answers.create === 'Redux State'
     },
     {
       type: 'input',
       name: 'description',
-      message: 'Описание',
+      message: 'Description',
       when: (answers) => answers.create === 'Redux State'
     },
     {
       type: 'input',
       name: 'pendingType',
-      message: 'Интерфейс на вход',
+      message: 'Pending payload type',
       when: (answers) => answers.create === 'Redux State'
     },
     {
       type: 'input',
       name: 'successType',
-      message: 'Интерфейс на выход',
+      message: 'Success payload type',
       when: (answers) => answers.create === 'Redux State' && answers.async
     }
   ])
