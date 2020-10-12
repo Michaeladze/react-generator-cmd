@@ -306,7 +306,9 @@ import { ${ answers.actionName }${ answers.async ? 'Success' : '' } } from '../a
     `/** ${ answers.description } */
     createTypedHandler(${ answers.actionName }${ answers.async ? 'Success' : '' }, (state: I${ capName }State, action: Action<${ successType }>) => {
       
-      return state;
+      return {
+      ...state,
+      };
     }),`;
 
   if (init) {
