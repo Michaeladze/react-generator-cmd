@@ -25,11 +25,15 @@ const tsxTemplate = (name, answers) => {
     }
 
     if (o === 'useLocation') {
-      locationImport = `import { useLocation } from 'root-front';\n`;
+      locationImport = `import { useLocation } from 'react-router-dom';\n`;
     }
 
     if (o === 'useHistory') {
-      historyImport = `import { useHistory } from 'react-router-dom';\n`;
+      if (locationImport) {
+        locationImport = `import { useLocation, useHistory } from 'react-router-dom';\n`;
+      } else {
+        historyImport = `import { useHistory } from 'react-router-dom';\n`;
+      }
     }
 
     if (o === 'Children') {
