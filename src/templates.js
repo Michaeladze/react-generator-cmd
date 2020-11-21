@@ -308,7 +308,7 @@ import { ${ answers.actionName }${ answers.async ? 'Success' : '' } } from '../a
 
   const reducer =
     `/** ${ answers.description } */
-    createTypedHandler(${ answers.actionName }${ answers.async ? 'Success' : '' }, (state: I${ capName }State, action: Action<${ successType }>) => {
+    createTypedHandler(${ answers.actionName }${ answers.async ? 'Success' : '' }, (state: I${ capName }State, action: Action<${ successType }>): I${ capName }State => {
       
       return {
       ...state,
