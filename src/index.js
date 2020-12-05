@@ -107,6 +107,24 @@ inquirer
       name: 'successType',
       message: 'Success payload type',
       when: (answers) => answers.create === 'Redux State' && answers.async
+    },
+    {
+      type: 'list',
+      name: 'method',
+      message: 'What is the method of the service?',
+      choices: [
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE'
+      ],
+      when: (answers) => answers.create === 'Redux State' && answers.async
+    },
+    {
+      type: 'confirm',
+      name: 'initServer',
+      message: 'Use express server?',
+      when: (answers) => answers.create === 'Redux State' && answers.async
     }
   ])
   .then(answers => {

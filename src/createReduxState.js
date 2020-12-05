@@ -1,10 +1,12 @@
 const fs = require('fs');
+const { exec } = require('child_process');
 const { storeIndexTemplate } = require('./templates/index.template');
 const { reducerTemplate } = require('./templates/reducers.template');
 const { serviceTemplate } = require('./templates/services.template');
 const { effectTemplate } = require('./templates/effects.template');
-const { mocksTemplate } = require('./templates/mocks.template');
 const { typesTemplate } = require('./templates/types.template');
+const { expressTemplate } = require('./templates/express.template');
+const { apiTemplate } = require('./templates/api.template');
 const { actionTemplate, commonActionsTemplate, } = require('./templates/actions.template');
 const { mkDir, mkFile } = require('./mk');
 const { appendImports } = require('./appendImports');
@@ -19,11 +21,13 @@ function createReduxState(answers, path) {
     createIndex(path);
     createCommonActions(path);
     createTypes(answers, path, name);
-    createMocks(answers, path, name);
+    createMocks(answers, name);
+    answers.initServer && createServer(answers, name);
     createAction(answers, path, name);
     if (answers.async) {
       createEffect(answers, path, name);
       createService(answers, path, name);
+      answers.initServer && createApi(answers, name);
     }
     createReducer(answers, path, name);
     createState(answers, path, name);
@@ -41,18 +45,52 @@ function createIndex(path) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function createMocks(answers, path, name) {
-  path += '/mocks';
-  mkDir(path);
+function createMocks(answers, name) {
 
-  path += `/${ name }.mocks.ts`;
-  mkFile(path, mocksTemplate(name, answers), () => {
+  if (!answers.successType) {
+    return;
+  }
 
-    fs.readFile(path, { encoding: 'utf8' }, (err, data) => {
-      const writeStream = fs.createWriteStream(path, { flags: 'a' });
-      const fileData = data.split('\n');
-      writeStream.write(mocksTemplate(name, answers, fileData));
-    });
+  const isArray = answers.successType.includes('[]');
+  let successType = answers.successType;
+  if (isArray) {
+    successType = answers.successType.replace('[]', '');
+  }
+
+  const interMock = 'node ./node_modules/intermock/build/src/cli/index.js';
+  const files = `--files ./src/_store/types/${ answers.name }.types.ts`;
+  const interfaces = `--interfaces "${ successType }"`;
+  const outputFormat = '--outputFormat json';
+
+  const command = `${ interMock } ${ files } ${ interfaces } ${ outputFormat }`;
+
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${ error.message }`);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${ stderr }`);
+      return;
+    }
+
+    let path = 'backend';
+    mkDir(path);
+
+    path += '/mocks';
+    mkDir(path);
+
+    path += `/${ name }`;
+    mkDir(path);
+
+    path += `/${ answers.actionName }.json`;
+    let data = JSON.stringify(JSON.parse(stdout)[successType]);
+
+    if (isArray) {
+      data = `[${ data }]`
+    }
+
+    mkFile(path, data);
   });
 }
 
@@ -140,6 +178,31 @@ function createService(answers, path, name) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+function createApi(answers, name) {
+  const path = 'backend/index.js';
+  mkFile(path, apiTemplate(name, answers), () => {
+
+    fs.readFile(path, { encoding: 'utf8' }, (err, data) => {
+
+      const lines = data.split('\n');
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i] === '// [NEW ENDPOINT]') {
+          lines[i] = lines[i].replace('// [NEW ENDPOINT]', apiTemplate(name, answers) + '\n// [NEW ENDPOINT]')
+        }
+      }
+
+      fs.writeFile(path, lines.join('\n'), (err) => {
+        if (err) {
+          console.log(err)
+        }
+      });
+    });
+
+  });
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 function createReducer(answers, path, name) {
   path += '/reducers';
   mkDir(path);
@@ -207,6 +270,18 @@ function createState(answers, path, name) {
     }
   });
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function createServer(answers, name) {
+  let path = 'backend';
+  mkDir(path);
+
+  path += '/index.js';
+  mkFile(path, expressTemplate())
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 module.exports = {
   createReduxState

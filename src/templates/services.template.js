@@ -15,8 +15,7 @@ ${ typesImport(name, answers) }` : '';
   return `${ imp } \n
 /** ${ answers.description } */
 export const ${ answers.actionName } = (${payload}): Observable<${ successType }> => {
-  // return of([]).pipe(map((data: ${ successType }) => data));
-  return Axios.get(\`/${answers.actionName}\`).pipe(map(({ data }: AxiosResponse<${successType}>) => data));
+  return Axios.${answers.method.toLowerCase()}(\`/${answers.actionName}\`).pipe(map(({ data }: AxiosResponse<${successType}>) => data));
 };
 `
 }

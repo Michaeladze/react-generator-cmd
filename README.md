@@ -2,7 +2,7 @@
 
 Install dependencies
 ```js
-yarn add redux react-redux redux-observable redux-actions redux-actions-ts axios axios-observable
+yarn add redux react-redux redux-observable redux-actions redux-actions-ts axios axios-observable express cors
 ```
 Install devDependencies
 ```js
