@@ -1,4 +1,4 @@
-const { interceptorTemplate } = require('./templates');
+const { interceptorTemplate } = require('./templates/interceptor.template');
 const { mkDir, mkFile } = require('./mk');
 const fs = require('fs');
 

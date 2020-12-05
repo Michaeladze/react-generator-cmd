@@ -1,4 +1,4 @@
-const { tsxTemplate, indexTemplate } = require('./templates');
+const { tsxTemplate, indexTemplate } = require('./templates/component.template');
 const { mkDir, mkFile } = require('./mk');
 
 function createComponent(answers, path) {

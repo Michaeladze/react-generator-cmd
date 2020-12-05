@@ -1,4 +1,4 @@
-const { commonStylesTemplate, colorsStylesTemplate, mixinsStylesTemplate, indexStylesTemplate } = require('./styleTemplates');
+const { commonStylesTemplate, colorsStylesTemplate, mixinsStylesTemplate, indexStylesTemplate } = require('./templates/style.template');
 const { mkDir, mkFile } = require('./mk');
 
 function createStyles(answers, path) {

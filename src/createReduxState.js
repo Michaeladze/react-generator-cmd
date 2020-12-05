@@ -1,5 +1,11 @@
 const fs = require('fs');
-const { actionTemplate, commonActionsTemplate, effectTemplate, serviceTemplate, reducerTemplate, storeIndexTemplate, typesTemplate } = require('./templates');
+const { storeIndexTemplate } = require('./templates/index.template');
+const { reducerTemplate } = require('./templates/reducers.template');
+const { serviceTemplate } = require('./templates/services.template');
+const { effectTemplate } = require('./templates/effects.template');
+const { mocksTemplate } = require('./templates/mocks.template');
+const { typesTemplate } = require('./templates/types.template');
+const { actionTemplate, commonActionsTemplate, } = require('./templates/actions.template');
 const { mkDir, mkFile } = require('./mk');
 const { appendImports } = require('./appendImports');
 
@@ -13,6 +19,7 @@ function createReduxState(answers, path) {
     createIndex(path);
     createCommonActions(path);
     createTypes(answers, path, name);
+    createMocks(answers, path, name);
     createAction(answers, path, name);
     if (answers.async) {
       createEffect(answers, path, name);
@@ -30,6 +37,23 @@ function createReduxState(answers, path) {
 function createIndex(path) {
   const file = path + '/index.ts';
   mkFile(file, storeIndexTemplate());
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function createMocks(answers, path, name) {
+  path += '/mocks';
+  mkDir(path);
+
+  path += `/${ name }.mocks.ts`;
+  mkFile(path, mocksTemplate(name, answers), () => {
+
+    fs.readFile(path, { encoding: 'utf8' }, (err, data) => {
+      const writeStream = fs.createWriteStream(path, { flags: 'a' });
+      const fileData = data.split('\n');
+      writeStream.write(mocksTemplate(name, answers, fileData));
+    });
+  });
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -166,7 +190,7 @@ function createState(answers, path, name) {
           lines[i - 1] = lines[i - 1].replace('', `  ${ name }: ${ name }Reducer, \n`)
         }
 
-        if (answers.async &&  lines[i].includes('[effects:end]')) {
+        if (answers.async && lines[i].includes('[effects:end]')) {
           lines[i - 1] = lines[i - 1].replace('', `  ${ answers.actionName }Effect$, \n`)
         }
 

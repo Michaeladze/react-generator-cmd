@@ -1,6 +1,6 @@
 const fs = require('fs');
-const { basicTypes, typesImport, reducerTemplate } = require('./templates');
-const { replaceParentheses } = require('./mk');
+const { basicTypes, typesImport, replaceParentheses } = require('./utils');
+const { reducerTemplate } = require('./templates/reducers.template');
 
 function appendImports(types = [], data, path, name, answers, cb) {
   if (data) {

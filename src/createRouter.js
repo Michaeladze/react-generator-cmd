@@ -1,4 +1,4 @@
-const { routerConfigTemplate, routerTemplate, routerWithSubRoutesTemplate } = require('./templates');
+const { routerConfigTemplate, routerTemplate, routerWithSubRoutesTemplate } = require('./templates/router.template');
 const { mkDir, mkFile } = require('./mk');
 const fs = require('fs');
 

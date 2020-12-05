@@ -14,10 +14,6 @@ const mkFile = (path, data, cb) => {
   }
 };
 
-function replaceParentheses(str) {
-  return str.replace('[]', '');
-}
-
 module.exports = {
-  mkDir, mkFile, replaceParentheses
+  mkDir, mkFile
 }
