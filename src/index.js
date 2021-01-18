@@ -5,6 +5,9 @@ const { createReduxState } = require('./createReduxState');
 const { createRouter } = require('./createRouter');
 const { createInterceptor } = require('./createInterceptor');
 const { createStyles } = require('./createStyles');
+const { createStyleLint } = require('./createStyleLint');
+const { createEsLint } = require('./createEsLint');
+const { createHusky } = require('./createHusky');
 
 inquirer
   .prompt([
@@ -46,6 +49,15 @@ inquirer
         },
         {
           name: 'Styles'
+        },
+        {
+          name: 'Style Lint'
+        },
+        {
+          name: 'ESLint'
+        },
+        {
+          name: 'Husky'
         }
       ]
     },
@@ -151,6 +163,18 @@ inquirer
 
       if (answers.initParts.includes('Styles')) {
         createStyles(answers, path);
+      }
+
+      if (answers.initParts.includes('Style Lint')) {
+        createStyleLint();
+      }
+
+      if (answers.initParts.includes('ESLint')) {
+        createEsLint();
+      }
+
+      if (answers.initParts.includes('Husky')) {
+        createHusky();
       }
     }
   })
