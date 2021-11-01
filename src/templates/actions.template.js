@@ -22,8 +22,7 @@ export const errorAction = createTypedAction<void>('[Error]');
 export const showErrorMessage = (e: Error) => {
   console.log(e.message);
   return of(errorAction());
-};
-`
+};`
 }
 
 module.exports = {

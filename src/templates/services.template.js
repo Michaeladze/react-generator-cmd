@@ -16,8 +16,7 @@ ${ typesImport(name, answers) }` : '';
 /** ${ answers.description } */
 export const ${ answers.actionName } = (${payload}): Observable<${ successType }> => {
   return Axios.${answers.method.toLowerCase()}(\`/${answers.actionName}\`).pipe(map(({ data }: AxiosResponse<${successType}>) => data));
-};
-`
+};`
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

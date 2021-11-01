@@ -131,12 +131,6 @@ inquirer
         'DELETE'
       ],
       when: (answers) => answers.create === 'Redux State' && answers.async
-    },
-    {
-      type: 'confirm',
-      name: 'initServer',
-      message: 'Use express server?',
-      when: (answers) => answers.create === 'Redux State' && answers.async
     }
   ])
   .then(answers => {

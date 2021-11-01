@@ -21,8 +21,8 @@ function createReduxState(answers, path) {
     createIndex(path);
     createCommonActions(path);
     createTypes(answers, path, name);
-    createMocks(answers, name);
-    answers.initServer && createServer(answers, name);
+    // createMocks(answers, name);
+    // answers.initServer && createServer(answers, name);
     createAction(answers, path, name);
     if (answers.async) {
       createEffect(answers, path, name);
