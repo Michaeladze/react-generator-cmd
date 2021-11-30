@@ -9,7 +9,7 @@ const { expressTemplate } = require('./templates/express.template');
 const { apiTemplate } = require('./templates/api.template');
 const { actionTemplate, commonActionsTemplate, } = require('./templates/actions.template');
 const { mkDir, mkFile } = require('./mk');
-const { appendImports } = require('./appendImports');
+const { appendImports, insertComma } = require('./appendImports');
 
 function createReduxState(answers, path) {
   if (answers.name && answers.actionName) {
@@ -27,7 +27,6 @@ function createReduxState(answers, path) {
     if (answers.async) {
       createEffect(answers, path, name);
       createService(answers, path, name);
-      answers.initServer && createApi(answers, name);
     }
     createReducer(answers, path, name);
     createState(answers, path, name);
@@ -238,7 +237,8 @@ function createState(answers, path, name) {
 
         if (answers.async && lines[i].includes(`./effects/${ name }.effects`)) {
           hasEffectImport = true;
-          lines[i] = lines[i].replace(' }', `, ${ answers.actionName }Effect$ }`);
+          insertComma(lines, i, '}')
+          lines[i] = lines[i].replace('}', `${ answers.actionName }Effect$ }`);
         }
 
         if (lines[i].includes('[imports:end]')) {

@@ -15,11 +15,13 @@ function appendImports(types = [], data, path, name, answers, cb) {
 
       if (lines[i].includes(`${ name }.actions`) && types.includes('actions')) {
         if (!lines[i].includes(`${ answers.actionName }Pending }`) && !isReducer && !isService) {
-          lines[i] = lines[i].replace(' }', `, ${ answers.actionName }Pending }`);
+          insertComma(lines, i, '}');
+          lines[i] = lines[i].replace('}', `${ answers.actionName }Pending }`);
         }
 
         if (!lines[i].includes(`${ answers.actionName }Success }`)) {
-          lines[i] = lines[i].replace(' }', `, ${ answers.actionName }${ answers.async ? 'Success' : '' } }`);
+          insertComma(lines, i, '}');
+          lines[i] = lines[i].replace('}', `${ answers.actionName }${ answers.async ? 'Success' : '' } }`);
         }
       }
 
@@ -27,7 +29,8 @@ function appendImports(types = [], data, path, name, answers, cb) {
 
       if (answers.async && lines[i].includes(`${ name }.services`) && types.includes('services')) {
         if (!lines[i].includes(answers.actionName)) {
-          lines[i] = lines[i].replace(' }', `, ${ answers.actionName } }`);
+          insertComma(lines, i, '}');
+          lines[i] = lines[i].replace('}', `${ answers.actionName } }`);
         }
       }
 
@@ -40,11 +43,13 @@ function appendImports(types = [], data, path, name, answers, cb) {
         hasTypesImports = true;
 
         if (pt && !lines[i].includes(pt) && !isReducer && !isService && !basicTypes[pt]) {
-          lines[i] = lines[i].replace(' }', `, ${ pt } }`);
+          insertComma(lines, i, '}');
+          lines[i] = lines[i].replace('}', `${ pt } }`);
         }
 
         if (st && !lines[i].includes(st) && !basicTypes[st]) {
-          lines[i] = lines[i].replace(' }', `, ${ replaceParentheses(st) } }`);
+          insertComma(lines, i, '}');
+          lines[i] = lines[i].replace('}', `${ replaceParentheses(st) } }`);
         }
       }
 
@@ -87,6 +92,55 @@ function appendImports(types = [], data, path, name, answers, cb) {
   }
 }
 
+function insertComma(lines, i, beforeElement) {
+  let index = -1;
+  // [1] Ищем элемент на строке
+  for (let j = 0; j < lines[i].length; j++) {
+    if (lines[i][j] === beforeElement) {
+      index = j;
+    }
+  }
+
+  if (index < 0) {
+    return
+  }
+
+  let found = false;
+
+  // [2] Идем в обратную сторону по той же строке и ищем место, чтобы вставить запятую
+  for (let j = index - 1; j >= 0; j--) {
+    if (/\w|\d/.test(lines[i][j])) {
+      if (lines[i][j] !== ',') {
+        found = true;
+        break;
+      }
+
+      const next = lines[i].split('');
+      next[j] = next[j].replace(next[j], next[j] + ',');
+      lines[i] = next.join('');
+      found = true;
+      break;
+    }
+  }
+
+  if (found) {
+    return
+  }
+
+  // [3] Если не нашли на строке, ставим запятую в конце предыдущей строки
+  if (!lines[i - 1]) {
+    return
+  }
+
+  if (lines[i - 1][lines[i - 1].length === ',']) {
+    return;
+  }
+
+  const next = lines[i - 1].split('');
+  next.push(',');
+  lines[i - 1] = next.join('');
+}
+
 module.exports = {
-  appendImports
+  appendImports, insertComma
 }
