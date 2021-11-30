@@ -118,7 +118,7 @@ function insertComma(lines, i, beforeElement) {
         break;
       }
 
-      if (/\w|\d/.test(lines[i][j])) {
+      if (lines[i][j] !== ' ') {
         const next = lines[i].split('');
         next[j] = next[j].replace(next[j], next[j] + ',');
         lines[i] = next.join('');
