@@ -78,7 +78,7 @@ function appendImports(types = [], data, path, name, answers, cb) {
       }
 
       const needPending = answers.pendingType && basicTypes[answers.pendingType];
-      lines[lastImport] = lines[lastImport].replace(';', `;\n${typesImport(name, answers, needPending)}`);
+      lines[lastImport] = lines[lastImport].replace(';', `;\n${ typesImport(name, answers, needPending) }`);
     }
 
 
@@ -107,38 +107,36 @@ function insertComma(lines, i, beforeElement) {
 
   let found = false;
 
-  // [2] Идем в обратную сторону по той же строке и ищем место, чтобы вставить запятую
-  for (let j = index - 1; j >= 0; j--) {
-    if (/\w|\d/.test(lines[i][j])) {
-      if (lines[i][j] !== ',') {
+  function insertCommaOnTheLine(lines, i, index) {
+    if (found) {
+      return
+    }
+
+    for (let j = index - 1; j >= 0; j--) {
+      if (lines[i][j] === ',') {
         found = true;
         break;
       }
 
-      const next = lines[i].split('');
-      next[j] = next[j].replace(next[j], next[j] + ',');
-      lines[i] = next.join('');
-      found = true;
-      break;
+      if (/\w|\d/.test(lines[i][j])) {
+        const next = lines[i].split('');
+        next[j] = next[j].replace(next[j], next[j] + ',');
+        lines[i] = next.join('');
+        found = true;
+        break;
+      }
     }
   }
 
-  if (found) {
-    return
-  }
+  // [2] Идем в обратную сторону по той же строке и ищем место, чтобы вставить запятую
+  insertCommaOnTheLine(lines, i, index);
 
   // [3] Если не нашли на строке, ставим запятую в конце предыдущей строки
   if (!lines[i - 1]) {
     return
   }
 
-  if (lines[i - 1][lines[i - 1].length === ',']) {
-    return;
-  }
-
-  const next = lines[i - 1].split('');
-  next.push(',');
-  lines[i - 1] = next.join('');
+  insertCommaOnTheLine(lines, i - 1, lines[i - 1].length);
 }
 
 module.exports = {
