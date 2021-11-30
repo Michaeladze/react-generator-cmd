@@ -32,15 +32,13 @@
     "intermock": "^0.2.5",
     "release-it": "^14.0.2",
     "webpack": "^5.0.0",
-    "webpack-cli": "^4.0.0"
+    "webpack-cli": "^4.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
   },
   "release-it": {
     "github": {
       "release": false
     }
   },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1"
-  }
 }
