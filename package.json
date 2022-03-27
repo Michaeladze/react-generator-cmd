@@ -1,7 +1,7 @@
 {
   "name": "react-generator-cmd",
   "version": "1.5.2",
-  "description": "Generate redux or components",
+  "description": "Generate redux, components and other files",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
