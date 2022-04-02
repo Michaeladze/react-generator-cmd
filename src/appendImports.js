@@ -40,14 +40,43 @@ function appendImports(types = [], data, path, name, answers, cb) {
         const pt = answers.pendingType && replaceParentheses(answers.pendingType);
         const st = answers.successType && replaceParentheses(answers.successType);
 
+        let ptIndex = -1;
+        let stIndex = -1;
+
+        let j = i;
+
+        while (!lines[j].includes('{')) {
+          if (ptIndex !== -1 && stIndex !== -1) {
+            break;
+          }
+
+          if (lines[j].includes(pt)) {
+            ptIndex = j;
+          }
+
+          if (lines[j].includes(st)) {
+            stIndex = j;
+          }
+
+          j--;
+        }
+
+        if (lines[j].includes(pt)) {
+          ptIndex = j;
+        }
+
+        if (lines[j].includes(st)) {
+          stIndex = j;
+        }
+
         hasTypesImports = true;
 
-        if (pt && !lines[i].includes(pt) && !isReducer && !isService && !basicTypes[pt]) {
+        if (pt && ptIndex === -1 && !isReducer && !isService && !basicTypes[pt]) {
           insertComma(lines, i, '}');
           lines[i] = lines[i].replace('}', `${ pt } }`);
         }
 
-        if (st && !lines[i].includes(st) && !basicTypes[st]) {
+        if (st && stIndex === -1 && !basicTypes[st]) {
           insertComma(lines, i, '}');
           lines[i] = lines[i].replace('}', `${ replaceParentheses(st) } }`);
         }
@@ -56,35 +85,35 @@ function appendImports(types = [], data, path, name, answers, cb) {
       // ----------
 
       if (isReducer && lines[i].includes('initialState')) {
-        lines[i - 1] = lines[i - 1].replace(']', `  ${ reducerTemplate(name, path, answers) }\n  ]`)
+        lines[i - 1] = lines[i - 1].replace(']', `  ${ reducerTemplate(name, path, answers) }\n  ]`);
       }
 
     }
 
-    if (!hasTypesImports) {
-      /** Ищем последний импорт и вставляем типы */
-
-      let lastImport = -1;
-
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].includes('import')) {
-          lastImport = i;
-          continue;
-        }
-
-        if (lines[i].includes('export')) {
-          break;
-        }
-      }
-
-      const needPending = answers.pendingType && basicTypes[answers.pendingType];
-      lines[lastImport] = lines[lastImport].replace(';', `;\n${ typesImport(name, answers, needPending) }`);
-    }
+    // if (!hasTypesImports) {
+    //   /** Ищем последний импорт и вставляем типы */
+    //
+    //   let lastImport = -1;
+    //
+    //   for (let i = 0; i < lines.length; i++) {
+    //     if (lines[i].includes('import')) {
+    //       lastImport = i;
+    //       continue;
+    //     }
+    //
+    //     if (lines[i].includes('export')) {
+    //       break;
+    //     }
+    //   }
+    //
+    //   const needPending = answers.pendingType && basicTypes[answers.pendingType];
+    //   lines[lastImport] = lines[lastImport].replace(';', `;\n${ typesImport(name, answers, needPending) }`);
+    // }
 
 
     fs.writeFile(path, lines.join('\n'), (err) => {
       if (err) {
-        console.log(err)
+        console.log(err);
       } else {
         cb && cb();
       }
@@ -102,14 +131,14 @@ function insertComma(lines, i, beforeElement) {
   }
 
   if (index < 0) {
-    return
+    return;
   }
 
   let found = false;
 
   function insertCommaOnTheLine(lines, i, index) {
     if (found) {
-      return
+      return;
     }
 
     for (let j = index - 1; j >= 0; j--) {
@@ -133,7 +162,7 @@ function insertComma(lines, i, beforeElement) {
 
   // [3] Если не нашли на строке, ставим запятую в конце предыдущей строки
   if (!lines[i - 1]) {
-    return
+    return;
   }
 
   insertCommaOnTheLine(lines, i - 1, lines[i - 1].length);
@@ -141,4 +170,4 @@ function insertComma(lines, i, beforeElement) {
 
 module.exports = {
   appendImports, insertComma
-}
+};

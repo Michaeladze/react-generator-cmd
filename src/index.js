@@ -8,6 +8,7 @@ const { createStyles } = require('./createStyles');
 const { createStyleLint } = require('./createStyleLint');
 const { createEsLint } = require('./createEsLint');
 const { createHusky } = require('./createHusky');
+const { runLinter } = require('./runLinter');
 
 inquirer
   .prompt([
@@ -79,7 +80,7 @@ inquirer
           name: 'Children'
         },
         {
-          name: 'useReactiveForm'
+          name: 'useFormHook'
         },
         {
           name: 'useLocation'
@@ -171,5 +172,7 @@ inquirer
         createHusky();
       }
     }
+
+    runLinter();
   })
 

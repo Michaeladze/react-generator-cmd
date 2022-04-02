@@ -28,13 +28,23 @@
   },
   "homepage": "https://github.com/Michaeladze/react-generator#readme",
   "devDependencies": {
+    "@types/react-redux": "^7.1.23",
+    "@types/redux-actions": "^2.6.2",
+    "axios": "^0.26.1",
+    "axios-observable": "^1.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "inquirer": "^7.3.3",
     "intermock": "^0.2.5",
+    "react-redux": "^7.2.8",
+    "redux": "^4.1.2",
+    "redux-actions": "^2.6.5",
+    "redux-actions-ts": "^0.1.1",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-observable": "^2.0.0",
     "release-it": "^14.0.2",
     "webpack": "^5.0.0",
-    "webpack-cli": "^4.0.0",
-    "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "webpack-cli": "^4.0.0"
   },
   "release-it": {
     "github": {

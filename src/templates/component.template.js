@@ -28,23 +28,21 @@ const tsxTemplate = (name, answers) => {
       childrenImport = true;
     }
 
-    if (o === 'useReactiveForm') {
-      formImport = `import { useReactiveForm } from 'use-reactive-form';\nimport { object } from 'yup';\n`;
-      formTemplate = `const config = {
-    fields: {},
-    schema: object().shape({
-    })
-  }
-    
-  const { ref, values, errors, validate } = useReactiveForm(config);
-    
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log(values);
-    } else {
+    if (o === 'useFormHook') {
+      formImport = `import { FormProvider, useForm } from 'react-hook-form';`;
+      formTemplate = `const form = useForm({
+    defaultValues: {},
+    // resolver: yupResolver(schema)
+  });
+  
+  const { handleSubmit } = form;
+  
+  const onSubmit = () => {
+    handleSubmit((data: any) => {
+      console.log(data);
+    }, (errors) => {
       console.log(errors);
-    }
+    })();
   };
     
   // -------------------------------------------------------------------------------------------------------------------
@@ -70,11 +68,11 @@ const ${ name }: React.FC<IProps> = ({${childrenImport ? 'children' : ''}}: IPro
   ${formTemplate}
 
   return (
-    <div className=''>
-      ${formImport ? `<form className='' ref={ref} onSubmit={onSubmit}>
+    <>
+      ${formImport ? `<FormProvider { ...form }>
 
-      </form>` : ''}
-    </div>
+      </FormProvider>` : ''}
+    </>
   );
 };
 
