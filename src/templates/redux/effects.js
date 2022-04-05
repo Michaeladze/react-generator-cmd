@@ -18,7 +18,8 @@ import { ${ answers.actionName }Pending, ${ answers.actionName }Success } from '
 
   return `${ imp } \n
 /** ${ answers.description } */
-export const ${ answers.actionName }Effect$ = (actions$: Observable<Action<${ pendingType }>>, _state$: StateObservable<IStore>, { services }: EffectOptions) =>
+export const ${ answers.actionName }Effect$ = 
+  (actions$: Observable<Action<${ pendingType }>>, _state$: StateObservable<IStore>, { services }: EffectOptions) =>
   actions$.pipe(
     ofType(${ answers.actionName }Pending.toString()),
     switchMap((${ payload ? `{ ${ payload } }` : '' }) =>

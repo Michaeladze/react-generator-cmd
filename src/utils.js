@@ -8,6 +8,24 @@ const basicTypes = {
   undefined: true
 }
 
+const basicTypesTestPayload = {
+  number: 1,
+  string: '\'Test\'',
+  boolean: true,
+  any: true,
+  void: undefined,
+  null: null,
+  undefined: undefined
+}
+
+const getTestPayload = (type) => {
+  if (type.includes('[]')) {
+    return '[]';
+  }
+
+  return `${basicTypesTestPayload[type] || undefined}`;
+}
+
 const replaceParentheses = (str) => {
   return str.replace('[]', '');
 }
@@ -53,5 +71,6 @@ const typesImport = (name, answers, needPending = true) => {
 module.exports = {
   basicTypes,
   typesImport,
-  replaceParentheses
+  replaceParentheses,
+  getTestPayload
 }
