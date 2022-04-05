@@ -1,4 +1,5 @@
-const { getTestPayload } = require('../../utils')
+const { getTestPayload } = require('../../utils');
+const { typesImport } = require('../../utils');
 
 const testsTemplate = (name, answers) => {
   return `import { ${ answers.actionName }Pending, ${ answers.actionName }Success } from '../../actions/${ name }.actions';
@@ -9,16 +10,18 @@ import { IStore } from '../../index';
 import { Action } from 'redux-actions';
 import { errorAction } from '../../_common/actions';
 import ${ name }Reducer, { initialState } from '../../reducers/${ name }.reducer';
+${ typesImport(name, answers, false, true) }
 
 describe('Tests for ${ answers.actionName }Effect', () => {
 
-  const action$ = of({ type: ${ answers.actionName }Pending.toString(), payload: ${getTestPayload(answers.pendingType)} });
+  const action$ = of({ type: ${ answers.actionName }Pending.toString(), payload: ${ getTestPayload(answers.pendingType) } });
   const state$ = {} as StateObservable<IStore>;
 
   it('should dispatch ${ answers.actionName }Success action', async () => {
+    const payload: ${ answers.successType } = ${ getTestPayload(answers.successType) };
     const dependencies = {
       services: {
-        ${ answers.actionName }: () => of(${getTestPayload(answers.successType)})
+        ${ answers.actionName }: () => of(payload)
       }
     };
 
@@ -26,11 +29,10 @@ describe('Tests for ${ answers.actionName }Effect', () => {
     const action: Action<any> = await lastValueFrom(effect$);
 
     expect(action.type).toBe(${ answers.actionName }Success.toString());
-    expect(action.payload).toBe(${getTestPayload(answers.successType)});
+    expect(action.payload).toBe(payload);
   });
 
   it('should dispatch error action', async () => {
-
     const dependencies = {
       services: {
         ${ answers.actionName }: () => {
@@ -52,7 +54,7 @@ describe('Tests for ${ answers.actionName }Effect', () => {
   });
 
   it('should handle ${ answers.actionName }Success action', () => {
-    const payload = ${getTestPayload(answers.successType)};
+    const payload: ${ answers.successType } = ${ getTestPayload(answers.successType) };
     const action: Action<any> = { type: ${ answers.actionName }Success.toString(), payload };
     const nextState = ${ name }Reducer(initialState, action);
     expect(nextState).toEqual({

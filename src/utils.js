@@ -30,7 +30,7 @@ const replaceParentheses = (str) => {
   return str.replace('[]', '');
 }
 
-const typesImport = (name, answers, needPending = true) => {
+const typesImport = (name, answers, needPending = true, tests = false) => {
   let result = '';
   let hasPending = false;
 
@@ -55,7 +55,7 @@ const typesImport = (name, answers, needPending = true) => {
       result += `${ st }`;
     }
 
-    result += ` } from '../types/${ name }.types';`;
+    result += ` } from '../${tests ? '../' : ''}types/${ name }.types';`;
   }
 
   if (!needPending && !checkSuccess) {
