@@ -6,7 +6,7 @@ ${ typesImport(name, answers) }` : '';
 
   const actions = answers.async ? `export const ${ answers.actionName }Pending = createTypedAction<${ answers.pendingType || 'void' }>('[Pending] ${ answers.description }');
 export const ${ answers.actionName }Success = createTypedAction<${ answers.successType || 'void' }>('[Success] ${ answers.description }');` :
-    `export const ${ answers.actionName } = createTypedAction<${ answers.pendingType || 'void' }>('${ answers.description }');`
+    `export const ${ answers.actionName } = createTypedAction<${ answers.successType || 'void' }>('${ answers.description }');`
 
   return `${ imp }\n\n${ actions }`;
 }

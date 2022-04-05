@@ -116,13 +116,19 @@ inquirer
       type: 'input',
       name: 'pendingType',
       message: 'Pending payload type',
-      when: (answers) => answers.create === 'Redux State'
+      when: (answers) => answers.create === 'Redux State' && answers.async
     },
     {
       type: 'input',
       name: 'successType',
       message: 'Success payload type',
-      when: (answers) => answers.create === 'Redux State' && answers.async
+      when: (answers) => answers.create === 'Redux State'
+    },
+    {
+      type: 'input',
+      name: 'reducerKey',
+      message: 'Name of a key in the reducer',
+      when: (answers) => answers.create === 'Redux State'
     },
     {
       type: 'list',
@@ -141,7 +147,7 @@ inquirer
       name: 'tests',
       message: 'Create tests?',
       default: true,
-      when: (answers) => answers.create === 'Redux State' && answers.async
+      when: (answers) => answers.create === 'Redux State'
     }
   ])
   .then(answers => {

@@ -1,4 +1,4 @@
-const { typesImport } = require('../../utils');
+const { typesImport, getTestPayload } = require('../../utils');
 
 const reducerTemplate = (name, path, answers, imports = false, init = false) => {
   const imp = imports ? `import { Action } from 'redux-actions';
@@ -16,18 +16,18 @@ import { ${ answers.actionName }${ answers.async ? 'Success' : '' } } from '../a
     createTypedHandler(${ answers.actionName }${ answers.async ? 'Success' : '' }, (state: I${ capName }State, action: Action<${ successType }>): I${ capName }State => {
       
       return {
-      ...state,
+        ...state,${answers.reducerKey ? `\n        ${answers.reducerKey}: action.payload` : ''}
       };
     }),`;
 
   if (init) {
     result += `\n
 export interface I${ capName }State {
-  collection: ${ successType };
+  ${answers.reducerKey ? `${answers.reducerKey}: ${ successType }` : ''}
 }
 
 export const initialState: I${ capName }State = {
-  collection: []
+  ${answers.reducerKey ? `${answers.reducerKey}: ${getTestPayload(successType)}` : ''}
 };
 
 const ${ name }Reducer = handleTypedActions(

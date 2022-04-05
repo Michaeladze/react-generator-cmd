@@ -2,18 +2,18 @@ const { getTestPayload } = require('../../utils');
 const { typesImport } = require('../../utils');
 
 const testsTemplate = (name, answers) => {
-  return `import { ${ answers.actionName }Pending, ${ answers.actionName }Success } from '../../actions/${ name }.actions';
+
+  const asyncImports = answers.async ?
+    `import { ${ answers.actionName }Pending, ${ answers.actionName }Success } from '../../actions/${ name }.actions';
 import { ${ answers.actionName }Effect$ } from '../../effects/${ name }.effects';
 import { lastValueFrom, of, throwError } from 'rxjs';
 import { StateObservable } from 'redux-observable';
 import { IStore } from '../../index';
-import { Action } from 'redux-actions';
-import { errorAction } from '../../_common/actions';
-import ${ name }Reducer, { initialState } from '../../reducers/${ name }.reducer';
-${ typesImport(name, answers, false, true) }
+import { errorAction } from '../../_common/actions';` :
+    `import { ${ answers.actionName }} from '../../actions/${ name }.actions';`;
 
-describe('Tests for ${ answers.actionName }Effect', () => {
-
+  const asyncTests = answers.async ?
+    `
   const action$ = of({ type: ${ answers.actionName }Pending.toString(), payload: ${ getTestPayload(answers.pendingType) } });
   const state$ = {} as StateObservable<IStore>;
 
@@ -46,8 +46,16 @@ describe('Tests for ${ answers.actionName }Effect', () => {
 
     expect(action.type).toBe(errorAction.toString());
   });
-});
+` : '';
 
+
+  return `${ asyncImports }
+import { Action } from 'redux-actions';
+import ${ name }Reducer, { initialState } from '../../reducers/${ name }.reducer';
+${ typesImport(name, answers, true, true) }
+
+describe('Tests for ${ answers.actionName }', () => {
+  ${ asyncTests }
   it('should return the initial state', () => {
     const action: Action<any> = { type: 'Empty', payload: '' };
     expect(${ name }Reducer(undefined, action)).toEqual(initialState);
@@ -55,14 +63,15 @@ describe('Tests for ${ answers.actionName }Effect', () => {
 
   it('should handle ${ answers.actionName }Success action', () => {
     const payload: ${ answers.successType } = ${ getTestPayload(answers.successType) };
-    const action: Action<any> = { type: ${ answers.actionName }Success.toString(), payload };
+    const action: Action<any> = { type: ${ answers.actionName }${ answers.async ? 'Success' : '' }.toString(), payload };
     const nextState = ${ name }Reducer(initialState, action);
     expect(nextState).toEqual({
-      ...initialState,
-      collection: payload
+      ...initialState,${ answers.reducerKey ? `\n      ${ answers.reducerKey }: payload` : '' }
     });
   });
   
+}); 
+
 `;
 };
 

@@ -31,11 +31,12 @@ function createReduxState(answers, path) {
     if (answers.async) {
       createEffect(answers, path, name);
       createService(answers, path, name);
-
-      if (answers.tests) {
-        createTests(answers, path, name);
-      }
     }
+
+    if (answers.tests) {
+      createTests(answers, path, name);
+    }
+
     createReducer(answers, path, name);
     createState(answers, path, name);
     runLinter('./_store');
