@@ -1,6 +1,6 @@
 {
   "name": "react-generator-cmd",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Generate redux or components",
   "main": "index.js",
   "scripts": {
