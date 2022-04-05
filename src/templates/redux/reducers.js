@@ -23,11 +23,11 @@ import { ${ answers.actionName }${ answers.async ? 'Success' : '' } } from '../a
   if (init) {
     result += `\n
 export interface I${ capName }State {
-  ${answers.reducerKey ? `${answers.reducerKey}: ${ successType }` : ''}
+  ${answers.reducerKey ? `${answers.reducerKey}: ${ successType };` : ''}
 }
 
 export const initialState: I${ capName }State = {
-  ${answers.reducerKey ? `${answers.reducerKey}: ${getTestPayload(successType)}` : ''}
+  ${answers.reducerKey ? `${answers.reducerKey}: ${getTestPayload(successType)},` : ''}
 };
 
 const ${ name }Reducer = handleTypedActions(

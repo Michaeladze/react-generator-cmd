@@ -13,6 +13,7 @@ const { appendImports, insertComma } = require('./appendImports');
 const { commonTypesTemplate } = require('./templates/redux/comonTypes');
 const { testsTemplate } = require('./templates/redux/tests');
 const { runLinter } = require('./runLinter');
+const { getTestPayload } = require('./utils');
 
 function createReduxState(answers, path) {
   if (answers.name && answers.actionName) {
@@ -230,7 +231,43 @@ function createReducer(answers, path, name) {
   mkFile(path, reducerTemplate(name, path, answers, true, true), () => {
 
     fs.readFile(path, { encoding: 'utf8' }, (err, data) => {
-      appendImports(['actions', 'types'], data, path, name, answers);
+      appendImports(['actions', 'types'], data, path, name, answers, () => {
+
+        fs.readFile(path, { encoding: 'utf8' }, (err, data) => {
+          if (data) {
+            const lines = data.split('\n');
+            const capName = answers.name.charAt(0).toUpperCase() + answers.name.slice(1);
+            const successType = answers.successType || 'any';
+
+            for (let i = 0; i < lines.length; i++) {
+
+              if (lines[i].includes(`export interface I${ capName }State`)) {
+                let j = i;
+                while (!lines[j].includes('}')) {
+                  j++;
+                }
+                const reducerKey = answers.reducerKey ? `${answers.reducerKey}: ${ successType }` : '';
+                lines[j] = lines[j].replace('}', `  ${ reducerKey };\n }`);
+              }
+
+              if (lines[i].includes('export const initialState')) {
+                let j = i;
+                while (!lines[j].includes('};')) {
+                  j++;
+                }
+                const reducerKey = answers.reducerKey ? `${answers.reducerKey}: ${getTestPayload(successType)}` : '';
+                lines[j] = lines[j].replace('}', `  ${ reducerKey },\n }`);
+              }
+            }
+
+            fs.writeFile(path, lines.join('\n'), (err) => {
+              if (err) {
+                console.log(err);
+              }
+            });
+          }
+        })
+      });
     });
 
   });
