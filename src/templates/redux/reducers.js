@@ -26,7 +26,7 @@ export interface I${ capName }State {
   collection: ${ successType };
 }
 
-const initialState: I${ capName }State = {
+export const initialState: I${ capName }State = {
   collection: []
 };
 

@@ -6,6 +6,7 @@ import { StateObservable } from 'redux-observable';
 import { IStore } from '../../index';
 import { Action } from 'redux-actions';
 import { errorAction } from '../../_common/actions';
+import ${ name }Reducer, { initialState } from '../../reducers/${ name }.reducer';
 
 describe('Tests for ${ answers.actionName }Effect', () => {
 
@@ -43,6 +44,21 @@ describe('Tests for ${ answers.actionName }Effect', () => {
   });
 });
 
+  it('should return the initial state', () => {
+    const action: Action<any> = { type: 'Empty', payload: '' };
+    expect(${ name }Reducer(undefined, action)).toEqual(initialState);
+  });
+
+  it('should handle ${ answers.actionName }Success action', () => {
+    const payload = [];
+    const action: Action<any> = { type: ${ answers.actionName }Success.toString(), payload };
+    const nextState = ${ name }Reducer(initialState, action);
+    expect(nextState).toEqual({
+      ...initialState,
+      collection: payload
+    });
+  });
+  
 `;
 };
 
