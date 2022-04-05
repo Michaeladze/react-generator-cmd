@@ -23,7 +23,11 @@ const getTestPayload = (type) => {
     return '[]';
   }
 
-  return `${basicTypesTestPayload[type] || undefined}`;
+  if (type === '') {
+    return undefined;
+  }
+
+  return `${basicTypesTestPayload[type] || `\{\} as ${ type }`}`;
 }
 
 const replaceParentheses = (str) => {
