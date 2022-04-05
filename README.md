@@ -32,6 +32,7 @@ To run tests add this lines to package.json
 "jest": {
     "transform": {
       "^.+\\.(ts|tsx)?$": "ts-jest"
-    }
+    },
+    "testEnvironment": "jsdom"
   }
 ```

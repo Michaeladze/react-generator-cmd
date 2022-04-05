@@ -1,4 +1,5 @@
 const { tsxTemplate, indexTemplate } = require('./templates/components/component');
+const { componentTestTemplate } = require('./templates/components/tests');
 const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
 
@@ -16,6 +17,9 @@ function createComponent(answers, path) {
   mkDir(path);
   mkFile(`${ path }/index.ts`, indexTemplate(componentName));
   mkFile(`${ path }/${ componentName }.tsx`, tsxTemplate(componentName, answers));
+  if (answers.tests) {
+    mkFile(`${ path }/${ componentName }.spec.tsx`, componentTestTemplate(componentName, answers));
+  }
   mkFile(`${ path }/${ componentName }.scss`, '');
 
   runLinter(path);

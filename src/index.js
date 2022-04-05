@@ -96,6 +96,13 @@ inquirer
     },
     {
       type: 'confirm',
+      name: 'tests',
+      message: 'Create tests?',
+      default: true,
+      when: (answers) => answers.create === 'Component'
+    },
+    {
+      type: 'confirm',
       name: 'async',
       message: 'Async?',
       when: (answers) => answers.create === 'Redux State'
