@@ -1,4 +1,4 @@
-const interceptorTemplate = (name) => {
+const interceptor = (name) => {
   return `import Axios from 'axios-observable';
 import Axios1 from 'axios';
 
@@ -19,5 +19,5 @@ export default intercept;
 // ---------------------------------------------------------------------------------------------------------------------
 
 module.exports = {
-  interceptorTemplate
+  interceptorTemplate: interceptor
 }

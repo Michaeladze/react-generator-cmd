@@ -6,7 +6,7 @@ yarn add redux react-redux redux-observable redux-actions redux-actions-ts axios
 ```
 Install devDependencies
 ```js
-yarn add -D redux-devtools-extension @types/redux-actions @types/react-redux
+yarn add -D redux-devtools-extension @types/redux-actions @types/react-redux jest ts-jest @types/jest
 ```
 
 Install CLI
@@ -25,4 +25,13 @@ Run generator
 ```js
 npm run g
 yarn g
+```
+
+To run tests add this lines to package.json
+```js
+"jest": {
+    "transform": {
+      "^.+\\.(ts|tsx)?$": "ts-jest"
+    }
+  }
 ```

@@ -1,4 +1,4 @@
-const { typesImport } = require('../utils');
+const { typesImport } = require('../../utils');
 
 const serviceTemplate = (name, path, answers, imports = false) => {
   const successType = answers.successType || 'any';
@@ -15,7 +15,8 @@ ${ typesImport(name, answers) }` : '';
   return `${ imp } \n
 /** ${ answers.description } */
 export const ${ answers.actionName } = (${payload}): Observable<${ successType }> => {
-  return Axios.${answers.method.toLowerCase()}(\`/${answers.actionName}\`).pipe(map(({ data }: AxiosResponse<${successType}>) => data));
+  const url = \`/${answers.actionName}\`;
+  return Axios.${answers.method.toLowerCase()}(url).pipe(map(({ data }: AxiosResponse<${successType}>) => data));
 };`
 }
 

@@ -17,7 +17,7 @@ export const routes = [];
 `
 }
 
-const routerTemplate = () => {
+const router = () => {
   return `import React from 'react';
 import { Switch } from 'react-router-dom';
 import RouteWithSubRoutes from './RouteWithSubRoutes';
@@ -67,5 +67,5 @@ export default RouteWithSubRoutes;
 // ---------------------------------------------------------------------------------------------------------------------
 
 module.exports = {
-  routerConfigTemplate, routerTemplate, routerWithSubRoutesTemplate
+  routerConfigTemplate, routerTemplate: router, routerWithSubRoutesTemplate
 }

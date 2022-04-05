@@ -1,4 +1,4 @@
-const huskyTemplate = () => {
+const husky = () => {
 
   // "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
 
@@ -20,5 +20,5 @@ const huskyTemplate = () => {
 }
 
 module.exports = {
-  huskyTemplate
+  huskyTemplate: husky
 }

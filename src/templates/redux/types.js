@@ -1,6 +1,6 @@
-const { replaceParentheses, basicTypes } = require('../utils');
+const { replaceParentheses, basicTypes } = require('../../utils');
 
-const typesTemplate = (name, answers, fileData) => {
+const types = (name, answers, fileData) => {
   const pt = answers.pendingType ? replaceParentheses(answers.pendingType) : '';
   const st = answers.successType ? replaceParentheses(answers.successType) : '';
 
@@ -37,5 +37,5 @@ const typesTemplate = (name, answers, fileData) => {
 // ---------------------------------------------------------------------------------------------------------------------
 
 module.exports = {
-  typesTemplate
+  typesTemplate: types
 }

@@ -1,9 +1,9 @@
-const mocksTemplate = (data) => {
+const mocks = (data) => {
   return data;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 module.exports = {
-  mocksTemplate
+  mocksTemplate: mocks
 };

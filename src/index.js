@@ -87,6 +87,9 @@ inquirer
         },
         {
           name: 'useHistory'
+        },
+        {
+          name: 'useParams'
         }
       ],
       when: (answers) => answers.create === 'Component'
@@ -132,6 +135,13 @@ inquirer
         'DELETE'
       ],
       when: (answers) => answers.create === 'Redux State' && answers.async
+    },
+    {
+      type: 'confirm',
+      name: 'tests',
+      message: 'Create tests?',
+      default: true,
+      when: (answers) => answers.create === 'Redux State' && answers.async
     }
   ])
   .then(answers => {
@@ -139,7 +149,7 @@ inquirer
     mkDir(path);
 
     if (answers.create === 'Component') {
-      createComponent(answers, path);
+      createComponent(answers, path)
     }
 
     if (answers.create === 'Redux State') {
@@ -172,7 +182,5 @@ inquirer
         createHusky();
       }
     }
-
-    runLinter();
   })
 

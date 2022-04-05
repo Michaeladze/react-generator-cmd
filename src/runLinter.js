@@ -1,7 +1,7 @@
 const { exec } = require('child_process');
 
-function runLinter() {
-  exec('eslint ./_store --fix');
+function runLinter(path) {
+  exec(`eslint ${path} --fix`);
 }
 
 module.exports = { runLinter };

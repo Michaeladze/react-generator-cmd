@@ -1,4 +1,4 @@
-const expressTemplate = () => {
+const express = () => {
   return `const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -16,5 +16,5 @@ app.listen(PORT, () => {
 }
 
 module.exports = {
-  expressTemplate
+  expressTemplate: express
 }

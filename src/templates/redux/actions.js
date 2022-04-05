@@ -1,6 +1,6 @@
-const { typesImport } = require('../utils');
+const { typesImport } = require('../../utils');
 
-const actionsTemplate = (name, answers, imports = false) => {
+const actions = (name, answers, imports = false) => {
   const imp = imports ? `import { createTypedAction } from 'redux-actions-ts';
 ${ typesImport(name, answers) }` : '';
 
@@ -26,6 +26,6 @@ export const showErrorMessage = (e: Error) => {
 }
 
 module.exports = {
-  actionTemplate: actionsTemplate,
+  actionTemplate: actions,
   commonActionsTemplate
 }

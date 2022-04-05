@@ -1,4 +1,4 @@
-const { esLintTemplate } = require('./templates/esLint.template');
+const { esLintTemplate } = require('./templates/general/esLint');
 const { mkFile } = require('./mk');
 const { exec } = require('child_process');
 

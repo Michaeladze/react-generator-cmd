@@ -1,4 +1,4 @@
-const { typesImport } = require('../utils');
+const { typesImport } = require('../../utils');
 
 const reducerTemplate = (name, path, answers, imports = false, init = false) => {
   const imp = imports ? `import { Action } from 'redux-actions';

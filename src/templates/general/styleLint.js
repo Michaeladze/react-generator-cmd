@@ -1,4 +1,4 @@
-const styleLintTemplate = () => {
+const styleLint = () => {
   return `{
   "rules": {
     "indentation": 2,
@@ -20,5 +20,5 @@ const styleLintTemplate = () => {
 }
 
 module.exports = {
-  styleLintTemplate
+  styleLintTemplate: styleLint
 }

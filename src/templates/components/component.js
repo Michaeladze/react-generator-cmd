@@ -1,8 +1,10 @@
 const tsxTemplate = (name, answers) => {
 
   let storeImport = '';
-  let historyImport = '';
-  let locationImport = '';
+  let routerDomImport = '';
+  let useHistory = '';
+  let useLocation = '';
+  let useParams = '';
   let formImport = '';
   let formTemplate = '';
   let childrenImport = false;
@@ -13,15 +15,18 @@ const tsxTemplate = (name, answers) => {
     }
 
     if (o === 'useLocation') {
-      locationImport = `import { useLocation } from 'react-router-dom';\n`;
+      useLocation = '  const location = useLocation();\n';
+      routerDomImport = 'useLocation';
     }
 
     if (o === 'useHistory') {
-      if (locationImport) {
-        locationImport = `import { useLocation, useHistory } from 'react-router-dom';\n`;
-      } else {
-        historyImport = `import { useHistory } from 'react-router-dom';\n`;
-      }
+      useHistory = '  const history = useHistory();\n';
+      routerDomImport += routerDomImport === '' ? 'useHistory' : ', useHistory';
+    }
+
+    if (o === 'useParams') {
+      useParams = '  const params = useParams<{}>();\n';
+      routerDomImport += routerDomImport === '' ? 'useParams' : ', useParams';
     }
 
     if (o === 'Children') {
@@ -50,17 +55,20 @@ const tsxTemplate = (name, answers) => {
     }
   })
 
+  if (routerDomImport) {
+    routerDomImport = `import { ${routerDomImport} } from 'react-router-dom';\n`;
+  }
 
   return `import React${childrenImport ? ', { ReactNode } ' : ''} from 'react';
 import './${ name }.scss';
-${storeImport}${locationImport}${historyImport}${formImport}
+${storeImport}${routerDomImport}${formImport}
 
 interface IProps {
     ${childrenImport ? 'children: ReactNode | ReactNode[];' : ''}
 }
 
 const ${ name }: React.FC<IProps> = ({${childrenImport ? 'children' : ''}}: IProps) => {
-  ${storeImport ? 'const dispatch = useDispatch();\n' : ''}${locationImport ? '  const location = useLocation();\n' : ''}${historyImport ? '  const history = useHistory();\n' : ''}
+  ${storeImport ? 'const dispatch = useDispatch();\n' : ''}${useLocation}${useHistory}${useParams}
   ${storeImport ? 'const store = useSelector((store: IStore) => store);' : ''}
 
   // -------------------------------------------------------------------------------------------------------------------

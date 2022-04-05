@@ -1,4 +1,4 @@
-const { huskyTemplate } = require('./templates/husky.template');
+const { huskyTemplate } = require('./templates/general/husky');
 const fs = require('fs');
 const { exec } = require('child_process');
 

@@ -1,4 +1,4 @@
-const apiTemplate = (name, answers) => {
+const api = (name, answers) => {
   return `
 /** ${ answers.description } */
 app.${answers.method.toLowerCase()}('/${answers.actionName}', (req, res) => {
@@ -11,5 +11,5 @@ app.${answers.method.toLowerCase()}('/${answers.actionName}', (req, res) => {
 }
 
 module.exports = {
-  apiTemplate
+  apiTemplate: api
 }
