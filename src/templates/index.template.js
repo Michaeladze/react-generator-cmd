@@ -22,8 +22,7 @@ const reducers = combineReducers({
 export const store = createStore(reducers, composeWithDevTools(applyMiddleware(observableMiddleware)));
 
 /** Register effects */
-// @ts-ignore
-observableMiddleware.run(combineEpics(
+observableMiddleware.run(combineEpics<any, any, any, any>(
   
   /*[effects:end] */
   )

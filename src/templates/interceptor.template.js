@@ -1,27 +1,15 @@
 const interceptorTemplate = (name) => {
   return `import Axios from 'axios-observable';
-import { AxiosRequestConfig } from 'axios';
+import Axios1 from 'axios';
+
+const onRequest = (config: any) => {
+  return config;
+};
 
 /** Interceptors */
 const intercept = () => {
-  Axios.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
-      
-      if (config.headers.hasOwnProperty('NO_INTERCEPT')) {
-        return config;
-      }
-
-      /** Authorization */
-      // const token = localStorage.getItem('token');
-      // if (token) {
-      //   config.headers.Authorization = token;
-      // }
-
-      config.url = (process.env.REACT_APP_HOST as string) + config.url;
-
-      return config;
-    }
-  );
+  Axios.interceptors.request.use(onRequest);
+  Axios1.interceptors.request.use(onRequest);
 };
 
 export default intercept;
