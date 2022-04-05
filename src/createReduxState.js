@@ -246,8 +246,8 @@ function createReducer(answers, path, name) {
                 while (!lines[j].includes('}')) {
                   j++;
                 }
-                const reducerKey = answers.reducerKey ? `${answers.reducerKey}: ${ successType }` : '';
-                lines[j] = lines[j].replace('}', `  ${ reducerKey };\n }`);
+                const reducerKey = answers.reducerKey ? `${answers.reducerKey}: ${ successType };\n` : '';
+                lines[j] = lines[j].replace('}', `  ${ reducerKey }}`);
               }
 
               if (lines[i].includes('export const initialState')) {
@@ -255,8 +255,8 @@ function createReducer(answers, path, name) {
                 while (!lines[j].includes('};')) {
                   j++;
                 }
-                const reducerKey = answers.reducerKey ? `${answers.reducerKey}: ${getTestPayload(successType)}` : '';
-                lines[j] = lines[j].replace('}', `  ${ reducerKey },\n }`);
+                const reducerKey = answers.reducerKey ? `${answers.reducerKey}: ${getTestPayload(successType)},\n` : '';
+                lines[j] = lines[j].replace('}', `  ${ reducerKey }}`);
               }
             }
 
