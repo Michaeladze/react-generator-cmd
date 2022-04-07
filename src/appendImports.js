@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { basicTypes, typesImport, replaceParentheses } = require('./utils');
+const { basicTypes, replaceParentheses } = require('./utils');
 const { reducerTemplate } = require('./templates/redux/reducers');
 
 function appendImports(types = [], data, path, name, answers, cb) {
@@ -89,27 +89,6 @@ function appendImports(types = [], data, path, name, answers, cb) {
       }
 
     }
-
-    // if (!hasTypesImports) {
-    //   /** Ищем последний импорт и вставляем типы */
-    //
-    //   let lastImport = -1;
-    //
-    //   for (let i = 0; i < lines.length; i++) {
-    //     if (lines[i].includes('import')) {
-    //       lastImport = i;
-    //       continue;
-    //     }
-    //
-    //     if (lines[i].includes('export')) {
-    //       break;
-    //     }
-    //   }
-    //
-    //   const needPending = answers.pendingType && basicTypes[answers.pendingType];
-    //   lines[lastImport] = lines[lastImport].replace(';', `;\n${ typesImport(name, answers, needPending) }`);
-    // }
-
 
     fs.writeFile(path, lines.join('\n'), (err) => {
       if (err) {

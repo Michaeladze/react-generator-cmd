@@ -10,7 +10,6 @@ const { apiTemplate } = require('./templates/redux/api');
 const { actionTemplate, commonActionsTemplate, } = require('./templates/redux/actions');
 const { mkDir, mkFile } = require('./mk');
 const { appendImports, insertComma } = require('./appendImports');
-const { commonTypesTemplate } = require('./templates/redux/comonTypes');
 const { testsTemplate } = require('./templates/redux/tests');
 const { runLinter } = require('./runLinter');
 const { getTestPayload } = require('./utils');
@@ -24,7 +23,6 @@ function createReduxState(answers, path) {
 
     createIndex(path);
     createCommonActions(path);
-    // createCommonTypes(path);
     createTypes(answers, path, name);
     // createMocks(answers, name);
     // answers.initServer && createServer(answers, name);
@@ -112,16 +110,6 @@ function createCommonActions(path) {
 
   path += `/actions.ts`;
   mkFile(path, commonActionsTemplate());
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-function createCommonTypes(path) {
-  path += '/_common';
-  mkDir(path);
-
-  path += `/types.ts`;
-  mkFile(path, commonTypesTemplate());
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -284,10 +272,8 @@ function createState(answers, path, name) {
       const capName = answers.name.charAt(0).toUpperCase() + answers.name.slice(1);
       let hasReducerImport = false;
       let hasEffectImport = false;
-      // let hasServiceImport = false;
 
       let effectImport = `import { ${ answers.actionName }Effect$ } from './effects/${ name }.effects';\n`;
-      // let serviceImport = `import { ${ answers.actionName } } from './services/${ name }.services';\n`;
 
       for (let i = 0; i < lines.length; i++) {
 
@@ -301,21 +287,11 @@ function createState(answers, path, name) {
           lines[i] = lines[i].replace('}', `${ answers.actionName }Effect$ }`);
         }
 
-        // if (answers.async && lines[i].includes(`./services/${ name }.services`)) {
-        //   hasServiceImport = true;
-        //   insertComma(lines, i, '}');
-        //   lines[i] = lines[i].replace('}', `${ answers.actionName } }`);
-        // }
-
         if (lines[i].includes('[imports:end]')) {
           const reducerImport = !hasReducerImport ? `import ${ name }Reducer, { I${ capName }State } from './reducers/${ name }.reducer';\n` : '';
           if (hasEffectImport || !answers.async) {
             effectImport = '';
           }
-
-          // if (hasServiceImport || !answers.async) {
-          //   serviceImport = '';
-          // }
 
           lines[i - 1] = lines[i - 1].replace('', `${ effectImport }${ reducerImport }`);
         }
@@ -331,10 +307,6 @@ function createState(answers, path, name) {
         if (!hasReducerImport && lines[i].includes('[types:end]')) {
           lines[i - 1] = lines[i - 1].replace('', `  ${ name }: I${ capName }State; \n`);
         }
-
-        // if (lines[i].includes('[services:end]')) {
-        //   lines[i - 1] = lines[i - 1].replace('', `    ${ answers.actionName }, \n`);
-        // }
       }
 
       fs.writeFile(indexPath, lines.join('\n'), (err) => {
