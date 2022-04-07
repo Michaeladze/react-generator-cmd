@@ -7,25 +7,19 @@ const testsTemplate = (name, answers) => {
     `import { ${ answers.actionName }Pending, ${ answers.actionName }Success } from '../../actions/${ name }.actions';
 import { ${ answers.actionName }Effect$ } from '../../effects/${ name }.effects';
 import { lastValueFrom, of, throwError } from 'rxjs';
-import { StateObservable } from 'redux-observable';
-import { IStore } from '../../index';
-import { errorAction } from '../../_common/actions';` :
+import { errorAction } from '../../_common/actions';
+import * as service from '../../services/${ answers.name }.services';` :
     `import { ${ answers.actionName }} from '../../actions/${ name }.actions';`;
 
   const asyncTests = answers.async ?
     `
   const action$ = of({ type: ${ answers.actionName }Pending.toString(), payload: ${ getTestPayload(answers.pendingType) } });
-  const state$ = {} as StateObservable<IStore>;
 
   it('should dispatch ${ answers.actionName }Success action', async () => {
     const payload: ${ answers.successType } = ${ getTestPayload(answers.successType) };
-    const dependencies = {
-      services: {
-        ${ answers.actionName }: () => of(payload)
-      }
-    };
+    jest.spyOn(service, '${answers.actionName}').mockReturnValue(of(payload));
 
-    const effect$ = ${ answers.actionName }Effect$(action$, state$, dependencies);
+    const effect$ = ${ answers.actionName }Effect$(action$);
     const action: Action<any> = await lastValueFrom(effect$);
 
     expect(action.type).toBe(${ answers.actionName }Success.toString());
@@ -33,15 +27,8 @@ import { errorAction } from '../../_common/actions';` :
   });
 
   it('should dispatch error action', async () => {
-    const dependencies = {
-      services: {
-        ${ answers.actionName }: () => {
-          return throwError(() => new Error('Test Error'));
-        }
-      }
-    };
-
-    const effect$ = ${ answers.actionName }Effect$(action$, state$, dependencies);
+    jest.spyOn(service, '${answers.actionName}').mockReturnValue(throwError(() => new Error('test')));
+    const effect$ = ${ answers.actionName }Effect$(action$);
     const action: Action<any> = await lastValueFrom(effect$);
 
     expect(action.type).toBe(errorAction.toString());

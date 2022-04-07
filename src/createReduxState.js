@@ -24,7 +24,7 @@ function createReduxState(answers, path) {
 
     createIndex(path);
     createCommonActions(path);
-    createCommonTypes(path);
+    // createCommonTypes(path);
     createTypes(answers, path, name);
     // createMocks(answers, name);
     // answers.initServer && createServer(answers, name);
@@ -284,10 +284,10 @@ function createState(answers, path, name) {
       const capName = answers.name.charAt(0).toUpperCase() + answers.name.slice(1);
       let hasReducerImport = false;
       let hasEffectImport = false;
-      let hasServiceImport = false;
+      // let hasServiceImport = false;
 
       let effectImport = `import { ${ answers.actionName }Effect$ } from './effects/${ name }.effects';\n`;
-      let serviceImport = `import { ${ answers.actionName } } from './services/${ name }.services';\n`;
+      // let serviceImport = `import { ${ answers.actionName } } from './services/${ name }.services';\n`;
 
       for (let i = 0; i < lines.length; i++) {
 
@@ -301,11 +301,11 @@ function createState(answers, path, name) {
           lines[i] = lines[i].replace('}', `${ answers.actionName }Effect$ }`);
         }
 
-        if (answers.async && lines[i].includes(`./services/${ name }.services`)) {
-          hasServiceImport = true;
-          insertComma(lines, i, '}');
-          lines[i] = lines[i].replace('}', `${ answers.actionName } }`);
-        }
+        // if (answers.async && lines[i].includes(`./services/${ name }.services`)) {
+        //   hasServiceImport = true;
+        //   insertComma(lines, i, '}');
+        //   lines[i] = lines[i].replace('}', `${ answers.actionName } }`);
+        // }
 
         if (lines[i].includes('[imports:end]')) {
           const reducerImport = !hasReducerImport ? `import ${ name }Reducer, { I${ capName }State } from './reducers/${ name }.reducer';\n` : '';
@@ -313,11 +313,11 @@ function createState(answers, path, name) {
             effectImport = '';
           }
 
-          if (hasServiceImport || !answers.async) {
-            serviceImport = '';
-          }
+          // if (hasServiceImport || !answers.async) {
+          //   serviceImport = '';
+          // }
 
-          lines[i - 1] = lines[i - 1].replace('', `${ serviceImport }${ effectImport }${ reducerImport }`);
+          lines[i - 1] = lines[i - 1].replace('', `${ effectImport }${ reducerImport }`);
         }
 
         if (!hasReducerImport && lines[i].includes('[reducers:end]')) {
@@ -332,9 +332,9 @@ function createState(answers, path, name) {
           lines[i - 1] = lines[i - 1].replace('', `  ${ name }: I${ capName }State; \n`);
         }
 
-        if (lines[i].includes('[services:end]')) {
-          lines[i - 1] = lines[i - 1].replace('', `    ${ answers.actionName }, \n`);
-        }
+        // if (lines[i].includes('[services:end]')) {
+        //   lines[i - 1] = lines[i - 1].replace('', `    ${ answers.actionName }, \n`);
+        // }
       }
 
       fs.writeFile(indexPath, lines.join('\n'), (err) => {

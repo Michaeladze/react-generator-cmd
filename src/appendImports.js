@@ -27,12 +27,12 @@ function appendImports(types = [], data, path, name, answers, cb) {
 
       // ----------
 
-      if (answers.async && lines[i].includes(`${ name }.services`) && types.includes('services')) {
-        if (!lines[i].includes(answers.actionName)) {
-          insertComma(lines, i, '}');
-          lines[i] = lines[i].replace('}', `${ answers.actionName } }`);
-        }
-      }
+      // if (answers.async && lines[i].includes(`${ name }.services`) && types.includes('services')) {
+      //   if (!lines[i].includes(answers.actionName)) {
+      //     insertComma(lines, i, '}');
+      //     lines[i] = lines[i].replace('}', `${ answers.actionName } }`);
+      //   }
+      // }
 
       // ----------
 
