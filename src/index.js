@@ -23,8 +23,18 @@ inquirer
     },
     {
       type: 'list',
+      name: 'design',
+      message: 'What design do you prefer?',
+      choices: [
+        'Atomic Design',
+        'Domains Design'
+      ],
+      when: (answers) => answers.create === 'Component'
+    },
+    {
+      type: 'list',
       name: 'component',
-      message: 'What type of component?',
+      message: 'What type of the component?',
       choices: [
         '🔬 Atom',
         '🧬 Molecule',
@@ -33,7 +43,13 @@ inquirer
         '✏️ Template',
         '🎆 Popup'
       ],
-      when: (answers) => answers.create === 'Component'
+      when: (answers) => answers.design === 'Atomic Design'
+    },
+    {
+      type: 'input',
+      name: 'domain',
+      message: 'What is the name of the domain?',
+      when: (answers) => answers.design === 'Domains Design'
     },
     {
       type: 'checkbox',

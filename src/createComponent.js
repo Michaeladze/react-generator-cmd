@@ -7,9 +7,19 @@ function createComponent(answers, path) {
   path += '/components';
   mkDir(path);
 
-  const componentFolder = answers.component.split(' ')[1].toLowerCase() + 's';
-  path += `/${ componentFolder }`;
-  mkDir(path);
+  if (answers.design === 'Atomic Design') {
+    const componentFolder = answers.component.split(' ')[1].toLowerCase() + 's';
+    path += `/${ componentFolder }`;
+    mkDir(path);
+  } else {
+    path += '/domains'
+    mkDir(path);
+    const tmp = answers.domain.split('');
+    tmp[0] = tmp[0].toUpperCase();
+    const componentFolder = tmp.join('');
+    path += `/${ componentFolder }`;
+    mkDir(path);
+  }
 
   const componentName = answers.name.charAt(0).toUpperCase() + answers.name.slice(1)
 
