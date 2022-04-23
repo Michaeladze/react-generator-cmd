@@ -91,7 +91,8 @@ export default ${ name };
 // ---------------------------------------------------------------------------------------------------------------------
 
 const indexTemplate = (name) => {
-  return `import ${ name } from './${ name }';
+  return `/* istanbul ignore file */
+import ${ name } from './${ name }';
 
 export default ${ name };
 `
