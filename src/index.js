@@ -26,7 +26,7 @@ inquirer
       name: 'component',
       message: 'What type of the component?',
       choices: [
-        'Component',
+        'Shared',
         'Feature',
         'Page',
         'Template',

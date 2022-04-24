@@ -4,10 +4,10 @@ const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
 
 function createComponent(answers, path) {
-  // path += '/components';
-  // mkDir(path);
+  path += '/components';
+  mkDir(path);
 
-  const componentFolder = answers.component.toLowerCase() + 's';
+  const componentFolder = answers.component.toLowerCase() + (answers.component === 'Shared' ? '' : 's');
   path += `/${ componentFolder }`;
   mkDir(path);
 
