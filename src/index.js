@@ -23,33 +23,22 @@ inquirer
     },
     {
       type: 'list',
-      name: 'design',
-      message: 'What design do you prefer?',
+      name: 'component',
+      message: 'What type of the component?',
       choices: [
-        'Atomic Design',
-        'Domains Design'
+        'Component',
+        'Feature',
+        'Page',
+        'Template',
+        'Popup'
       ],
       when: (answers) => answers.create === 'Component'
     },
     {
-      type: 'list',
-      name: 'component',
-      message: 'What type of the component?',
-      choices: [
-        '🔬 Atom',
-        '🧬 Molecule',
-        '🦍 Organism',
-        '📄 Page',
-        '✏️ Template',
-        '🎆 Popup'
-      ],
-      when: (answers) => answers.design === 'Atomic Design'
-    },
-    {
       type: 'input',
-      name: 'domain',
-      message: 'What is the name of the domain?',
-      when: (answers) => answers.design === 'Domains Design'
+      name: 'feature',
+      message: 'What is the name of the feature?',
+      when: (answers) => answers.component === 'Feature'
     },
     {
       type: 'checkbox',
@@ -89,7 +78,7 @@ inquirer
       message: 'Create component with:',
       choices: [
         {
-          name: 'Redux'
+          name: 'Dispatch and Selector'
         },
         {
           name: 'Children'

@@ -10,7 +10,7 @@ const tsxTemplate = (name, answers) => {
   let childrenImport = false;
 
   answers.componentOptions.forEach((o) => {
-    if (o === 'Redux') {
+    if (o === 'Dispatch and Selector') {
       storeImport = `import { useDispatch, useSelector } from 'react-redux';\nimport { IStore } from '../../../_store';\n`;
     }
 

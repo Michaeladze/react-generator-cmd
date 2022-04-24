@@ -4,20 +4,16 @@ const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
 
 function createComponent(answers, path) {
-  path += '/components';
+  // path += '/components';
+  // mkDir(path);
+
+  const componentFolder = answers.component.toLowerCase() + 's';
+  path += `/${ componentFolder }`;
   mkDir(path);
 
-  if (answers.design === 'Atomic Design') {
-    const componentFolder = answers.component.split(' ')[1].toLowerCase() + 's';
-    path += `/${ componentFolder }`;
-    mkDir(path);
-  } else {
-    path += '/domains'
-    mkDir(path);
-    const tmp = answers.domain.split('');
-    tmp[0] = tmp[0].toUpperCase();
-    const componentFolder = tmp.join('');
-    path += `/${ componentFolder }`;
+  if (answers.feature) {
+    const featureName = answers.feature.charAt(0).toUpperCase() + answers.feature.slice(1)
+    path += `/${ featureName }`;
     mkDir(path);
   }
 
