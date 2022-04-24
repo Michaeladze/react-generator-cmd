@@ -177,7 +177,7 @@ inquirer
       path += 'packages/' + answers.package;
     }
 
-    path += `/src`;
+    path += (path === '' ? '.' : '') + `/src` ;
     mkDir(path);
 
     if (answers.create === 'Component') {

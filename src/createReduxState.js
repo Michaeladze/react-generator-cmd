@@ -264,7 +264,7 @@ function createReducer(answers, path, name) {
 // ---------------------------------------------------------------------------------------------------------------------
 
 function createState(answers, path, name) {
-  const indexPath = `./src/_store/index.ts`;
+  const indexPath = `${path}/index.ts`;
 
   fs.readFile(indexPath, { encoding: 'utf8' }, (err, data) => {
     if (data) {
