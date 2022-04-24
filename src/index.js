@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { mkDir } = require('./mk');
+const { mkDir, fileExists, readDirSync } = require('./mk');
 const { createComponent } = require('./createComponent');
 const { createReduxState } = require('./createReduxState');
 const { createRouter } = require('./createRouter');
@@ -11,6 +11,15 @@ const { createHusky } = require('./createHusky');
 
 inquirer
   .prompt([
+    {
+      type: 'list',
+      name: 'package',
+      message: 'What package you are working with?',
+      choices: () => {
+        return readDirSync('./packages');
+      },
+      when: () => fileExists('./lerna.json')
+    },
     {
       type: 'list',
       name: 'create',
@@ -162,7 +171,13 @@ inquirer
     }
   ])
   .then(answers => {
-    let path = `./src`;
+    let path = '';
+
+    if (answers.package) {
+      path += 'packages/' + answers.package;
+    }
+
+    path += `/src`;
     mkDir(path);
 
     if (answers.create === 'Component') {

@@ -14,6 +14,14 @@ const mkFile = (path, data, cb) => {
   }
 };
 
+const fileExists = (path) => {
+  return fs.existsSync(path);
+}
+
+const readDirSync = (path) => {
+  return fs.readdirSync(path);
+}
+
 module.exports = {
-  mkDir, mkFile
+  mkDir, mkFile, fileExists, readDirSync
 }
