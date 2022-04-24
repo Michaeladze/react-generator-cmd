@@ -44,10 +44,41 @@ inquirer
       when: (answers) => answers.create === 'Component'
     },
     {
-      type: 'input',
+      type: 'list',
       name: 'feature',
       message: 'What is the name of the feature?',
-      when: (answers) => answers.component === 'Feature'
+      choices: (answers) => {
+        let path = './';
+
+        if (answers.package) {
+          path += `packages/${answers.package}/`;
+        }
+
+        path += 'src/components/features'
+
+        return ['[Create New Feature]', ...readDirSync(path)];
+      },
+      when: (answers) => {
+        let path = './';
+
+        if (answers.package) {
+          path += `packages/${answers.package}`;
+        }
+
+        path += '/src/components';
+
+        if (fileExists(path)) {
+          path += '/features';
+        }
+
+        return fileExists(path);
+      }
+    },
+    {
+      type: 'input',
+      name: 'newFeatureName',
+      message: 'How do you want to call the feature?',
+      when: (answers) => answers.component === 'Feature' && (answers.feature === 'New' || !answers.feature)
     },
     {
       type: 'checkbox',

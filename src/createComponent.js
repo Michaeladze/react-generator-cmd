@@ -11,13 +11,15 @@ function createComponent(answers, path) {
   path += `/${ componentFolder }`;
   mkDir(path);
 
-  if (answers.feature) {
-    const featureName = answers.feature.charAt(0).toUpperCase() + answers.feature.slice(1)
+  if (answers.feature === 'New' || answers.newFeatureName) {
+    const featureName = answers.newFeatureName.charAt(0).toUpperCase() + answers.newFeatureName.slice(1);
     path += `/${ featureName }`;
     mkDir(path);
+  } else if (answers.feature) {
+    path += `/${ answers.feature }`;
   }
 
-  const componentName = answers.name.charAt(0).toUpperCase() + answers.name.slice(1)
+  const componentName = answers.name.charAt(0).toUpperCase() + answers.name.slice(1);
 
   path += `/${ componentName }`;
   mkDir(path);
@@ -33,4 +35,4 @@ function createComponent(answers, path) {
 
 module.exports = {
   createComponent
-}
+};
