@@ -59,6 +59,10 @@ inquirer
         return ['[Create New Feature]', ...readDirSync(path)];
       },
       when: (answers) => {
+        if (answers.component !== 'Feature') {
+          return false;
+        }
+
         let path = './';
 
         if (answers.package) {
@@ -78,7 +82,8 @@ inquirer
       type: 'input',
       name: 'newFeatureName',
       message: 'How do you want to call the feature?',
-      when: (answers) => answers.component === 'Feature' && (answers.feature === 'New' || !answers.feature)
+      when: (answers) => answers.component === 'Feature' && (answers.feature === '[Create New Feature]' || !answers.feature),
+      validate: (input) => input !== ''
     },
     {
       type: 'checkbox',
@@ -110,7 +115,8 @@ inquirer
       type: 'input',
       name: 'name',
       message: 'How to name files?',
-      when: (answers => answers.create !== 'Init')
+      when: (answers => answers.create !== 'Init'),
+      validate: (input) => input !== ''
     },
     {
       type: 'checkbox',
@@ -155,13 +161,15 @@ inquirer
       type: 'input',
       name: 'actionName',
       message: 'How to name Actions?',
-      when: (answers) => answers.create === 'Redux State'
+      when: (answers) => answers.create === 'Redux State',
+      validate: (input) => input !== ''
     },
     {
       type: 'input',
       name: 'description',
       message: 'Description',
-      when: (answers) => answers.create === 'Redux State'
+      when: (answers) => answers.create === 'Redux State',
+      validate: (input) => input !== ''
     },
     {
       type: 'input',
@@ -179,7 +187,8 @@ inquirer
       type: 'input',
       name: 'reducerKey',
       message: 'Name of a key in the reducer',
-      when: (answers) => answers.create === 'Redux State'
+      when: (answers) => answers.create === 'Redux State',
+      validate: (input) => input !== ''
     },
     {
       type: 'list',

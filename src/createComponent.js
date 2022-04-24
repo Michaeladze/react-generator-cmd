@@ -11,7 +11,7 @@ function createComponent(answers, path) {
   path += `/${ componentFolder }`;
   mkDir(path);
 
-  if (answers.feature === 'New' || answers.newFeatureName) {
+  if (answers.feature === '[Create New Feature]' || answers.newFeatureName) {
     const featureName = answers.newFeatureName.charAt(0).toUpperCase() + answers.newFeatureName.slice(1);
     path += `/${ featureName }`;
     mkDir(path);
