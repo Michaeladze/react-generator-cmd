@@ -43,7 +43,7 @@ function createComponent(answers, fullPath, json) {
   }
 
   if (json.router.pageAlias && Object.values(answers).some((v) => v === json.router.pageAlias)) {
-    let routerPath = `${json.root}/router`;
+    let routerPath = `${json.router.path}`;
     mkDir(routerPath);
     routerPath += '/router.tsx';
     mkFile(routerPath, routerTemplate());
@@ -51,7 +51,7 @@ function createComponent(answers, fullPath, json) {
   }
 
   runLinter(path);
-  runLinter(`${json.root}/router`);
+  runLinter(`${json.router.path}`);
 }
 
 module.exports = {

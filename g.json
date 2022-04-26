@@ -18,6 +18,7 @@
   "testAlias": "spec",
   "explicit": false,
   "router": {
+    "path": "/router",
     "pageAlias": "pages"
   }
 }
