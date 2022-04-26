@@ -9,6 +9,19 @@ function appendRouter(componentName, answers, path, routerPath) {
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].includes('export const routes')) {
         lines[i - 2] = lines[i - 2] + '\n' + importStr;
+        break;
+      }
+    }
+
+    const template = `{
+        path: '${answers.route}',
+        element: <Suspense fallback=''><${componentName}/></Suspense>
+    },`;
+
+    for (let i = lines.length -1; i >= 0; i--) {
+      if (lines[i] === '];') {
+        lines[i] = template + '\n' + lines[i];
+        break;
       }
     }
 
@@ -19,7 +32,6 @@ function appendRouter(componentName, answers, path, routerPath) {
     });
 
   });
-
 }
 
 module.exports = {

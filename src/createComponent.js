@@ -51,6 +51,7 @@ function createComponent(answers, fullPath, json) {
   }
 
   runLinter(path);
+  runLinter(`${json.root}/router`);
 }
 
 module.exports = {
