@@ -39,18 +39,31 @@ To run tests add this lines to package.json
 
 ## Config
 
+`root` - The root folder where files are created
+
+`structure` - the structure of your folders in the project. You can add dynamic names by using `:` prefix. When generator detects the dynamic name, it will ask to create new folder inside it or select the existing one.
+
+`css` - accepts values `css | scss | less | styled`. 
+
+`reduxFolder` - the folder where redux is stored.
+
+`testAlias` - `spec | test`.
+
+`explicit` - boolean. By default, is set to `false`. If a folder contains just one folder inside, with explicit flag equal to true generator will still ask you about that folder.
+
+#### Example:
 ```json
 {
   "root": "./src",
   "structure": {
     "components": {
-      "Shared": "",
-      "Features": {
+      "shared": "",
+      "features": {
         ":id": ""
       },
-      "Pages": "",
-      "Templates": "",
-      "Popups": ""
+      "pages": "",
+      "templates": "",
+      "popups": ""
     }
   },
   "css": "styled",
