@@ -26,20 +26,18 @@ function createComponent(answers, fullPath, json) {
     mkFile(`${ path }/${ componentName }.${ testAlias }.tsx`, componentTestTemplate(componentName, answers));
   }
 
-  if (json.css === 'styled') {
-    mkFile(`${ path }/${ componentName }.styled.tsx`, styledComponentTemplate(componentName, answers, json));
-  }
-
-  if (json.css === 'css') {
-    mkFile(`${ path }/${ componentName }.css`, '');
-  }
-
-  if (json.css === 'scss') {
-    mkFile(`${ path }/${ componentName }.scss`, '');
-  }
-
-  if (json.css === 'less') {
-    mkFile(`${ path }/${ componentName }.less`, '');
+  switch (json.css) {
+    case 'styled':
+      mkFile(`${ path }/${ componentName }.styled.tsx`, styledComponentTemplate(componentName, answers, json));
+      break;
+    case 'scss':
+      mkFile(`${ path }/${ componentName }.scss`, '');
+      break;
+    case 'less':
+      mkFile(`${ path }/${ componentName }.less`, '');
+      break;
+    default:
+      mkFile(`${ path }/${ componentName }.css`, '');
   }
 
   runLinter(path);

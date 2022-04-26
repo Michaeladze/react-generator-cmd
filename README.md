@@ -36,3 +36,26 @@ To run tests add this lines to package.json
     "testEnvironment": "jsdom"
   }
 ```
+
+## Config
+
+```json
+{
+  "root": "./src",
+  "structure": {
+    "components": {
+      "Shared": "",
+      "Features": {
+        ":id": ""
+      },
+      "Pages": "",
+      "Templates": "",
+      "Popups": ""
+    }
+  },
+  "css": "styled",
+  "reduxFolder": "redux",
+  "testAlias": "spec",
+  "explicit": false
+}
+```
