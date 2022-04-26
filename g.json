@@ -2,15 +2,13 @@
   "root": "./src",
   "structure": {
     "components": {
-      ":id": {
-        "shared": "",
-        "features": {
-          ":id": ""
-        },
-        "pages": "",
-        "templates": "",
-        "popups": ""
-      }
+      "shared": "",
+      "features": {
+        ":id": ""
+      },
+      "pages": "",
+      "templates": "",
+      "popups": ""
     }
   },
   "css": "styled",

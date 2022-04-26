@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function appendRouter(componentName, answers, path, routerPath) {
-  const importStr = `const ${ componentName } = lazy(() => import('.${ path }'));`;
+  const importStr = `const ${ componentName } = lazy(() => import('${ path.replace('../', '') }'));`;
 
   fs.readFile(routerPath, { encoding: 'utf8' }, (err, data) => {
     const lines = data.split('\n');

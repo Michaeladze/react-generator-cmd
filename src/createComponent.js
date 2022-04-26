@@ -4,6 +4,7 @@ const { appendRouter } = require('./appendRouter');
 const { componentTestTemplate } = require('./templates/components/tests');
 const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
+const nodePath = require('path');
 
 function createComponent(answers, fullPath, json) {
   const pathArr = fullPath.split('/').filter((s) => s !== '' && s !== '.');
@@ -43,11 +44,23 @@ function createComponent(answers, fullPath, json) {
   }
 
   if (json.router.pageAlias && Object.values(answers).some((v) => v === json.router.pageAlias)) {
-    let routerPath = `${json.router.path}`;
-    mkDir(routerPath);
+    let routerPath = `${json.root}${json.router.path}`;
+
+    const pathArr = routerPath.split('/').filter((s) => s !== '' && s !== '.');
+    let tmpPath = '.';
+
+    while (pathArr.length > 0) {
+      const folder = pathArr.shift();
+      tmpPath += `/${ folder }`;
+      mkDir(tmpPath);
+    }
+
     routerPath += '/router.tsx';
     mkFile(routerPath, routerTemplate());
-    appendRouter(componentName, answers, path, routerPath);
+
+    nodePath.relative(routerPath, path);
+
+    appendRouter(componentName, answers, nodePath.relative(routerPath, path), routerPath);
   }
 
   runLinter(path);
