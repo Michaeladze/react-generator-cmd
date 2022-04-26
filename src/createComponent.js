@@ -1,4 +1,4 @@
-const { tsxTemplate, indexTemplate } = require('./templates/components/component');
+const { tsxTemplate, indexTemplate, styledComponentTemplate } = require('./templates/components/component');
 const { componentTestTemplate } = require('./templates/components/tests');
 const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
@@ -26,7 +26,21 @@ function createComponent(answers, fullPath, json) {
     mkFile(`${ path }/${ componentName }.${ testAlias }.tsx`, componentTestTemplate(componentName, answers));
   }
 
-  mkFile(`${ path }/${ componentName }.scss`, '');
+  if (json.css === 'styled') {
+    mkFile(`${ path }/${ componentName }.styled.tsx`, styledComponentTemplate(componentName, answers, json));
+  }
+
+  if (json.css === 'css') {
+    mkFile(`${ path }/${ componentName }.css`, '');
+  }
+
+  if (json.css === 'scss') {
+    mkFile(`${ path }/${ componentName }.scss`, '');
+  }
+
+  if (json.css === 'less') {
+    mkFile(`${ path }/${ componentName }.less`, '');
+  }
 
   runLinter(path);
 }

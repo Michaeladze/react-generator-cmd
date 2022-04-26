@@ -59,8 +59,27 @@ const tsxTemplate = (name, answers, json) => {
     routerDomImport = `import { ${routerDomImport} } from 'react-router-dom';\n`;
   }
 
+  let styledPrefix = ''
+  let cssExtension = '';
+
+  switch (json.css) {
+    case 'styled':
+      styledPrefix = 'SC from ';
+      cssExtension = '.styled';
+      break;
+    case 'scss':
+      cssExtension = '.scss';
+      break;
+    case 'less':
+      cssExtension = '.less';
+      break;
+    default:
+      cssExtension = '.css';
+  }
+
+
   return `import React${childrenImport ? ', { ReactNode } ' : ''} from 'react';
-import './${ name }.scss';
+import ${styledPrefix}'./${ name }${cssExtension}';
 ${storeImport}${routerDomImport}${formImport}
 
 interface IProps {
@@ -100,7 +119,21 @@ export default ${ name };
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+const styledComponentTemplate = (name, answers, json) => {
+  return `import styled from 'styled-components/macro';
+  
+const ${name}Wrapper = styled.div\`\`;
+
+export default {
+  ${name}Wrapper
+}
+`
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 module.exports = {
   tsxTemplate,
-  indexTemplate
+  indexTemplate,
+  styledComponentTemplate
 }

@@ -1,6 +1,5 @@
 {
   "root": "./src",
-  "testAlias": "spec",
   "structure": {
     "components": {
       "Shared": "",
@@ -12,6 +11,8 @@
       "Popups": ""
     }
   },
-  "explicit": false,
-  "reduxFolder": "redux"
+  "css": "styled",
+  "reduxFolder": "redux",
+  "testAlias": "spec",
+  "explicit": false
 }
