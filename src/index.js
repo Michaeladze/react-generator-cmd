@@ -1,9 +1,9 @@
 const inquirer = require('inquirer');
-const { fileExists, readDirSync } = require('./src/mk');
-const { createComponent } = require('./src/createComponent');
-const { createReduxState } = require('./src/createReduxState')
-const readGJSON = require('./src/_readGJSON.js');
-const getReduxQuestions = require('./src/questions/redux.js');
+const { fileExists, readDirSync } = require('./mk');
+const { createComponent } = require('./createComponent');
+const { createReduxState } = require('./createReduxState')
+const readGJSON = require('./_readGJSON.js');
+const getReduxQuestions = require('./questions/redux.js');
 
 // const { createRouter } = require('./createRouter');
 // const { createInterceptor } = require('./createInterceptor');

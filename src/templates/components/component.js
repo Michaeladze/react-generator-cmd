@@ -1,4 +1,4 @@
-const tsxTemplate = (name, answers) => {
+const tsxTemplate = (name, answers, json) => {
 
   let storeImport = '';
   let routerDomImport = '';
@@ -11,7 +11,7 @@ const tsxTemplate = (name, answers) => {
 
   answers.componentOptions.forEach((o) => {
     if (o === 'Dispatch and Selector') {
-      storeImport = `import { useDispatch, useSelector } from 'react-redux';\nimport { IStore } from '../../../_store';\n`;
+      storeImport = `import { useDispatch, useSelector } from 'react-redux';\nimport { IStore } from '../../../${json.reduxFolder}';\n`;
     }
 
     if (o === 'useLocation') {

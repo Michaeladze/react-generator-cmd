@@ -5,14 +5,13 @@
     "components": {
       "Shared": "",
       "Features": {
-        ":id": {
-          "One": ""
-        }
+        ":id": ""
       },
       "Pages": "",
       "Templates": "",
       "Popups": ""
     }
   },
-  "explicit": true
+  "explicit": false,
+  "reduxFolder": "redux"
 }

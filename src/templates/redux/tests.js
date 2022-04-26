@@ -3,6 +3,8 @@ const { typesImport } = require('../../utils');
 
 const testsTemplate = (name, answers) => {
 
+  const successType = answers.successType || 'any';
+
   const asyncImports = answers.async ?
     `import { ${ answers.actionName }Pending, ${ answers.actionName }Success } from '../../actions/${ name }.actions';
 import { ${ answers.actionName }Effect$ } from '../../effects/${ name }.effects';
@@ -16,7 +18,7 @@ import * as service from '../../services/${ answers.name }.services';` :
   const action$ = of({ type: ${ answers.actionName }Pending.toString(), payload: ${ getTestPayload(answers.pendingType) } });
 
   it('should dispatch ${ answers.actionName }Success action', async () => {
-    const payload: ${ answers.successType } = ${ getTestPayload(answers.successType) };
+    const payload: ${ successType } = ${ getTestPayload(answers.successType) };
     jest.spyOn(service, '${answers.actionName}').mockReturnValue(of(payload));
 
     const effect$ = ${ answers.actionName }Effect$(action$);
@@ -49,7 +51,7 @@ describe('Tests for ${ answers.actionName }', () => {
   });
 
   it('should handle ${ answers.actionName }Success action', () => {
-    const payload: ${ answers.successType } = ${ getTestPayload(answers.successType) };
+    const payload: ${ successType } = ${ getTestPayload(answers.successType) };
     const action: Action<any> = { type: ${ answers.actionName }${ answers.async ? 'Success' : '' }.toString(), payload };
     const nextState = ${ name }Reducer(initialState, action);
     expect(nextState).toEqual({

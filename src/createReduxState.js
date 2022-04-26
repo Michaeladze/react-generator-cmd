@@ -16,7 +16,7 @@ const { getTestPayload } = require('./utils');
 
 function createReduxState(answers, path, json) {
   if (answers.name && answers.actionName) {
-    path += '/_store';
+    path += `/${json.reduxFolder}`;
     mkDir(path);
 
     const name = answers.name.charAt(0).toLowerCase() + answers.name.slice(1);
@@ -38,7 +38,7 @@ function createReduxState(answers, path, json) {
 
     createReducer(answers, path, name);
     createState(answers, path, name);
-    runLinter('./_store');
+    runLinter(`./${json.reduxFolder}`);
   } else {
     console.log('No action name was provided');
   }
@@ -49,57 +49,6 @@ function createReduxState(answers, path, json) {
 function createIndex(path) {
   const file = path + '/index.ts';
   mkFile(file, storeIndexTemplate());
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-function createMocks(answers, name) {
-
-  if (!answers.successType) {
-    return;
-  }
-
-  const isArray = answers.successType.includes('[]');
-  let successType = answers.successType;
-  if (isArray) {
-    successType = answers.successType.replace('[]', '');
-  }
-
-  const interMock = 'node ./node_modules/intermock/build/src/cli/index.js';
-  const files = `--files ./src/_store/types/${ answers.name }.types.ts`;
-  const interfaces = `--interfaces "${ successType }"`;
-  const outputFormat = '--outputFormat json';
-
-  const command = `${ interMock } ${ files } ${ interfaces } ${ outputFormat }`;
-
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.log(`error: ${ error.message }`);
-      return;
-    }
-    if (stderr) {
-      console.log(`stderr: ${ stderr }`);
-      return;
-    }
-
-    let path = 'backend';
-    mkDir(path);
-
-    path += '/mocks';
-    mkDir(path);
-
-    path += `/${ name }`;
-    mkDir(path);
-
-    path += `/${ answers.actionName }.json`;
-    let data = JSON.stringify(JSON.parse(stdout)[successType]);
-
-    if (isArray) {
-      data = `[${ data }]`;
-    }
-
-    mkFile(path, data);
-  });
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

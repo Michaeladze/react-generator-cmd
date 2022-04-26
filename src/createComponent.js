@@ -19,7 +19,7 @@ function createComponent(answers, fullPath, json) {
   path += `/${ componentName }`;
   mkDir(path);
   mkFile(`${ path }/index.ts`, indexTemplate(componentName));
-  mkFile(`${ path }/${ componentName }.tsx`, tsxTemplate(componentName, answers));
+  mkFile(`${ path }/${ componentName }.tsx`, tsxTemplate(componentName, answers, json));
 
   if (answers.tests) {
     const testAlias = json.testAlias || 'spec';
