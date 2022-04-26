@@ -39,6 +39,8 @@ To run tests add this lines to package.json
 
 ## Config
 
+Create a `g.json` file in the root folder.
+
 `root` - The root folder where files are created
 
 `structure` - the structure of your folders in the project. You can add dynamic names by using `:` prefix. When generator detects the dynamic name, it will ask to create new folder inside it or select the existing one.
