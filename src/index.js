@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const { fileExists, readDirSync } = require('./mk');
 const { createComponent } = require('./createComponent');
-const { createReduxState } = require('./createReduxState')
+const { createReduxState } = require('./createReduxState');
 const readGJSON = require('./_readGJSON.js');
 const getReduxQuestions = require('./questions/redux.js');
 
@@ -30,7 +30,7 @@ const answers = {};
 
 inquirer.prompt(prompts).ui.process.subscribe(
   (q) => {
-    answers[q.name] = q.answer
+    answers[q.name] = q.answer;
 
     if (q.name === 'create') {
       if (q.answer === 'Redux State') {
@@ -64,14 +64,26 @@ inquirer.prompt(prompts).ui.process.subscribe(
           name: `components_${ depth }`,
           message: 'Where to create a component?',
           choices: Object.keys(structure)
-        })
+        });
       }
 
       return;
     }
 
     if (q.name === 'tests') {
-      prompts.complete();
+      if (!json.router.pageAlias || !Object.values(answers).some((v) => v === json.router.pageAlias)) {
+        prompts.complete();
+      } else {
+        prompts.next({
+          type: 'input',
+          name: 'route',
+          message: 'What route?',
+          when: (answers) => {
+            return answers.create === 'Component';
+          }
+        });
+      }
+
       return;
     }
 
@@ -87,6 +99,11 @@ inquirer.prompt(prompts).ui.process.subscribe(
         default: true,
         when: (answers) => answers.create === 'Component'
       });
+      return;
+    }
+
+    if (q.name === 'route') {
+      prompts.complete();
       return;
     }
 
@@ -175,7 +192,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
           ];
         }
 
-        return  Object.keys(structure);
+        return Object.keys(structure);
       }
     });
   },

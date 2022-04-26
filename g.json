@@ -1,0 +1,21 @@
+{
+  "root": "./src",
+  "structure": {
+    "components": {
+      "shared": "",
+      "features": {
+        ":id": ""
+      },
+      "pages": "",
+      "templates": "",
+      "popups": ""
+    }
+  },
+  "css": "styled",
+  "reduxFolder": "redux",
+  "testAlias": "spec",
+  "explicit": false,
+  "router": {
+    "pageAlias": "pages"
+  }
+}

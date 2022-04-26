@@ -1,4 +1,6 @@
 const { tsxTemplate, indexTemplate, styledComponentTemplate } = require('./templates/components/component');
+const { routerTemplate } = require('./templates/general/router');
+const { appendRouter } = require('./appendRouter');
 const { componentTestTemplate } = require('./templates/components/tests');
 const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
@@ -38,6 +40,14 @@ function createComponent(answers, fullPath, json) {
       break;
     default:
       mkFile(`${ path }/${ componentName }.css`, '');
+  }
+
+  if (json.router.pageAlias && Object.values(answers).some((v) => v === json.router.pageAlias)) {
+    let routerPath = `${json.root}/router`;
+    mkDir(routerPath);
+    routerPath += '/router.tsx';
+    mkFile(routerPath, routerTemplate());
+    appendRouter(componentName, answers, path, routerPath);
   }
 
   runLinter(path);
