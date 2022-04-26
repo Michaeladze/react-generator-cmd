@@ -59,11 +59,28 @@ inquirer.prompt(prompts).ui.process.subscribe(
           }
         }
 
+        const keys = structure ? Object.keys(structure) : [];
+        dynamicKey = keys.find((k) => k[0] === ':') || undefined;
+
         prompts.next({
           type: 'list',
           name: `components_${ depth }`,
           message: 'Where to create a component?',
-          choices: Object.keys(structure)
+          choices: () => {
+            if (dynamicKey) {
+              let dir = [];
+              if (fileExists(componentsPath)) {
+                dir = readDirSync(componentsPath);
+              }
+
+              return [
+                '[Create New]',
+                ...dir
+              ];
+            }
+
+            return Object.keys(structure);
+          }
         });
       }
 
