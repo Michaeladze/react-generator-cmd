@@ -22,6 +22,8 @@ const readDirSync = (path) => {
   return fs.readdirSync(path);
 }
 
+const readFileSync = fs.readFileSync;
+
 module.exports = {
-  mkDir, mkFile, fileExists, readDirSync
+  mkDir, mkFile, fileExists, readDirSync, readFileSync
 }

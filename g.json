@@ -1,0 +1,18 @@
+{
+  "root": "./src",
+  "testAlias": "spec",
+  "structure": {
+    "components": {
+      "Shared": "",
+      "Features": {
+        ":id": {
+          "One": ""
+        }
+      },
+      "Pages": "",
+      "Templates": "",
+      "Popups": ""
+    }
+  },
+  "explicit": true
+}

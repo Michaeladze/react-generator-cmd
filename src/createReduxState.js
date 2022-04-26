@@ -14,7 +14,7 @@ const { testsTemplate } = require('./templates/redux/tests');
 const { runLinter } = require('./runLinter');
 const { getTestPayload } = require('./utils');
 
-function createReduxState(answers, path) {
+function createReduxState(answers, path, json) {
   if (answers.name && answers.actionName) {
     path += '/_store';
     mkDir(path);
@@ -33,7 +33,7 @@ function createReduxState(answers, path) {
     }
 
     if (answers.tests) {
-      createTests(answers, path, name);
+      createTests(answers, path, name, json);
     }
 
     createReducer(answers, path, name);
@@ -330,14 +330,16 @@ function createServer(answers, name) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function createTests(answers, path, name) {
+function createTests(answers, path, name, json) {
   path += '/_tests';
   mkDir(path);
 
   path += `/${name}`;
   mkDir(path);
 
-  path += `/${ answers.actionName }.spec.ts`;
+  const testAlias = json.testAlias || 'spec';
+
+  path += `/${ answers.actionName }.${testAlias}.ts`;
   mkFile(path, testsTemplate(name, answers));
 }
 

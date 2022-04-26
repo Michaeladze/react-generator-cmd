@@ -3,31 +3,29 @@ const { componentTestTemplate } = require('./templates/components/tests');
 const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
 
-function createComponent(answers, path) {
-  path += '/components';
-  mkDir(path);
+function createComponent(answers, fullPath, json) {
+  const pathArr = fullPath.split('/').filter((s) => s !== '' && s !== '.');
+  let path = '.';
 
-  const componentFolder = answers.component.toLowerCase() + (answers.component === 'Shared' ? '' : 's');
-  path += `/${ componentFolder }`;
-  mkDir(path);
-
-  if (answers.feature === '[Create New Feature]' || answers.newFeatureName) {
-    const featureName = answers.newFeatureName.charAt(0).toUpperCase() + answers.newFeatureName.slice(1);
-    path += `/${ featureName }`;
+  while (pathArr.length > 1) {
+    const folder = pathArr.shift();
+    path += `/${ folder }`;
     mkDir(path);
-  } else if (answers.feature) {
-    path += `/${ answers.feature }`;
   }
 
-  const componentName = answers.name.charAt(0).toUpperCase() + answers.name.slice(1);
+  const fileName = pathArr[0];
+  const componentName = fileName.charAt(0).toUpperCase() + fileName.slice(1);
 
   path += `/${ componentName }`;
   mkDir(path);
   mkFile(`${ path }/index.ts`, indexTemplate(componentName));
   mkFile(`${ path }/${ componentName }.tsx`, tsxTemplate(componentName, answers));
+
   if (answers.tests) {
-    mkFile(`${ path }/${ componentName }.spec.tsx`, componentTestTemplate(componentName, answers));
+    const testAlias = json.testAlias || 'spec';
+    mkFile(`${ path }/${ componentName }.${ testAlias }.tsx`, componentTestTemplate(componentName, answers));
   }
+
   mkFile(`${ path }/${ componentName }.scss`, '');
 
   runLinter(path);
