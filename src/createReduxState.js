@@ -48,7 +48,7 @@ function createReduxState(answers, path, json) {
 
 function createIndex(answers, path, json) {
   const file = path + '/index.ts';
-  if (!json.redux.mainApplication && !json.applications) {
+  if (!json.redux.mainApplication || !json.applications) {
     mkFile(file, storeIndexMainTemplate());
   } else {
     const appName = answers.application === '[Create New]' ? answers.applicationName : answers.application;

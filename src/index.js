@@ -32,6 +32,16 @@ inquirer.prompt(prompts).ui.process.subscribe(
   (q) => {
     answers[q.name] = q.answer;
 
+    if (q.name === 'application' || q.name === 'applicationName') {
+      const appName = answers.application === '[Create New]' ? answers.applicationName : answers.application;
+      if (json.applications && appName) {
+        const newRoot = `${json.root}${json.applications}/${appName}`;
+        componentsPath = componentsPath.replace(json.root, newRoot);
+        json.root = newRoot;
+        componentsPath = componentsPath.split('/').filter((s) => s !== '').join('/');
+      }
+    }
+
     if (q.name === 'create') {
       if (q.answer === 'Redux State') {
         getReduxQuestions(prompts, answers);
@@ -203,6 +213,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
       choices: () => {
         if (dynamicKey) {
           let dir = [];
+
           if (fileExists(componentsPath)) {
             dir = readDirSync(componentsPath);
           }
@@ -221,13 +232,6 @@ inquirer.prompt(prompts).ui.process.subscribe(
     console.log(error);
   },
   () => {
-    const appName = answers.application === '[Create New]' ? answers.applicationName : answers.application;
-    if (json.applications && appName) {
-      const newRoot = `${json.root}${json.applications}/${appName}`;
-      componentsPath = componentsPath.replace(json.root, newRoot);
-      json.root = newRoot;
-    }
-
     componentsPath = componentsPath.split('/').filter((s) => s !== '').join('/');
 
     if (answers.create === 'Component') {
