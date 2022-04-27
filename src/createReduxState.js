@@ -38,7 +38,7 @@ function createReduxState(answers, path, json) {
 
     createReducer(answers, path, name);
     createState(answers, path, name);
-    runLinter(`./${json.reduxFolder}`);
+    runLinter(`${json.root}`);
   } else {
     console.log('No action name was provided');
   }

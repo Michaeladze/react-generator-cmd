@@ -5,6 +5,7 @@ const tsxTemplate = (name, answers, json) => {
   let useHistory = '';
   let useLocation = '';
   let useParams = '';
+  let outlet = '';
   let formImport = '';
   let formTemplate = '';
   let childrenImport = false;
@@ -27,6 +28,11 @@ const tsxTemplate = (name, answers, json) => {
     if (o === 'useParams') {
       useParams = '  const params = useParams<{}>();\n';
       routerDomImport += routerDomImport === '' ? 'useParams' : ', useParams';
+    }
+
+    if (o === 'Nested routes') {
+      outlet = '<Outlet/>';
+      routerDomImport += routerDomImport === '' ? 'Outlet' : ', Outlet';
     }
 
     if (o === 'Children') {
@@ -98,7 +104,7 @@ const ${ name }: React.FC<IProps> = ({${childrenImport ? 'children' : ''}}: IPro
     <>
       ${formImport ? `<FormProvider { ...form }>
 
-      </FormProvider>` : ''}
+      </FormProvider>` : ''}${outlet}
     </>
   );
 };

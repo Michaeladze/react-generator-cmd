@@ -63,8 +63,7 @@ function createComponent(answers, fullPath, json, appRoot) {
     appendRouter(componentName, answers, relativePath, routerPath);
   }
 
-  runLinter(path);
-  runLinter(`${json.router.path}`);
+  runLinter(`${json.root}`);
 }
 
 module.exports = {

@@ -139,6 +139,9 @@ inquirer.prompt(prompts).ui.process.subscribe(
               name: 'Children'
             },
             {
+              name: 'Nested routes'
+            },
+            {
               name: 'useFormHook'
             },
             {
