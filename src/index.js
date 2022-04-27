@@ -44,7 +44,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
 
     if (q.name === 'create') {
       if (q.answer === 'Redux State') {
-        getReduxQuestions(prompts, answers);
+        getReduxQuestions(prompts, answers, componentsPath, json);
         return;
       }
 
@@ -239,6 +239,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
     }
 
     if (answers.create === 'Redux State') {
+      answers.name = answers.name === '[Create New]' ? answers.reducer : answers.name;
       answers.description = answers.description.charAt(0).toUpperCase() + answers.description.slice(1);
       createReduxState(answers, componentsPath, json);
     }

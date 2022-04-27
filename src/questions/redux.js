@@ -1,11 +1,33 @@
-function getReduxQuestions(prompts, answers) {
+const { fileExists, readDirSync } = require('../mk');
+
+function getReduxQuestions(prompts, answers, root, json) {
 
   const question = [
     {
+        type: 'list',
+        name: `name`,
+        message: 'Select a reducer',
+        choices: () => {
+          let dir = [];
+          let path = root + '/' + json.redux.folder + '/reducers';
+          path = path.split('/').filter((s) => s !== '').join('/');
+
+          if (fileExists(path)) {
+            dir = readDirSync(path);
+            dir = dir.map((file) => file.replace('.reducer.ts', ''))
+          }
+
+          return [
+            '[Create New]',
+            ...dir
+          ];
+        }
+    },
+    {
       type: 'input',
-      name: 'name',
+      name: 'reducer',
       message: 'How to name file?',
-      when: () => answers.create === 'Redux State',
+      when: () => answers.create === 'Redux State' && answers.name === '[Create New]',
       validate: (input) => input !== ''
     },
     {
