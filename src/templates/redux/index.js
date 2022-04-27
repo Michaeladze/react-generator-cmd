@@ -1,32 +1,25 @@
 const storeIndexTemplate = () => {
-  return `import { combineEpics, createEpicMiddleware } from 'redux-observable';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+  return `import { combineEpics } from 'redux-observable';
+import { combineReducers } from 'redux';
 
-/*[imports:end] */
+/* [imports:end] */
 
 export interface IStore {
 
-  /*[types:end] */
+  /* [types:end] */
 }
 
-const observableMiddleware = createEpicMiddleware();
-
 /** Register reducers */
-const reducers = combineReducers({
+export const reducers = combineReducers({
 
-  /*[reducers:end] */
-})
+  /* [reducers:end] */
+});
 
-/** Create store */
-export const store = createStore(reducers, composeWithDevTools(applyMiddleware(observableMiddleware)));
+export const effects$ = combineEpics<any, any, any>(
 
-/** Register effects */
-observableMiddleware.run(combineEpics<any, any, any, any>(
-  
-  /*[effects:end] */
-  )
+  /* [effects:end] */
 );
+
 `;
 };
 

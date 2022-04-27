@@ -1,6 +1,6 @@
 const fs = require('fs');
-const { exec } = require('child_process');
 const { storeIndexTemplate } = require('./templates/redux');
+const { storeIndexMainTemplate } = require('./templates/redux/indexMainApp');
 const { reducerTemplate } = require('./templates/redux/reducers');
 const { serviceTemplate } = require('./templates/redux/services');
 const { effectTemplate } = require('./templates/redux/effects');
@@ -15,13 +15,13 @@ const { runLinter } = require('./runLinter');
 const { getTestPayload } = require('./utils');
 
 function createReduxState(answers, path, json) {
-  if (answers.name && answers.actionName) {
-    path += `/${json.reduxFolder}`;
+  if (answers.name) {
+    path += `/${json.redux.folder}`;
     mkDir(path);
 
     const name = answers.name.charAt(0).toLowerCase() + answers.name.slice(1);
 
-    createIndex(path);
+    createIndex(answers, path, json);
     createCommonActions(path);
     createTypes(answers, path, name);
     // createMocks(answers, name);
@@ -46,9 +46,19 @@ function createReduxState(answers, path, json) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function createIndex(path) {
+function createIndex(answers, path, json) {
   const file = path + '/index.ts';
-  mkFile(file, storeIndexTemplate());
+  if (!json.redux.mainApplication && !json.applications) {
+    mkFile(file, storeIndexMainTemplate());
+  } else {
+    const appName = answers.application === '[Create New]' ? answers.applicationName : answers.application;
+
+    if (appName.toLowerCase() === json.redux.mainApplication.toLowerCase()) {
+      mkFile(file, storeIndexMainTemplate());
+    } else if (json.redux.createIndexForDependents !== false) {
+      mkFile(file, storeIndexTemplate());
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

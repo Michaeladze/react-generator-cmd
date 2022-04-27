@@ -29,7 +29,7 @@ function readGJSON() {
     }
   }
 
-  result.reduxFolder =  result.reduxFolder || '_store';
+  result.redux.folder =  result.redux.folder || '_store';
   result.explicit =  result.explicit || false;
   result.testAlias =  result.testAlias || 'spec';
 

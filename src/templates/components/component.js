@@ -12,7 +12,7 @@ const tsxTemplate = (name, answers, json) => {
 
   answers.componentOptions.forEach((o) => {
     if (o === 'Dispatch and Selector') {
-      storeImport = `import { useDispatch, useSelector } from 'react-redux';\nimport { IStore } from '../../../${json.reduxFolder}';\n`;
+      storeImport = `import { useDispatch, useSelector } from 'react-redux';\nimport { IStore } from '../../../${json.redux.folder}';\n`;
     }
 
     if (o === 'useLocation') {

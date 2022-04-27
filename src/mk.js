@@ -1,8 +1,17 @@
 const fs = require('fs');
 
 const mkDir = (path) => {
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
+
+  const pathArr = path.split('/').filter((s) => s !== '' && s !== '.');
+  let p = '.';
+
+  while (pathArr.length > 0) {
+    const folder = pathArr.shift();
+    p += `/${ folder }`;
+
+    if (!fs.existsSync(p)) {
+      fs.mkdirSync(p);
+    }
   }
 };
 

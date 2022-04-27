@@ -6,15 +6,9 @@ const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
 const nodePath = require('path');
 
-function createComponent(answers, fullPath, json, appRoot) {
-  const pathArr = fullPath.split('/').filter((s) => s !== '' && s !== '.');
-  let path = '.';
-
-  while (pathArr.length > 1) {
-    const folder = pathArr.shift();
-    path += `/${ folder }`;
-    mkDir(path);
-  }
+function createComponent(answers, path, json, appRoot) {
+  const pathArr = path.split('/').filter((s) => s !== '' && s !== '.');
+  mkDir(path);
 
   const fileName = pathArr[0];
   const componentName = fileName.charAt(0).toUpperCase() + fileName.slice(1);
@@ -45,15 +39,7 @@ function createComponent(answers, fullPath, json, appRoot) {
 
   if (json.router.pageAlias && Object.values(answers).some((v) => v === json.router.pageAlias)) {
     let routerPath = `${json.root}${json.router.path}`;
-
-    const pathArr = routerPath.split('/').filter((s) => s !== '' && s !== '.');
-    let tmpPath = '.';
-
-    while (pathArr.length > 0) {
-      const folder = pathArr.shift();
-      tmpPath += `/${ folder }`;
-      mkDir(tmpPath);
-    }
+    mkDir(routerPath);
 
     routerPath += '/router.tsx';
     mkFile(routerPath, routerTemplate());
