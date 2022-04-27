@@ -37,7 +37,7 @@ function createReduxState(answers, path, json) {
     }
 
     createReducer(answers, path, name);
-    createState(answers, path, name);
+    createState(answers, path, name, json);
     runLinter(`${json.root}`);
   } else {
     console.log('No action name was provided');
@@ -55,8 +55,8 @@ function createIndex(answers, path, json) {
 
     if (appName.toLowerCase() === json.redux.mainApplication.toLowerCase()) {
       mkFile(file, storeIndexMainTemplate());
-    } else if (json.redux.createIndexForDependents !== false) {
-      mkFile(file, storeIndexTemplate());
+    } else {
+      mkFile(file, storeIndexTemplate(json));
     }
   }
 }
@@ -222,7 +222,7 @@ function createReducer(answers, path, name) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function createState(answers, path, name) {
+function createState(answers, path, name, json) {
   const indexPath = `${path}/index.ts`;
 
   fs.readFile(indexPath, { encoding: 'utf8' }, (err, data) => {
@@ -232,7 +232,12 @@ function createState(answers, path, name) {
       let hasReducerImport = false;
       let hasEffectImport = false;
 
-      let effectImport = `import { ${ answers.actionName }Effect$ } from './effects/${ name }.effects';\n`;
+      const appName = answers.application === '[Create New]' ? answers.applicationName : answers.application;
+      const ignoreEffectAndReducer = json.redux.mainApplication &&
+        appName.toLowerCase() !== json.redux.mainApplication.toLowerCase() &&
+        json.redux.registerDependents === false;
+
+      let effectImport = ignoreEffectAndReducer ? '' : `import { ${ answers.actionName }Effect$ } from './effects/${ name }.effects';\n`;
 
       for (let i = 0; i < lines.length; i++) {
 
@@ -247,7 +252,8 @@ function createState(answers, path, name) {
         }
 
         if (lines[i].includes('[imports:end]')) {
-          const reducerImport = !hasReducerImport ? `import ${ name }Reducer, { I${ capName }State } from './reducers/${ name }.reducer';\n` : '';
+          const reducerImportTmp = ignoreEffectAndReducer ? 'import ' : `import ${ name }Reducer, `;
+          const reducerImport = !hasReducerImport ? `${reducerImportTmp}{ I${ capName }State } from './reducers/${ name }.reducer';\n` : '';
           if (hasEffectImport || !answers.async) {
             effectImport = '';
           }
@@ -255,11 +261,11 @@ function createState(answers, path, name) {
           lines[i - 1] = lines[i - 1].replace('', `${ effectImport }${ reducerImport }`);
         }
 
-        if (!hasReducerImport && lines[i].includes('[reducers:end]')) {
+        if (!ignoreEffectAndReducer && !hasReducerImport && lines[i].includes('[reducers:end]')) {
           lines[i - 1] = lines[i - 1].replace('', `  ${ name }: ${ name }Reducer, \n`);
         }
 
-        if (answers.async && lines[i].includes('[effects:end]')) {
+        if (!ignoreEffectAndReducer && answers.async && lines[i].includes('[effects:end]')) {
           lines[i - 1] = lines[i - 1].replace('', `  ${ answers.actionName }Effect$, \n`);
         }
 

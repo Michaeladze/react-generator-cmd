@@ -51,7 +51,7 @@ Create a `g.json` file in the root folder.
 
 `redux.mainApplication` - if you have multiple large parts of the project that want to have their own redux states and to be combined into one at the main application dynamically, you can specify main application here. Generator will create specific index.ts file with all the registrations and injection functions.
 
-`redux.createIndexForDependents` - specify if you want to create index.ts with registration of reducers and effects for applications different from the one specified in "mainApplication" field.
+`redux.registerDependents` - specify if you want to register reducers and effects in index.ts for applications different from the one specified in "mainApplication" field.
 
 `testAlias` - `spec | test`.
 

@@ -13,7 +13,8 @@
   },
   "css": "css",
   "redux": {
-    "folder": "redux"
+    "folder": "redux",
+    "mainApplication": "a"
   },
   "testAlias": "spec",
   "explicit": false,
