@@ -58,9 +58,9 @@ function createComponent(answers, fullPath, json) {
     routerPath += '/router.tsx';
     mkFile(routerPath, routerTemplate());
 
-    nodePath.relative(routerPath, path);
+    const relativePath = nodePath.relative(routerPath, path).replace(/\\/g, '/');
 
-    appendRouter(componentName, answers, nodePath.relative(routerPath, path), routerPath);
+    appendRouter(componentName, answers, relativePath, routerPath);
   }
 
   runLinter(path);
