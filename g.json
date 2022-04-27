@@ -1,21 +1,17 @@
 {
   "root": "./src",
   "structure": {
-    "applications": {
-      ":id": {
-        "components": {
-          "shared": "",
-          "features": {
-            ":id": ""
-          },
-          "pages": "",
-          "templates": "",
-          "popups": ""
-        }
-      }
+    "components": {
+      "shared": "",
+      "features": {
+        ":id": ""
+      },
+      "pages": "",
+      "templates": "",
+      "popups": ""
     }
   },
-  "css": "styled",
+  "css": "css",
   "reduxFolder": "redux",
   "testAlias": "spec",
   "explicit": false,

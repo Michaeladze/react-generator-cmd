@@ -53,7 +53,15 @@ Create a `g.json` file in the root folder.
 
 `explicit` - boolean. By default, is set to `false`. If a folder contains just one folder inside, with explicit flag equal to true generator will still ask you about that folder.
 
+`router.path` - how the router folder will be named.
+
+`router.pageAlias` - a key from your structure that associated with pages.
+
+`applications` - if your project contains of multiple applications, define the folder where those applications are located. For example, "lerna" applications are located in "packages" folder.
+Notice, that the structure, router and redux paths will be relative to the application folder.
+
 #### Example:
+
 ```json
 {
   "root": "./src",
@@ -68,9 +76,14 @@ Create a `g.json` file in the root folder.
       "popups": ""
     }
   },
-  "css": "styled",
+  "css": "css",
   "reduxFolder": "redux",
   "testAlias": "spec",
-  "explicit": false
+  "explicit": false,
+  "router": {
+    "path": "/router",
+    "pageAlias": "pages"
+  },
+  "applications": "/applications"
 }
 ```

@@ -6,7 +6,7 @@ const { mkDir, mkFile } = require('./mk');
 const { runLinter } = require('./runLinter');
 const nodePath = require('path');
 
-function createComponent(answers, fullPath, json) {
+function createComponent(answers, fullPath, json, appRoot) {
   const pathArr = fullPath.split('/').filter((s) => s !== '' && s !== '.');
   let path = '.';
 

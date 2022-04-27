@@ -217,6 +217,15 @@ inquirer.prompt(prompts).ui.process.subscribe(
     console.log(error);
   },
   () => {
+    const appName = answers.application === '[Create New]' ? answers.applicationName : answers.application;
+    if (json.applications && appName) {
+      const newRoot = `${json.root}${json.applications}/${appName}`;
+      componentsPath = componentsPath.replace(json.root, newRoot);
+      json.root = newRoot;
+    }
+
+    componentsPath = componentsPath.split('/').filter((s) => s !== '').join('/');
+
     if (answers.create === 'Component') {
       createComponent(answers, componentsPath, json);
     }
@@ -226,6 +235,34 @@ inquirer.prompt(prompts).ui.process.subscribe(
       createReduxState(answers, componentsPath, json);
     }
   });
+
+if (json.applications) {
+  prompts.next({
+    type: 'list',
+    name: `application`,
+    message: 'Select an application?',
+    choices: () => {
+      const path = `${json.root}${json.applications}`
+      let dir = [];
+      if (fileExists(path)) {
+        dir = readDirSync(path);
+      }
+
+      return [
+        '[Create New]',
+        ...dir
+      ];
+    }
+  });
+
+  prompts.next({
+    type: 'input',
+    name: `applicationName`,
+    message: 'New Application name?',
+    validate: (input) => input !== '',
+    when: (answers) => answers.application === '[Create New]'
+  });
+}
 
 prompts.next({
   type: 'list',
