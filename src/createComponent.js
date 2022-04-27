@@ -7,14 +7,9 @@ const { runLinter } = require('./runLinter');
 const nodePath = require('path');
 
 function createComponent(answers, path, json, appRoot) {
-  const pathArr = path.split('/').filter((s) => s !== '' && s !== '.');
   mkDir(path);
+  const componentName = answers.fileName.charAt(0).toUpperCase() + answers.fileName.slice(1);
 
-  const fileName = pathArr[0];
-  const componentName = fileName.charAt(0).toUpperCase() + fileName.slice(1);
-
-  path += `/${ componentName }`;
-  mkDir(path);
   mkFile(`${ path }/index.ts`, indexTemplate(componentName));
   mkFile(`${ path }/${ componentName }.tsx`, tsxTemplate(componentName, answers, json));
 

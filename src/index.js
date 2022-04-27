@@ -95,6 +95,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
           type: 'input',
           name: 'route',
           message: 'What route?',
+          validate: (input) => input !== '',
           when: (answers) => {
             return answers.create === 'Component';
           }

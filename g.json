@@ -13,16 +13,12 @@
   },
   "css": "css",
   "redux": {
-    "folder": "redux",
-    "mainApplication": "portal",
-    "createIndexForDependents": false
+    "folder": "redux"
   },
   "testAlias": "spec",
   "explicit": false,
   "router": {
     "path": "/router",
     "pageAlias": "pages"
-  },
-  "httpClient": "axios",
-  "applications": "/applications"
+  }
 }
