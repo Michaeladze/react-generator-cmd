@@ -2,9 +2,17 @@ const { fileExists, readFileSync } = require('./mk');
 
 const defaultConfig = {
   "root": "./src",
-  "testAlias": "spec",
   "structure": {
     "components": ""
+  },
+  "css": "css",
+  "redux": {
+    "folder": "redux"
+  },
+  "testAlias": "spec",
+  "explicit": false,
+  "router": {
+    "path": "/router"
   }
 }
 
