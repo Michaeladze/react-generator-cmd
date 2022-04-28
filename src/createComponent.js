@@ -34,8 +34,11 @@ function createComponent(answers, path, json, appRoot) {
     case 'less':
       mkFile(`${ path }/${ componentName }.less`, '');
       break;
-    default:
+    case 'css':
       mkFile(`${ path }/${ componentName }.css`, '');
+      break;
+    default:
+      mkFile(`${ path }/${ componentName }${json.css || '.css'}`, '');
   }
 
   if (json.router.pageAlias && Object.values(answers).some((v) => v === json.router.pageAlias)) {

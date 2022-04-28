@@ -11,7 +11,6 @@
       "popups": ""
     }
   },
-  "css": "css",
   "redux": {
     "folder": "redux",
     "mainApplication": "a"

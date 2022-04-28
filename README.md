@@ -45,7 +45,7 @@ Create a `g.json` file in the root folder.
 
 `structure` - the structure of your folders in the project. You can add dynamic names by using `:` prefix. When generator detects the dynamic name, it will ask to create new folder inside it or select the existing one.
 
-`css` - accepts values `css | scss | less | styled`. 
+`css` - accepts values `css | scss | less | styled` or any other custom value with extension e.g. styles.ts. 
 
 `redux.folder` - the folder where redux is stored.
 

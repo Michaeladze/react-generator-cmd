@@ -79,8 +79,11 @@ const tsxTemplate = (name, answers, json) => {
     case 'less':
       cssExtension = '.less';
       break;
-    default:
+    case 'css':
       cssExtension = '.css';
+      break;
+    default:
+      cssExtension = json.css || '.css';
   }
 
 
