@@ -7,6 +7,12 @@ const { runLinter } = require('./runLinter');
 const nodePath = require('path');
 
 function createComponent(answers, path, json, appRoot) {
+  const componentPath = path.split('/');
+  componentPath[componentPath.length - 1] =
+    componentPath[componentPath.length - 1].charAt(0).toUpperCase() + componentPath[componentPath.length - 1].slice(1);
+
+  path = componentPath.join('/');
+
   mkDir(path);
   const componentName = answers.fileName.charAt(0).toUpperCase() + answers.fileName.slice(1);
 
