@@ -95,7 +95,7 @@ interface IProps {
     ${childrenImport ? 'children: ReactNode | ReactNode[];' : ''}
 }
 
-const ${ name }: React.FC<IProps> = ({${childrenImport ? 'children' : ''}}: IProps) => {
+export const ${ name }: React.FC<IProps> = ({${childrenImport ? 'children' : ''}}: IProps) => {
   ${storeImport ? 'const dispatch = useDispatch();\n' : ''}${useLocation}${useHistory}${useParams}
   ${storeImport ? 'const store = useSelector((store: IStore) => store);' : ''}
 
@@ -111,8 +111,6 @@ const ${ name }: React.FC<IProps> = ({${childrenImport ? 'children' : ''}}: IPro
     </>
   );
 };
-
-export default ${ name };
   `
 };
 
@@ -120,7 +118,7 @@ export default ${ name };
 
 const indexTemplate = (name) => {
   return `/* istanbul ignore file */
-import ${ name } from './${ name }';
+import { ${ name } } from './${ name }';
 
 export default ${ name };
 `
@@ -131,7 +129,7 @@ export default ${ name };
 const styledComponentTemplate = (name, answers, json) => {
   return `import styled from 'styled-components/macro';
   
-const ${name}Wrapper = styled.div\`\`;
+export const ${name}Wrapper = styled.div\`\`;
 
 export default {
   ${name}Wrapper

@@ -45,7 +45,7 @@ function createComponent(answers, path, json, appRoot) {
     let routerPath = `${json.root}${json.router.path}`;
     mkDir(routerPath);
 
-    routerPath += '/router.tsx';
+    routerPath += '/index.tsx';
     mkFile(routerPath, routerTemplate());
 
     const relativePath = nodePath.relative(routerPath, path).replace(/\\/g, '/');
