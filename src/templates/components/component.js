@@ -120,7 +120,7 @@ const indexTemplate = (name) => {
   return `/* istanbul ignore file */
 import { ${ name } } from './${ name }';
 
-export ${ name };
+export {${ name }};
 `
 }
 
