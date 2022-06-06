@@ -116,11 +116,12 @@ export const ${ name }: React.FC<IProps> = ({${childrenImport ? 'children' : ''}
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-const indexTemplate = (name) => {
+const indexTemplate = (name, answers, json) => {
+  const exportStr = answers.route ? `export default ${name};` : `export {${ name }};`;
   return `/* istanbul ignore file */
 import { ${ name } } from './${ name }';
 
-export {${ name }};
+${exportStr}
 `
 }
 

@@ -16,7 +16,7 @@ function createComponent(answers, path, json, appRoot) {
   mkDir(path);
   const componentName = answers.fileName.charAt(0).toUpperCase() + answers.fileName.slice(1);
 
-  mkFile(`${ path }/index.ts`, indexTemplate(componentName));
+  mkFile(`${ path }/index.ts`, indexTemplate(componentName, answers, json));
   mkFile(`${ path }/${ componentName }.tsx`, tsxTemplate(componentName, answers, json));
 
   if (answers.tests) {
