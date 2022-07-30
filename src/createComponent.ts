@@ -18,7 +18,7 @@ import { IConfig } from './types/config.types';
 import { IAnswersBase } from './types/types';
 
 
-export function createComponent(answers: IAnswersBase, path: string, json: IConfig, appRoot: string) {
+export function createComponent(answers: IAnswersBase, path: string, json: IConfig) {
   const componentPath = path.split('/');
   componentPath[componentPath.length - 1] =
     componentPath[componentPath.length - 1].charAt(0).toUpperCase() + componentPath[componentPath.length - 1].slice(1);

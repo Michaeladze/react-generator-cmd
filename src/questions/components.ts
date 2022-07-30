@@ -7,7 +7,7 @@ import {
 import { IConfig } from '../types/config.types';
 import { IAnswersBase } from '../types/types';
 
-export function getReduxQuestions(prompts: Subject<any>, answers: IAnswersBase, root: string, json: IConfig) {
+export function getComponentsQuestions(prompts: Subject<any>, answers: IAnswersBase, root: string, json: IConfig) {
 
   const question = [
     {

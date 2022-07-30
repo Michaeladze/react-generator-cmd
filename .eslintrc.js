@@ -35,7 +35,7 @@ module.exports = {
     "no-debugger": "off",
     "linebreak-style": [
       "error",
-      "windows"
+      "unix"
     ],
     "no-extra-parens": "off",
     "curly": "error",

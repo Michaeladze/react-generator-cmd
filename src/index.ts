@@ -2,6 +2,8 @@ import inquirer from 'inquirer';
 
 import { Subject } from 'rxjs';
 
+import { createComponent } from './createComponent';
+import { createReduxState } from './createReduxState';
 import {
   fileExists,
   readDirSync
@@ -9,11 +11,10 @@ import {
 import { getReduxQuestions } from './questions/reduxObservable';
 import { readJSON } from './readJSON';
 import { IConfig } from './types/config.types';
-import { IAnswersBase } from './types/types';
-
-const { createComponent } = require('./createComponent');
-const { createReduxState } = require('./createReduxState');
-
+import {
+  Answer,
+  IAnswersBase
+} from './types/types';
 
 const prompts: any = new Subject();
 
@@ -33,7 +34,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
     answers[q.name] = q.answer;
 
     if (q.name === 'application' || q.name === 'applicationName') {
-      const appName = answers.application === '[Create New]' ? answers.applicationName : answers.application;
+      const appName = answers.application === Answer.CreateNew ? answers.applicationName : answers.application;
 
       if (json.applications && appName) {
         const newRoot = `${json.root}${json.applications}/${appName}`;
@@ -44,12 +45,12 @@ inquirer.prompt(prompts).ui.process.subscribe(
     }
 
     if (q.name === 'create') {
-      if (q.answer === 'Redux State') {
+      if (q.answer === Answer.ReduxState) {
         getReduxQuestions(prompts, answers, componentsPath, json);
         return;
       }
 
-      if (q.answer === 'Component') {
+      if (q.answer === Answer.Component) {
 
         if (!explicit) {
           const currentKeys = Object.keys(structure);
@@ -86,7 +87,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
                 dir = readDirSync(componentsPath);
               }
 
-              return ['[Create New]', ...dir];
+              return [Answer.CreateNew, ...dir];
             }
 
             return Object.keys(structure);
@@ -107,7 +108,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
           message: 'What route?',
           validate: (input: string) => input !== '',
           when: (answers: IAnswersBase) => {
-            return answers.create === 'Component';
+            return answers.create === Answer.Component;
           }
         });
       }
@@ -115,7 +116,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
       return;
     }
 
-    if (answers.create !== 'Component') {
+    if (answers.create !== Answer.Component) {
       return;
     }
 
@@ -125,7 +126,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
         name: 'tests',
         message: 'Create tests?',
         default: true,
-        when: (answers: IAnswersBase) => answers.create === 'Component'
+        when: (answers: IAnswersBase) => answers.create === Answer.Component
       });
       return;
     }
@@ -165,7 +166,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
               name: 'useParams'
             }
           ],
-          when: (answers: IAnswersBase) => answers.create === 'Component'
+          when: (answers: IAnswersBase) => answers.create === Answer.Component
         }
       );
       return;
@@ -173,7 +174,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
 
     depth++;
 
-    if (q.answer === '[Create New]') {
+    if (q.answer === Answer.CreateNew) {
       prompts.next({
         type: 'input',
         name: `components_${depth}`,
@@ -218,7 +219,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
             dir = readDirSync(componentsPath);
           }
 
-          return ['[Create New]', ...dir];
+          return [Answer.CreateNew, ...dir];
         }
 
         return Object.keys(structure);
@@ -231,12 +232,12 @@ inquirer.prompt(prompts).ui.process.subscribe(
   () => {
     componentsPath = componentsPath.split('/').filter((s: string) => s !== '').join('/');
 
-    if (answers.create === 'Component') {
+    if (answers.create === Answer.Component) {
       createComponent(answers, componentsPath, json);
     }
 
-    if (answers.create === 'Redux State') {
-      answers.name = answers.name === '[Create New]' ? answers.reducer : answers.name;
+    if (answers.create === Answer.ReduxState) {
+      answers.name = answers.name === Answer.CreateNew ? answers.reducer : answers.name;
       answers.description = answers.description.charAt(0).toUpperCase() + answers.description.slice(1);
       createReduxState(answers, componentsPath, json);
     }
@@ -255,7 +256,7 @@ if (json.applications) {
         dir = readDirSync(path);
       }
 
-      return ['[Create New]', ...dir];
+      return [Answer.CreateNew, ...dir];
     }
   });
 
@@ -264,7 +265,7 @@ if (json.applications) {
     name: 'applicationName',
     message: 'New Application name?',
     validate: (input: string) => input !== '',
-    when: (answers: IAnswersBase) => answers.application === '[Create New]'
+    when: (answers: IAnswersBase) => answers.application === Answer.CreateNew
   });
 }
 
@@ -272,5 +273,5 @@ prompts.next({
   type: 'list',
   name: 'create',
   message: 'What needs to be created?',
-  choices: ['Component', 'Redux State', ],
+  choices: [Answer.Component, Answer.ReduxState ],
 });
