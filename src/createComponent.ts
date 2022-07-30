@@ -8,17 +8,19 @@ import {
 import { runLinter } from './runLinter';
 
 import {
-  tsxTemplate,
   indexTemplate,
-  styledComponentTemplate
+  styledComponentTemplate,
+  tsxTemplate
 } from './templates/components/component';
 import { componentTestTemplate } from './templates/components/tests';
 import { routerTemplate } from './templates/general/router';
-import { IConfig } from './types/config.types';
+import {
+  IConfig,
+  IConfigCss
+} from './types/config.types';
 import { IAnswersBase } from './types/types';
 
-
-export function createComponent(answers: IAnswersBase, path: string, json: IConfig) {
+export function createComponent(answers: IAnswersBase, path: string, config: IConfig) {
   const componentPath = path.split('/');
   componentPath[componentPath.length - 1] =
     componentPath[componentPath.length - 1].charAt(0).toUpperCase() + componentPath[componentPath.length - 1].slice(1);
@@ -28,33 +30,33 @@ export function createComponent(answers: IAnswersBase, path: string, json: IConf
   mkDir(path);
   const componentName = answers.fileName.charAt(0).toUpperCase() + answers.fileName.slice(1);
 
-  mkFile(`${path}/index.ts`, indexTemplate(componentName, answers, json));
-  mkFile(`${path}/${componentName}.tsx`, tsxTemplate(componentName, answers, json));
+  mkFile(`${path}/index.ts`, indexTemplate(componentName, answers, config));
+  mkFile(`${path}/${componentName}.tsx`, tsxTemplate(componentName, answers, config));
 
   if (answers.tests) {
-    const testAlias = json.testAlias || 'spec';
+    const testAlias = config.testAlias || 'spec';
     mkFile(`${path}/${componentName}.${testAlias}.tsx`, componentTestTemplate(componentName, answers));
   }
 
-  switch (json.css) {
-  case 'styled':
-    mkFile(`${path}/${componentName}.styled.tsx`, styledComponentTemplate(componentName, answers, json));
+  switch (config.css) {
+  case IConfigCss.Styled:
+    mkFile(`${path}/${componentName}.styled.tsx`, styledComponentTemplate(componentName, answers, config));
     break;
-  case 'scss':
+  case IConfigCss.Scss:
     mkFile(`${path}/${componentName}.scss`, '');
     break;
-  case 'less':
+  case IConfigCss.Less:
     mkFile(`${path}/${componentName}.less`, '');
     break;
-  case 'css':
+  case IConfigCss.Css:
     mkFile(`${path}/${componentName}.css`, '');
     break;
   default:
-    mkFile(`${path}/${componentName}${json.css || '.css'}`, '');
+    mkFile(`${path}/${componentName}${config.css || '.css'}`, '');
   }
 
-  if (json.router.pageAlias && Object.values(answers).some((v) => v === json.router.pageAlias)) {
-    let routerPath = `${json.root}${json.router.path}`;
+  if (config.router.pageAlias && Object.values(answers).some((v) => v === config.router.pageAlias)) {
+    let routerPath = `${config.root}${config.router.path}`;
     mkDir(routerPath);
 
     routerPath += '/index.tsx';
@@ -65,5 +67,5 @@ export function createComponent(answers: IAnswersBase, path: string, json: IConf
     appendRouter(componentName, answers, relativePath, routerPath);
   }
 
-  runLinter(`${json.root}`);
+  runLinter(`${config.root}`);
 }

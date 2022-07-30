@@ -5,9 +5,19 @@ import {
   readDirSync
 } from '../mk';
 import { IConfig } from '../types/config.types';
-import { IAnswersBase } from '../types/types';
+import {
+  Answer,
+  IAnswersBase
+} from '../types/types';
 
-export function getReduxQuestions(prompts: Subject<any>, answers: IAnswersBase, root: string, json: IConfig) {
+export interface IGetReduxQuestions {
+  prompts: Subject<any>;
+  answers: IAnswersBase;
+  root: string;
+  config: IConfig;
+}
+
+export function getReduxQuestions({ prompts, answers, root, config }: IGetReduxQuestions) {
 
   const question = [
     {
@@ -16,7 +26,7 @@ export function getReduxQuestions(prompts: Subject<any>, answers: IAnswersBase, 
       message: 'Select a reducer',
       choices: () => {
         let dir: string[] = [];
-        let path = root + '/' + json.redux.folder + '/reducers';
+        let path = root + '/' + config.redux.folder + '/reducers';
         path = path.split('/').filter((s) => s !== '').join('/');
 
         if (fileExists(path)) {
@@ -24,14 +34,14 @@ export function getReduxQuestions(prompts: Subject<any>, answers: IAnswersBase, 
           dir = dir.map((file) => file.replace('.reducer.ts', ''));
         }
 
-        return ['[Create New]', ...dir];
+        return [Answer.CreateNew, ...dir];
       }
     },
     {
       type: 'input',
       name: 'reducer',
       message: 'How to name file?',
-      when: () => answers.create === 'Redux State' && answers.name === '[Create New]',
+      when: () => answers.create === 'Redux State' && answers.name === Answer.CreateNew,
       validate: (input: string) => input !== ''
     },
     {

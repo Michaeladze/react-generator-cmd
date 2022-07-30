@@ -13,17 +13,17 @@ import { readJSON } from './readJSON';
 import { IConfig } from './types/config.types';
 import {
   Answer,
-  IAnswersBase
+  IAnswersBase,
+  Question
 } from './types/types';
 
 const prompts: any = new Subject();
 
-const json: IConfig = readJSON();
-const explicit = json.explicit;
-let structure = json.structure;
+const config: IConfig = readJSON();
+let structure = config.structure;
 
 let depth = 1;
-let componentsPath = json.root;
+let componentsPath = config.root;
 let nextKey = undefined;
 let dynamicKey: unknown = undefined;
 
@@ -33,26 +33,31 @@ inquirer.prompt(prompts).ui.process.subscribe(
   (q) => {
     answers[q.name] = q.answer;
 
-    if (q.name === 'application' || q.name === 'applicationName') {
+    if (q.name === Question.Application || q.name === Question.ApplicationName) {
       const appName = answers.application === Answer.CreateNew ? answers.applicationName : answers.application;
 
-      if (json.applications && appName) {
-        const newRoot = `${json.root}${json.applications}/${appName}`;
-        componentsPath = componentsPath.replace(json.root, newRoot);
-        json.root = newRoot;
+      if (config.applications && appName) {
+        const newRoot = `${config.root}${config.applications}/${appName}`;
+        componentsPath = componentsPath.replace(config.root, newRoot);
+        config.root = newRoot;
         componentsPath = componentsPath.split('/').filter((s: string) => s !== '').join('/');
       }
     }
 
-    if (q.name === 'create') {
+    if (q.name === Question.Create) {
       if (q.answer === Answer.ReduxState) {
-        getReduxQuestions(prompts, answers, componentsPath, json);
+        getReduxQuestions({
+          prompts,
+          answers,
+          root: componentsPath,
+          config
+        });
         return;
       }
 
       if (q.answer === Answer.Component) {
 
-        if (!explicit) {
+        if (!config.explicit) {
           const currentKeys = Object.keys(structure);
 
           if (currentKeys.length === 1) {
@@ -64,7 +69,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
           if (typeof structure === 'string') {
             prompts.next({
               type: 'input',
-              name: 'fileName',
+              name: Question.FileName,
               message: 'How to name file?',
               validate: (input: string) => input !== ''
             });
@@ -99,12 +104,12 @@ inquirer.prompt(prompts).ui.process.subscribe(
     }
 
     if (q.name === 'tests') {
-      if (!json.router.pageAlias || !Object.values(answers).some((v) => v === json.router.pageAlias)) {
+      if (!config.router.pageAlias || !Object.values(answers).some((v) => v === config.router.pageAlias)) {
         prompts.complete();
       } else {
         prompts.next({
           type: 'input',
-          name: 'route',
+          name: Question.Route,
           message: 'What route?',
           validate: (input: string) => input !== '',
           when: (answers: IAnswersBase) => {
@@ -120,10 +125,10 @@ inquirer.prompt(prompts).ui.process.subscribe(
       return;
     }
 
-    if (q.name === 'componentOptions') {
+    if (q.name === Question.ComponentOptions) {
       prompts.next({
         type: 'confirm',
-        name: 'tests',
+        name: Question.Tests,
         message: 'Create tests?',
         default: true,
         when: (answers: IAnswersBase) => answers.create === Answer.Component
@@ -131,17 +136,17 @@ inquirer.prompt(prompts).ui.process.subscribe(
       return;
     }
 
-    if (q.name === 'route') {
+    if (q.name === Question.Route) {
       prompts.complete();
       return;
     }
 
-    if (q.name === 'fileName') {
+    if (q.name === Question.FileName) {
       componentsPath += `/${q.answer}`;
       prompts.next(
         {
           type: 'checkbox',
-          name: 'componentOptions',
+          name: Question.ComponentOptions,
           message: 'Create component with:',
           choices: [
             {
@@ -191,7 +196,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
     const keys = structure ? Object.keys(structure) : [];
     dynamicKey = keys.find((k) => k[0] === ':') || undefined;
 
-    if (keys.length === 1 && !dynamicKey && !explicit) {
+    if (keys.length === 1 && !dynamicKey && !config.explicit) {
       nextKey = keys[0];
       componentsPath += `/${nextKey}`;
       structure = structure[nextKey];
@@ -200,7 +205,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
     if (typeof structure === 'string') {
       prompts.next({
         type: 'input',
-        name: 'fileName',
+        name: Question.FileName,
         message: 'How to name file?',
         validate: (input: string) => input !== ''
       });
@@ -233,23 +238,23 @@ inquirer.prompt(prompts).ui.process.subscribe(
     componentsPath = componentsPath.split('/').filter((s: string) => s !== '').join('/');
 
     if (answers.create === Answer.Component) {
-      createComponent(answers, componentsPath, json);
+      createComponent(answers, componentsPath, config);
     }
 
     if (answers.create === Answer.ReduxState) {
       answers.name = answers.name === Answer.CreateNew ? answers.reducer : answers.name;
       answers.description = answers.description.charAt(0).toUpperCase() + answers.description.slice(1);
-      createReduxState(answers, componentsPath, json);
+      createReduxState(answers, componentsPath, config);
     }
   });
 
-if (json.applications) {
+if (config.applications) {
   prompts.next({
     type: 'list',
-    name: 'application',
+    name: Question.Application,
     message: 'Select an application?',
     choices: () => {
-      const path = `${json.root}${json.applications}`;
+      const path = `${config.root}${config.applications}`;
       let dir: string[] = [];
 
       if (fileExists(path)) {
@@ -262,7 +267,7 @@ if (json.applications) {
 
   prompts.next({
     type: 'input',
-    name: 'applicationName',
+    name: Question.ApplicationName,
     message: 'New Application name?',
     validate: (input: string) => input !== '',
     when: (answers: IAnswersBase) => answers.application === Answer.CreateNew
@@ -271,7 +276,7 @@ if (json.applications) {
 
 prompts.next({
   type: 'list',
-  name: 'create',
+  name: Question.Create,
   message: 'What needs to be created?',
   choices: [Answer.Component, Answer.ReduxState ],
 });

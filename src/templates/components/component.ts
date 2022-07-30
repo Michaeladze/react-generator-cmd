@@ -1,4 +1,7 @@
-import { IConfig } from '../../types/config.types';
+import {
+  IConfig,
+  IConfigCss
+} from '../../types/config.types';
 import { IAnswersBase } from '../../types/types';
 
 export const tsxTemplate = (name: string, answers: IAnswersBase, json: IConfig) => {
@@ -72,17 +75,17 @@ export const tsxTemplate = (name: string, answers: IAnswersBase, json: IConfig) 
   let cssExtension = '';
 
   switch (json.css) {
-  case 'styled':
+  case IConfigCss.Styled:
     styledPrefix = 'SC from ';
     cssExtension = '.styled';
     break;
-  case 'scss':
+  case IConfigCss.Scss:
     cssExtension = '.scss';
     break;
-  case 'less':
+  case IConfigCss.Less:
     cssExtension = '.less';
     break;
-  case 'css':
+  case IConfigCss.Css:
     cssExtension = '.css';
     break;
   default:
