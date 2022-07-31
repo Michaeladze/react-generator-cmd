@@ -41,46 +41,46 @@ export function getReduxQuestions({ prompts, answers, root, config }: IGetReduxQ
       type: 'input',
       name: 'reducer',
       message: 'How to name file?',
-      when: () => answers.create === 'Redux State' && answers.name === Answer.CreateNew,
+      when: () => answers.create === Answer.ReduxState && answers.name === Answer.CreateNew,
       validate: (input: string) => input !== ''
     },
     {
       type: 'confirm',
       name: 'async',
       message: 'Async?',
-      when: () => answers.create === 'Redux State'
+      when: () => answers.create === Answer.ReduxState
     },
     {
       type: 'input',
       name: 'actionName',
       message: 'How to name Actions?',
-      when: (answers: IAnswersBase) => answers.create === 'Redux State',
+      when: (answers: IAnswersBase) => answers.create === Answer.ReduxState,
       validate: (input: string) => input !== ''
     },
     {
       type: 'input',
       name: 'description',
       message: 'Description',
-      when: () => answers.create === 'Redux State',
+      when: () => answers.create === Answer.ReduxState,
       validate: (input: string) => input !== ''
     },
     {
       type: 'input',
       name: 'pendingType',
       message: 'Pending payload type',
-      when: () => answers.create === 'Redux State' && answers.async
+      when: () => answers.create === Answer.ReduxState && answers.async
     },
     {
       type: 'input',
       name: 'successType',
       message: 'Success payload type',
-      when: () => answers.create === 'Redux State'
+      when: () => answers.create === Answer.ReduxState
     },
     {
       type: 'input',
       name: 'reducerKey',
       message: 'Name of a key in the reducer',
-      when: () => answers.create === 'Redux State',
+      when: () => answers.create === Answer.ReduxState,
       validate: (input: string) => input !== ''
     },
     {
@@ -93,14 +93,14 @@ export function getReduxQuestions({ prompts, answers, root, config }: IGetReduxQ
         'PUT',
         'DELETE'
       ],
-      when: () => answers.create === 'Redux State' && answers.async
+      when: () => answers.create === Answer.ReduxState && answers.async
     },
     {
       type: 'confirm',
       name: 'tests',
       message: 'Create tests?',
       default: true,
-      when: () => answers.create === 'Redux State'
+      when: () => answers.create === Answer.ReduxState
     }
   ];
 

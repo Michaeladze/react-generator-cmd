@@ -20,7 +20,10 @@ import { reducerTemplate } from './templates/redux/reducers';
 import { serviceTemplate } from './templates/redux/services';
 import { testsTemplate } from './templates/redux/tests';
 import { typesTemplate } from './templates/redux/types';
-import { IConfig } from './types/config.types';
+import {
+  IConfig,
+  IConfigTests
+} from './types/config.types';
 import { IAnswersBase } from './types/types';
 import { getTestPayload } from './utils';
 
@@ -34,8 +37,6 @@ export function createReduxState(answers: IAnswersBase, path: string, json: ICon
     createIndex(answers, path, json);
     createCommonActions(path);
     createTypes(answers, path, name);
-    // createMocks(answers, name);
-    // answers.initServer && createServer(answers, name);
     createAction(answers, path, name);
 
     if (answers.async) {
@@ -301,7 +302,7 @@ function createTests(answers: IAnswersBase, path: string, name: string, json: IC
   path += `/${name}`;
   mkDir(path);
 
-  const testAlias = json.testAlias || 'spec';
+  const testAlias = json.testAlias || IConfigTests.Test;
 
   path += `/${answers.actionName}.${testAlias}.ts`;
   mkFile(path, testsTemplate(name, answers));

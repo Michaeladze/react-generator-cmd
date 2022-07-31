@@ -13,7 +13,6 @@ export enum IConfigCss {
   Css = 'css',
   Scss = 'scss',
   Less = 'less',
-  Sass = 'sass',
   Styled = 'styled'
 }
 
@@ -21,6 +20,8 @@ export interface IConfigRedux {
   folder: string;
   mainApplication: string;
   registerDependents: boolean;
+  serviceFolder?: string;
+  typesFolder?: string;
 }
 
 export enum IConfigTests {

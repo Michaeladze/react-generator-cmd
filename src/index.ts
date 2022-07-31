@@ -44,17 +44,17 @@ inquirer.prompt(prompts).ui.process.subscribe(
       }
     }
 
-    if (q.name === Question.Create) {
-      if (q.answer === Answer.ReduxState) {
-        getReduxQuestions({
-          prompts,
-          answers,
-          root: componentsPath,
-          config
-        });
-        return;
-      }
+    if (q.name === Question.Create && q.answer === Answer.ReduxState) {
+      getReduxQuestions({
+        prompts,
+        answers,
+        root: componentsPath,
+        config
+      });
+      return;
+    }
 
+    if (q.name === Question.Create) {
       if (q.answer === Answer.Component) {
 
         if (!config.explicit) {

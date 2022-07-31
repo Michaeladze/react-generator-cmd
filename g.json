@@ -14,7 +14,7 @@
   "css": "css",
   "redux": {
     "folder": "redux",
-    "mainApplication": "a"
+    "mainApplication": ""
   },
   "testAlias": "spec",
   "explicit": false,

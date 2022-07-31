@@ -13,6 +13,7 @@ export enum Question {
 export enum Answer {
   Component = 'Component',
   ReduxState = 'Redux State',
+  ReduxSlice = 'Redux Toolkit Slice',
   CreateNew = '[Create New]'
 }
 
