@@ -22,5 +22,5 @@
     "path": "/router",
     "pageAlias": "pages"
   },
-  "applications": "/applications"
+  "applications": ""
 }
