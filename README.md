@@ -14,17 +14,9 @@ Install CLI
 yarn add -D react-generator-cmd
 ```
 
-Add script to package.json
+Run generator by simple command
 ```js
-scripts: {
-  "g": "node node_modules/react-generator-cmd/dist"
-}
-```
-
-Run generator
-```js
-npm run g
-yarn g
+g
 ```
 
 To run tests add this lines to package.json
@@ -86,7 +78,6 @@ Notice, that the structure, router and redux paths will be relative to the appli
     "mainApplication": "portal"
   },
   "testAlias": "spec",
-  "explicit": false,
   "router": {
     "path": "/router",
     "pageAlias": "pages"
