@@ -1,17 +1,15 @@
 {
   "name": "react-generator-cmd",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "Generate redux or components",
   "main": "src/index.ts",
   "scripts": {
-    "build": "webpack --config webpack.config.js && cp cli.js ./dist",
+    "build": "webpack --config webpack.config.js",
     "g1": "node ./dist/index.js",
     "g": "node src/index.ts",
     "release": "release-it --no-git.requireCleanWorkingDir"
   },
-  "bin": {
-    "g": "/dist/cli.js"
-  },
+  "bin": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Michaeladze/react-generator.git"
