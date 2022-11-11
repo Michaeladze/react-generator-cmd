@@ -14,9 +14,20 @@ Install CLI
 yarn add -D react-generator-cmd
 ```
 
-Run generator by simple command
+Add script to package.json
 ```js
-g
+scripts: {
+  "g": "g"
+}
+```
+
+Run generator
+```js
+npm run g
+
+or
+
+yarn g
 ```
 
 To run tests add this lines to package.json
