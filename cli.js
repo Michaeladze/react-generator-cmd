@@ -1,4 +1,1 @@
-#!/usr/bin/env node
-
-const cli = require('./index.js');
-cli();
+#!/usr/bin/env node ./index.js
