@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: './templater/index.ts',
   target: 'node',
   resolve: {
     extensions: ['.js', '.ts'],
@@ -19,12 +19,12 @@ module.exports = {
       }
     ]
   },
-  externals: [/(node_modules|main\..*\.js)/,],
+  externals: [/(node_modules|main\..*\.js)/, ],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'index.js'
   },
   optimization: {
-    minimize: true
+    minimize: false
   },
 };

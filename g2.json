@@ -1,0 +1,108 @@
+{
+  "root": "./output",
+  "explicit": false,
+  "domains": {
+    "component": {
+      "structure": {
+        "components": {
+          "shared": "",
+          "features": {
+            ":id": ""
+          },
+          "pages": "",
+          "layouts": "",
+          "popups": ""
+        }
+      },
+      "templates": [
+        {
+          "name": "$ComponentName$.tsx",
+          "template": "../templates/components/component.template.js"
+        },
+        {
+          "name": "$ComponentName$.css",
+          "template": "../templates/components/style.template.js"
+        },
+        {
+          "name": "$ComponentName$.test.tsx",
+          "template": "../templates/components/tests.template.js"
+        },
+        {
+          "name": "index.ts",
+          "template": "../templates/components/index.template.js"
+        }
+      ],
+      "questions": [
+        {
+          "name": "ComponentName",
+          "message": "How to name the component?",
+          "type": "input"
+        },
+        {
+          "name": "ComponentDetails",
+          "message": "What to add to the component?",
+          "type": "checkbox",
+          "choices": [
+            {
+              "name": "Children"
+            },
+            {
+              "name": "useDispatch"
+            },
+            {
+              "name": "useSelector"
+            },
+            {
+              "name": "useLocation"
+            },
+            {
+              "name": "useNavigate"
+            },
+            {
+              "name": "Outlet"
+            },
+            {
+              "name": "useForm"
+            }
+          ]
+        }
+      ]
+    },
+    "redux": {
+      "structure": {
+        "store": ""
+      },
+      "templates": [
+        {
+          "name": "actions/$FileName$.actions.tsx",
+          "template": "../templates/redux/redux.template.js"
+        },
+        {
+          "name": "effects/$FileName$.effects.tsx",
+          "template": "../templates/redux/redux.template.js"
+        }
+      ],
+      "questions": [
+        {
+          "name": "FileName",
+          "message": "How to name file?",
+          "type": "input"
+        }
+      ]
+    },
+    "services": {
+      "templates": [
+        {
+          "name": "api/index.ts"
+        }
+      ],
+      "questions": [
+        {
+          "name": "FileName",
+          "message": "How to name file?",
+          "type": "input"
+        }
+      ]
+    }
+  }
+}
