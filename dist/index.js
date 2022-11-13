@@ -38870,6 +38870,18 @@ var external_child_process_ = __webpack_require__(32081);
 function runLinter(path) {
   (0,external_child_process_.exec)(`eslint ${path} --fix`);
 }
+;// CONCATENATED MODULE: ./templater/types/types.ts
+let Characters;
+
+(function (Characters) {
+  Characters["Variable"] = "$";
+})(Characters || (Characters = {}));
+
+let Reserved;
+
+(function (Reserved) {
+  Reserved["Root"] = "$root$";
+})(Reserved || (Reserved = {}));
 // EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
 var dynamicRequire = __webpack_require__(77970);
 // EXTERNAL MODULE: external "fs"
@@ -38907,12 +38919,6 @@ const readDirSync = path => {
   return fs.readdirSync(path);
 };
 const readFileSync = external_fs_.readFileSync;
-;// CONCATENATED MODULE: ./templater/types/types.ts
-let Characters;
-
-(function (Characters) {
-  Characters["Variable"] = "$";
-})(Characters || (Characters = {}));
 ;// CONCATENATED MODULE: ./templater/utils/setVariable.ts
 
 
@@ -38944,12 +38950,13 @@ const setVariables = (path, answers, config) => {
     }
 
     const changeTo = typeGuard(variable, config) ? config.variables[variable] : answers[variable];
-    result = result.replace(`$${variable}$`, changeTo);
+    result = result.replace(`${Characters.Variable}${variable}${Characters.Variable}`, changeTo);
   }
 
   return result;
 };
 ;// CONCATENATED MODULE: ./templater/creator/index.ts
+
 
 
 
@@ -38972,7 +38979,7 @@ const setVariables = (path, answers, config) => {
       }
 
       const fileName = setVariables(name, answers, config);
-      const componentsPathNext = name.includes('$root$') ? '' : componentsPath + '/';
+      const componentsPathNext = name.includes(Reserved.Root) ? '' : componentsPath + '/';
       mkFile(`${componentsPathNext}${fileName}`, content);
       runLinter(`${config.variables.root}`);
     } catch (e) {

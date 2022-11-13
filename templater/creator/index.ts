@@ -5,7 +5,10 @@ import {
   IConfig,
   IConfigComponentTemplates
 } from '../types/config.types';
-import { IAnswersBase } from '../types/types';
+import {
+  IAnswersBase,
+  Reserved
+} from '../types/types';
 import { dynamicRequire } from '../utils/dynamicRequire';
 import { mkFile } from '../utils/mk';
 import { setVariables } from '../utils/setVariable';
@@ -26,7 +29,7 @@ export default (componentsPath: string, answers: IAnswersBase, config: IConfig) 
       }
 
       const fileName = setVariables(name, answers, config);
-      const componentsPathNext = name.includes('$root$') ? '' : componentsPath + '/';
+      const componentsPathNext = name.includes(Reserved.Root) ? '' : componentsPath + '/';
       mkFile(`${componentsPathNext}${fileName}`, content);
       runLinter(`${config.variables.root}`);
     } catch (e) {

@@ -36,7 +36,7 @@ export const setVariables = (path: string, answers: IAnswersBase, config: IConfi
     }
 
     const changeTo = typeGuard(variable, config) ? config.variables[variable] : answers[variable];
-    result = result.replace(`$${variable}$`, changeTo);
+    result = result.replace(`${Characters.Variable}${variable}${Characters.Variable}`, changeTo);
   }
 
   return result;
