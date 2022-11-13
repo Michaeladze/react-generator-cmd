@@ -1,17 +1,22 @@
 {
-  "root": "./output",
-  "explicit": false,
+  "variables": {
+    "root": "./output"
+  },
   "domains": {
     "component": {
       "structure": {
-        "components": {
-          "shared": "",
-          "features": {
-            ":id": ""
-          },
-          "pages": "",
-          "layouts": "",
-          "popups": ""
+        "applications":{
+          ":appId": {
+            "components": {
+              "shared": "",
+              "features": {
+                ":id": ""
+              },
+              "pages": "",
+              "layouts": "",
+              "popups": ""
+            }
+          }
         }
       },
       "templates": [
@@ -70,30 +75,30 @@
     },
     "redux": {
       "structure": {
-        "store": ""
+        "applications":{
+          ":appId": {
+            "components": {
+              "pages": ""
+            }
+          }
+        }
       },
       "templates": [
         {
-          "name": "actions/$FileName$.actions.tsx",
+          "name": "redux/$FileName$.selectors.ts",
           "template": "../templates/redux/redux.template.js"
         },
         {
-          "name": "effects/$FileName$.effects.tsx",
+          "name": "redux/$FileName$.slice.ts",
           "template": "../templates/redux/redux.template.js"
-        }
-      ],
-      "questions": [
+        },
         {
-          "name": "FileName",
-          "message": "How to name file?",
-          "type": "input"
-        }
-      ]
-    },
-    "services": {
-      "templates": [
+          "name": "redux/$FileName$.thunks.ts",
+          "template": "../templates/redux/redux.template.js"
+        },
         {
-          "name": "api/index.ts"
+          "name": "$root$/services/api/$FileName$.services.ts",
+          "template": "../templates/redux/redux.template.js"
         }
       ],
       "questions": [

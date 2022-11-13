@@ -1,5 +1,5 @@
 export interface IConfig {
-  root: string;
+  variables: IConfigVariables;
   explicit?: boolean;
   domains: Record<string, IConfigDomain>
 }
@@ -21,4 +21,8 @@ export interface IConfigComponentQuestion {
   type: string;
   required?: boolean;
   validate?: (input: any) => boolean;
+}
+
+export interface IConfigVariables {
+  root: string;
 }

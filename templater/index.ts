@@ -38,7 +38,7 @@ if (!isValidConfig) {
 
 let structure: any = {};
 let depth = 1;
-let componentsPath = config.root;
+let componentsPath = config.variables.root;
 let nextKey = undefined;
 let dynamicKey: unknown = undefined;
 

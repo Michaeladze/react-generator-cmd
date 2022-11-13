@@ -1,3 +1,3 @@
 module.exports = ({ FileName }) => {
-  return `console.log(${FileName})`;
+  return `export const foo = () => console.log('${FileName}');`;
 };

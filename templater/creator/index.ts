@@ -8,6 +8,7 @@ import {
 import { IAnswersBase } from '../types/types';
 import { dynamicRequire } from '../utils/dynamicRequire';
 import { mkFile } from '../utils/mk';
+import { setVariables } from '../utils/setVariable';
 
 
 export default (componentsPath: string, answers: IAnswersBase, config: IConfig) => {
@@ -24,23 +25,10 @@ export default (componentsPath: string, answers: IAnswersBase, config: IConfig) 
         content = invoker(answers);
       }
 
-
-      let variable = '';
-
-      for (let i = 0; i < name.length - 1; i++) {
-        if (name[i] === '$') {
-          for (let j = i + 1; j < name.length; j++) {
-            if (name[j] === '$') {
-              variable = name.substring(i + 1, j);
-              break;
-            }
-          }
-        }
-      }
-
-      const fileName = name.replace(`$${variable}$`, answers[variable]);
-      mkFile(`${componentsPath}/${fileName}`, content);
-      runLinter(`${config.root}`);
+      const fileName = setVariables(name, answers, config);
+      const componentsPathNext = name.includes('$root$') ? '' : componentsPath + '/';
+      mkFile(`${componentsPathNext}${fileName}`, content);
+      runLinter(`${config.variables.root}`);
     } catch (e) {
       console.log(e);
     }

@@ -38907,7 +38907,50 @@ const readDirSync = path => {
   return fs.readdirSync(path);
 };
 const readFileSync = external_fs_.readFileSync;
+;// CONCATENATED MODULE: ./templater/types/types.ts
+let Characters;
+
+(function (Characters) {
+  Characters["Variable"] = "$";
+})(Characters || (Characters = {}));
+;// CONCATENATED MODULE: ./templater/utils/setVariable.ts
+
+
+const typeGuard = (v, config) => {
+  return config.variables[v] !== undefined;
+};
+
+const setVariables = (path, answers, config) => {
+  const variables = [];
+
+  for (let i = 0; i < path.length - 1; i++) {
+    if (path[i] === Characters.Variable) {
+      for (let j = i + 1; j < path.length; j++) {
+        if (path[j] === Characters.Variable) {
+          variables.push(path.substring(i + 1, j));
+          break;
+        }
+      }
+    }
+  }
+
+  let result = path;
+
+  while (variables.length > 0) {
+    const variable = variables.pop();
+
+    if (!variable) {
+      return result;
+    }
+
+    const changeTo = typeGuard(variable, config) ? config.variables[variable] : answers[variable];
+    result = result.replace(`$${variable}$`, changeTo);
+  }
+
+  return result;
+};
 ;// CONCATENATED MODULE: ./templater/creator/index.ts
+
 
 
 
@@ -38928,22 +38971,10 @@ const readFileSync = external_fs_.readFileSync;
         content = invoker(answers);
       }
 
-      let variable = '';
-
-      for (let i = 0; i < name.length - 1; i++) {
-        if (name[i] === '$') {
-          for (let j = i + 1; j < name.length; j++) {
-            if (name[j] === '$') {
-              variable = name.substring(i + 1, j);
-              break;
-            }
-          }
-        }
-      }
-
-      const fileName = name.replace(`$${variable}$`, answers[variable]);
-      mkFile(`${componentsPath}/${fileName}`, content);
-      runLinter(`${config.root}`);
+      const fileName = setVariables(name, answers, config);
+      const componentsPathNext = name.includes('$root$') ? '' : componentsPath + '/';
+      mkFile(`${componentsPathNext}${fileName}`, content);
+      runLinter(`${config.variables.root}`);
     } catch (e) {
       console.log(e);
     }
@@ -39057,7 +39088,7 @@ if (!isValidConfig) {
 
 let structure = {};
 let depth = 1;
-let componentsPath = config.root;
+let componentsPath = config.variables.root;
 let nextKey = undefined;
 let dynamicKey = undefined;
 const answers = {};
