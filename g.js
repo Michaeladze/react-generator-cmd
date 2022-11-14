@@ -82,7 +82,13 @@ module.exports = {
           'message': 'What route?',
           'type': 'input',
           'validate': (input) => input !== '',
-          'default': '',
+          'when': (answers) => Object.values(answers).some((v) => v === 'pages')
+        },
+        {
+          'name': 'withReducer',
+          'message': 'Use reducer?',
+          'type': 'confirm',
+          'default': true,
           'when': (answers) => Object.values(answers).some((v) => v === 'pages')
         }
       ]
@@ -102,26 +108,64 @@ module.exports = {
       },
       'templates': [
         {
-          'name': ({ FileName }) => `redux/${FileName}.selectors.ts`,
-          'template': '../templates/redux/redux.template.js'
+          'name': ({ FileName }) => `redux/${FileName}/selectors.ts`,
+          'template': '../templates/redux/selector.template.js'
         },
         {
-          'name': ({ FileName }) => `redux/${FileName}.slice.ts`,
-          'template': '../templates/redux/redux.template.js'
+          'name': ({ FileName }) => `redux/${FileName}/slice.ts`,
+          'template': '../templates/redux/slice.template.js'
         },
         {
-          'name': ({ FileName }) => `redux/${FileName}.thunks.ts`,
-          'template': '../templates/redux/redux.template.js'
+          'name': ({ FileName }) => `redux/${FileName}/thunks.ts`,
+          'template': '../templates/redux/thunk.template.js'
         },
         {
-          'name': ({ FileName, $root }) => `${$root}/applications/services/api/${FileName}.services.ts`,
-          'template': '../templates/redux/redux.template.js'
+          'name': ({ FileName }) => `redux/${FileName}/types.ts`,
+          'template': '../templates/redux/types.template.js'
+        },
+        {
+          'name': ({ FileName }) => `redux/${FileName}/services.ts`,
+          'template': '../templates/redux/service.template.js'
+        },
+        {
+          'name': () => 'redux/reducer.ts',
+          'template': '../templates/redux/reducer.template.js'
         }
       ],
       'questions': [
         {
           'name': 'FileName',
           'message': 'How to name file?',
+          'type': 'input'
+        },
+        {
+          'name': 'reducerName',
+          'message': 'How to name reducer?',
+          'type': 'input'
+        },
+        {
+          'name': 'sliceName',
+          'message': 'How to name slice?',
+          'type': 'input'
+        },
+        {
+          'name': 'fieldName',
+          'message': 'How to name field?',
+          'type': 'input'
+        },
+        {
+          'name': 'thunkName',
+          'message': 'How to name thunk?',
+          'type': 'input'
+        },
+        {
+          'name': 'pendingType',
+          'message': 'Payload type?',
+          'type': 'input'
+        },
+        {
+          'name': 'successType',
+          'message': 'Response type',
           'type': 'input'
         }
       ]
