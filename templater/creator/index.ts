@@ -10,14 +10,14 @@ import { dynamicRequire } from '../utils/dynamicRequire';
 import { mkFile } from '../utils/mk';
 
 
-export default (componentsPath: string, answers: IAnswersBase, config: IConfig) => {
+export default (answers: IAnswersBase, config: IConfig) => {
   // console.log(componentsPath);
-  // console.log(answers);
+  console.log(answers);
   // console.log(config);
 
   config.domains[answers.$domainIndex].templates.forEach(async (templateConfig: IConfigComponentTemplates) => {
     try {
-      if (templateConfig.condition && !templateConfig.condition(answers)) {
+      if (templateConfig.when && !templateConfig.when(answers)) {
         return;
       }
 
@@ -36,7 +36,7 @@ export default (componentsPath: string, answers: IAnswersBase, config: IConfig) 
         name = templateConfig.name(answers);
       }
 
-      const componentsPathNext = name.includes(answers.$root) ? '' : componentsPath + '/';
+      const componentsPathNext = name.includes(answers.$root) ? '' : answers.$createPath + '/';
       mkFile(`${componentsPathNext}${name}`, content);
       runLinter(`${config.variables.root}`);
     } catch (e) {

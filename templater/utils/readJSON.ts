@@ -1,7 +1,7 @@
 import { dynamicRequire } from './dynamicRequire';
 import { fileExists } from './mk';
 
-import { parseConfigQuestions } from './parseonfigQuestions';
+import { parseConfigQuestions } from './parseConfigQuestions';
 
 import { IConfig } from '../types/config.types';
 

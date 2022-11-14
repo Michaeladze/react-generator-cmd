@@ -16,7 +16,7 @@ export interface IConfigDomain {
 export interface IConfigComponentTemplates {
   name: string | ((answers: IAnswersBase) => string);
   template: string;
-  condition?: (answers: IAnswersBase) => boolean;
+  when?: (answers: IAnswersBase) => boolean;
 }
 
 export interface IConfigComponentQuestion {

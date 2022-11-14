@@ -40,7 +40,7 @@ module.exports = {
         {
           'name': '../../../router/index.tsx',
           'template': '../templates/router/index.template.js',
-          'condition': ({ $createPath }) => $createPath.includes('pages')
+          'when': ({ $createPath }) => $createPath.includes('pages')
         }
       ],
       'questions': [
@@ -76,6 +76,13 @@ module.exports = {
               'name': 'useForm'
             }
           ]
+        },
+        {
+          'name': 'routePath',
+          'message': 'What route?',
+          'type': 'input',
+          'validate': (input) => input !== '',
+          'when': (answers) => Object.values(answers).some((v) => v === 'pages')
         }
       ]
     },
