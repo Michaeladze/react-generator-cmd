@@ -9,7 +9,6 @@ const defaultConfig: IConfig = {
   variables: {
     root: './'
   },
-  explicit: false,
   domains: []
 };
 

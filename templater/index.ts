@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 
 import {
-  merge,
+  concat,
   Subject
 } from 'rxjs';
 
@@ -24,10 +24,6 @@ import {
   IAnswersBase,
   Question
 } from '../src/types/types';
-
-
-const prompts: any = new Subject();
-const userPrompts: any = new Subject();
 
 const config: IConfig = readJSON();
 const isValidConfig = validateJSON(config);
@@ -60,7 +56,11 @@ const initialChoices: { name: string }[] = config.domains.map((d: IConfigDomain)
   };
 });
 
-inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
+const prompts: Subject<any> = new Subject();
+const userPrompts: Subject<any> = new Subject();
+
+// @ts-ignore
+inquirer.prompt(concat(prompts, userPrompts)).ui.process.subscribe(
   (q) => {
     answers[q.name] = q.answer;
 
@@ -68,9 +68,25 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
     try {
       if (answers.$domainIndex >= 0 && config.domains) {
-        const lastQuestion = config.domains[answers.$domainIndex].questions[config.domains[answers.$domainIndex].questions.length - 1];
+        const questions = config.domains[answers.$domainIndex].questions;
+        const lastQuestion = questions[questions.length - 1];
 
-        if (q.name === lastQuestion.name) {
+        // next question is invisible and is last question
+        const currentQuestionIndex = questions.findIndex((qu: IConfigComponentQuestion) => qu.name === q.name);
+        const nextQuestion = questions[currentQuestionIndex + 1];
+
+        const isNextQuestionLast = lastQuestion.name === nextQuestion?.name;
+        let isNextQuestionVisible = true;
+
+        if (nextQuestion?.when !== undefined) {
+          if (typeof nextQuestion.when === 'boolean') {
+            isNextQuestionVisible = nextQuestion.when;
+          } else {
+            isNextQuestionVisible = nextQuestion.when(answers);
+          }
+        }
+
+        if (q.name === lastQuestion.name || (isNextQuestionLast && !isNextQuestionVisible)) {
           userPrompts.complete();
           return;
         }
@@ -79,7 +95,7 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
       throw new Error('could not terminate');
     }
 
-    // ---
+    // -----------------------------------------------------------------------------------------------------------------
 
     if (prompts.isStopped) {
       return;
@@ -102,26 +118,24 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
         throw new Error('Could not define the domain');
       }
 
-      if (!config.explicit) {
-        const currentKeys = Object.keys(structure);
+      const currentKeys = Object.keys(structure);
 
-        if (currentKeys.length === 1) {
-          nextKey = currentKeys[0];
-          answers.$createPath += `/${nextKey}`;
-          structure = structure[nextKey];
-        }
+      if (currentKeys.length === 1) {
+        nextKey = currentKeys[0];
+        answers.$createPath += `/${nextKey}`;
+        structure = structure[nextKey];
+      }
 
-        try {
-          if (typeof structure === 'string') {
-            prompts.complete();
-            config.domains[answers.$domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
-              userPrompts.next(q);
-            });
-            return;
-          }
-        } catch (e) {
-          throw new Error('Could not complete prompts');
+      try {
+        if (typeof structure === 'string') {
+          prompts.complete();
+          config.domains[answers.$domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
+            userPrompts.next(q);
+          });
+          return;
         }
+      } catch (e) {
+        throw new Error('Could not complete prompts');
       }
 
       try {
@@ -150,7 +164,6 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
         throw new Error('1');
       }
 
-
       return;
     }
 
@@ -174,7 +187,7 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
       const keys = structure ? Object.keys(structure) : [];
       dynamicKey = keys.find((k) => k[0] === ':') || undefined;
 
-      if (keys.length === 1 && !dynamicKey && !config.explicit) {
+      if (keys.length === 1 && !dynamicKey) {
         nextKey = keys[0];
         answers.$createPath += `/${nextKey}`;
         structure = structure[nextKey];

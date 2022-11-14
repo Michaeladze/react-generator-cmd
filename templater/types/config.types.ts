@@ -2,7 +2,6 @@ import { IAnswersBase } from './types';
 
 export interface IConfig {
   variables: IConfigVariables;
-  explicit?: boolean;
   domains: IConfigDomain[];
 }
 
@@ -15,7 +14,7 @@ export interface IConfigDomain {
 
 export interface IConfigComponentTemplates {
   name: string | ((answers: IAnswersBase) => string);
-  template: string;
+  template: string | ((answers: IAnswersBase) => string);
   when?: (answers: IAnswersBase) => boolean;
 }
 
@@ -23,8 +22,8 @@ export interface IConfigComponentQuestion {
   name: string;
   message: string;
   type: string;
-  required?: boolean;
   validate?: (input: any) => boolean;
+  when?: boolean | ((answers: IAnswersBase) => boolean);
 }
 
 export interface IConfigVariablesRequired {

@@ -11,8 +11,7 @@ import { mkFile } from '../utils/mk';
 
 
 export default (answers: IAnswersBase, config: IConfig) => {
-  // console.log(componentsPath);
-  console.log(answers);
+  // console.log(answers);
   // console.log(config);
 
   config.domains[answers.$domainIndex].templates.forEach(async (templateConfig: IConfigComponentTemplates) => {
@@ -24,7 +23,8 @@ export default (answers: IAnswersBase, config: IConfig) => {
       let content = '';
 
       if (templateConfig.template) {
-        const invoker = dynamicRequire(path.resolve(config.variables.root, templateConfig.template));
+        const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
+        const invoker = dynamicRequire(path.resolve(config.variables.root, template));
         content = invoker(answers);
       }
 

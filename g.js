@@ -22,23 +22,23 @@ module.exports = {
       },
       'templates': [
         {
-          'name': ({ ComponentName }) => `${ComponentName}.tsx`,
+          'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.tsx`,
           'template': '../templates/components/component.template.js'
         },
         {
-          'name': ({ ComponentName }) => `${ComponentName}.css`,
+          'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.css`,
           'template': '../templates/components/style.template.js'
         },
         {
-          'name': ({ ComponentName }) => `${ComponentName}.test.tsx`,
+          'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.test.tsx`,
           'template': '../templates/components/tests.template.js'
         },
         {
-          'name': 'index.ts',
+          'name': ({ ComponentName }) => `${ComponentName}/index.ts`,
           'template': '../templates/components/index.template.js'
         },
         {
-          'name': '../../../router/index.tsx',
+          'name': '../../router/index.tsx',
           'template': '../templates/router/index.template.js',
           'when': ({ $createPath }) => $createPath.includes('pages')
         }
@@ -82,6 +82,7 @@ module.exports = {
           'message': 'What route?',
           'type': 'input',
           'validate': (input) => input !== '',
+          'default': '',
           'when': (answers) => Object.values(answers).some((v) => v === 'pages')
         }
       ]
@@ -92,7 +93,9 @@ module.exports = {
         'applications': {
           ':appId': {
             'components': {
-              'pages': ''
+              'pages': {
+                ':id': ''
+              }
             }
           }
         }
@@ -111,7 +114,7 @@ module.exports = {
           'template': '../templates/redux/redux.template.js'
         },
         {
-          'name': ({ FileName }) => `./services/api/${FileName}.services.ts`,
+          'name': ({ FileName, $root }) => `${$root}/applications/services/api/${FileName}.services.ts`,
           'template': '../templates/redux/redux.template.js'
         }
       ],
