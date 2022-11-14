@@ -38,7 +38,7 @@ module.exports = {
           'template': '../templates/components/index.template.js'
         },
         {
-          'name': ({ $root }) => `${$root}/router/index.tsx`,
+          'name': '../../../router/index.tsx',
           'template': '../templates/router/index.template.js',
           'condition': ({ $createPath }) => $createPath.includes('pages')
         }
@@ -104,7 +104,7 @@ module.exports = {
           'template': '../templates/redux/redux.template.js'
         },
         {
-          'name': ({ FileName, $root }) => `${$root}/services/api/${FileName}.services.ts`,
+          'name': ({ FileName }) => `./services/api/${FileName}.services.ts`,
           'template': '../templates/redux/redux.template.js'
         }
       ],

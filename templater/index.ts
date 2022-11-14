@@ -39,15 +39,21 @@ if (!isValidConfig) {
 
 let structure: any = {};
 let depth = 1;
-let componentsPath = config.variables.root;
+let componentsPath = config.variables.root || '';
 let nextKey = undefined;
 let dynamicKey: unknown = undefined;
 
 const answers: IAnswersBase = {
-  $root: config.variables.root,
   $domainIndex: -1,
   $createPath: ''
 };
+
+if (config.variables) {
+  Object.keys(config.variables).forEach((key: string) => {
+    // @ts-ignore
+    answers[`$${key}`] = config.variables[key];
+  });
+}
 
 const initialChoices: { name: string }[] = config.domains.map((d: IConfigDomain) => {
   return {

@@ -38907,56 +38907,7 @@ const readDirSync = path => {
   return fs.readdirSync(path);
 };
 const readFileSync = external_fs_.readFileSync;
-;// CONCATENATED MODULE: ./templater/types/types.ts
-let Characters;
-
-(function (Characters) {
-  Characters["Variable"] = "$";
-})(Characters || (Characters = {}));
-
-let Reserved;
-
-(function (Reserved) {
-  Reserved["Root"] = "$root$";
-})(Reserved || (Reserved = {}));
-;// CONCATENATED MODULE: ./templater/utils/setVariable.ts
-
-
-const typeGuard = (v, config) => {
-  return config.variables[v] !== undefined;
-};
-
-const setVariables = (path, answers, config) => {
-  const variables = [];
-
-  for (let i = 0; i < path.length - 1; i++) {
-    if (path[i] === Characters.Variable) {
-      for (let j = i + 1; j < path.length; j++) {
-        if (path[j] === Characters.Variable) {
-          variables.push(path.substring(i + 1, j));
-          break;
-        }
-      }
-    }
-  }
-
-  let result = path;
-
-  while (variables.length > 0) {
-    const variable = variables.pop();
-
-    if (!variable) {
-      return result;
-    }
-
-    const changeTo = typeGuard(variable, config) ? config.variables[variable] : answers[variable];
-    result = result.replace(`${Characters.Variable}${variable}${Characters.Variable}`, changeTo);
-  }
-
-  return result;
-};
 ;// CONCATENATED MODULE: ./templater/creator/index.ts
-
 
 
 
@@ -38974,7 +38925,7 @@ const setVariables = (path, answers, config) => {
       let content = '';
 
       if (templateConfig.template) {
-        const invoker = (0,dynamicRequire/* dynamicRequire */.l)(external_path_.resolve(__dirname, templateConfig.template));
+        const invoker = (0,dynamicRequire/* dynamicRequire */.l)(external_path_.resolve(config.variables.root, templateConfig.template));
         content = invoker(answers);
       }
 
@@ -38986,9 +38937,8 @@ const setVariables = (path, answers, config) => {
         name = templateConfig.name(answers);
       }
 
-      const fileName = setVariables(name, answers, config);
       const componentsPathNext = name.includes(answers.$root) ? '' : componentsPath + '/';
-      mkFile(`${componentsPathNext}${fileName}`, content);
+      mkFile(`${componentsPathNext}${name}`, content);
       runLinter(`${config.variables.root}`);
     } catch (e) {
       console.log(e);
@@ -39104,14 +39054,21 @@ if (!isValidConfig) {
 
 let structure = {};
 let depth = 1;
-let componentsPath = config.variables.root;
+let componentsPath = config.variables.root || '';
 let nextKey = undefined;
 let dynamicKey = undefined;
 const answers = {
-  $root: config.variables.root,
   $domainIndex: -1,
   $createPath: ''
 };
+
+if (config.variables) {
+  Object.keys(config.variables).forEach(key => {
+    // @ts-ignore
+    answers[`$${key}`] = config.variables[key];
+  });
+}
+
 const initialChoices = config.domains.map(d => {
   return {
     name: d.name

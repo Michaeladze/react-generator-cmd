@@ -8,7 +8,6 @@ import {
 import { IAnswersBase } from '../types/types';
 import { dynamicRequire } from '../utils/dynamicRequire';
 import { mkFile } from '../utils/mk';
-import { setVariables } from '../utils/setVariable';
 
 
 export default (componentsPath: string, answers: IAnswersBase, config: IConfig) => {
@@ -25,7 +24,7 @@ export default (componentsPath: string, answers: IAnswersBase, config: IConfig) 
       let content = '';
 
       if (templateConfig.template) {
-        const invoker = dynamicRequire(path.resolve(__dirname, templateConfig.template));
+        const invoker = dynamicRequire(path.resolve(config.variables.root, templateConfig.template));
         content = invoker(answers);
       }
 
@@ -37,9 +36,8 @@ export default (componentsPath: string, answers: IAnswersBase, config: IConfig) 
         name = templateConfig.name(answers);
       }
 
-      const fileName = setVariables(name, answers, config);
       const componentsPathNext = name.includes(answers.$root) ? '' : componentsPath + '/';
-      mkFile(`${componentsPathNext}${fileName}`, content);
+      mkFile(`${componentsPathNext}${name}`, content);
       runLinter(`${config.variables.root}`);
     } catch (e) {
       console.log(e);
