@@ -1,6 +1,7 @@
 module.exports = ({ ComponentName }) => {
 
-  return `import { ${ComponentName} } from './${ComponentName}';
+  return `/* istanbul ignore file */
+import { ${ComponentName} } from './${ComponentName}';
 
 export { ${ComponentName} };
 `;

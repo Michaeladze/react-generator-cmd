@@ -1,3 +1,5 @@
+import { IAnswersBase } from './types';
+
 export interface IConfig {
   variables: IConfigVariables;
   explicit?: boolean;
@@ -12,9 +14,9 @@ export interface IConfigDomain {
 }
 
 export interface IConfigComponentTemplates {
-  name: string;
+  name: string | ((answers: IAnswersBase) => string);
   template: string;
-  condition?: string;
+  condition?: (answers: IAnswersBase) => boolean;
 }
 
 export interface IConfigComponentQuestion {

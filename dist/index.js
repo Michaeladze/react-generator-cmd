@@ -38870,18 +38870,6 @@ var external_child_process_ = __webpack_require__(32081);
 function runLinter(path) {
   (0,external_child_process_.exec)(`eslint ${path} --fix`);
 }
-;// CONCATENATED MODULE: ./templater/types/types.ts
-let Characters;
-
-(function (Characters) {
-  Characters["Variable"] = "$";
-})(Characters || (Characters = {}));
-
-let Reserved;
-
-(function (Reserved) {
-  Reserved["Root"] = "$root$";
-})(Reserved || (Reserved = {}));
 // EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
 var dynamicRequire = __webpack_require__(77970);
 // EXTERNAL MODULE: external "fs"
@@ -38919,6 +38907,18 @@ const readDirSync = path => {
   return fs.readdirSync(path);
 };
 const readFileSync = external_fs_.readFileSync;
+;// CONCATENATED MODULE: ./templater/types/types.ts
+let Characters;
+
+(function (Characters) {
+  Characters["Variable"] = "$";
+})(Characters || (Characters = {}));
+
+let Reserved;
+
+(function (Reserved) {
+  Reserved["Root"] = "$root$";
+})(Reserved || (Reserved = {}));
 ;// CONCATENATED MODULE: ./templater/utils/setVariable.ts
 
 
@@ -38961,25 +38961,33 @@ const setVariables = (path, answers, config) => {
 
 
 
-
 /* harmony default export */ const creator = ((componentsPath, answers, config) => {
   // console.log(componentsPath);
   // console.log(answers);
   // console.log(config);
-  config.domains[answers.__domainIndex].templates.forEach(async ({
-    name,
-    template
-  }) => {
+  config.domains[answers.$domainIndex].templates.forEach(async templateConfig => {
     try {
+      if (templateConfig.condition && !templateConfig.condition(answers)) {
+        return;
+      }
+
       let content = '';
 
-      if (template) {
-        const invoker = (0,dynamicRequire/* dynamicRequire */.l)(external_path_.resolve(__dirname, template));
+      if (templateConfig.template) {
+        const invoker = (0,dynamicRequire/* dynamicRequire */.l)(external_path_.resolve(__dirname, templateConfig.template));
         content = invoker(answers);
       }
 
+      let name = '';
+
+      if (typeof templateConfig.name === 'string') {
+        name = templateConfig.name;
+      } else {
+        name = templateConfig.name(answers);
+      }
+
       const fileName = setVariables(name, answers, config);
-      const componentsPathNext = name.includes(Reserved.Root) ? '' : componentsPath + '/';
+      const componentsPathNext = name.includes(answers.$root) ? '' : componentsPath + '/';
       mkFile(`${componentsPathNext}${fileName}`, content);
       runLinter(`${config.variables.root}`);
     } catch (e) {
@@ -38995,27 +39003,28 @@ const parseConfigQuestions = config => {
 ;// CONCATENATED MODULE: ./templater/utils/readJSON.ts
 
 
+
 const defaultConfig = {
-  root: './',
+  variables: {
+    root: './'
+  },
   explicit: false,
-  domains: {}
+  domains: []
 };
 function readJSON() {
-  const GJSONExists = fileExists('./g2.json');
+  const GJSONExists = fileExists('./g.js');
 
   if (!GJSONExists) {
     return defaultConfig;
   }
 
-  const json = readFileSync('./g2.json', {
-    encoding: 'utf-8'
-  });
+  const json = (0,dynamicRequire/* dynamicRequire */.l)('../g.js');
 
   if (!json) {
     return defaultConfig;
   }
 
-  const parsedJSON = parseConfigQuestions(JSON.parse(json));
+  const parsedJSON = parseConfigQuestions(json);
   const result = { ...defaultConfig,
     ...parsedJSON
   };
@@ -39099,7 +39108,9 @@ let componentsPath = config.variables.root;
 let nextKey = undefined;
 let dynamicKey = undefined;
 const answers = {
-  __domainIndex: -1
+  $root: config.variables.root,
+  $domainIndex: -1,
+  $createPath: ''
 };
 const initialChoices = config.domains.map(d => {
   return {
@@ -39109,8 +39120,8 @@ const initialChoices = config.domains.map(d => {
 inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscribe(q => {
   answers[q.name] = q.answer; // Terminate
 
-  if (answers.__domainIndex >= 0 && config.domains) {
-    if (q.name === config.domains[answers.__domainIndex].questions[config.domains[answers.__domainIndex].questions.length - 1].name) {
+  if (answers.$domainIndex >= 0 && config.domains) {
+    if (q.name === config.domains[answers.$domainIndex].questions[config.domains[answers.$domainIndex].questions.length - 1].name) {
       userPrompts.complete();
       return;
     }
@@ -39121,10 +39132,10 @@ inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscr
     const domain = initialChoices.find(({
       name
     }) => name === q.answer);
-    answers.__domainIndex = config.domains.findIndex(d => d.name === (domain === null || domain === void 0 ? void 0 : domain.name));
+    answers.$domainIndex = config.domains.findIndex(d => d.name === (domain === null || domain === void 0 ? void 0 : domain.name));
 
-    if (answers.__domainIndex >= 0) {
-      const str = config.domains[answers.__domainIndex].structure;
+    if (answers.$domainIndex >= 0) {
+      const str = config.domains[answers.$domainIndex].structure;
       structure = !str || Object.keys(str).length === 0 ? '' : str;
     } else {
       prompts.complete();
@@ -39143,11 +39154,9 @@ inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscr
 
       if (typeof structure === 'string') {
         prompts.complete();
-
-        config.domains[answers.__domainIndex].questions.forEach(q => {
+        config.domains[answers.$domainIndex].questions.forEach(q => {
           userPrompts.next(q);
         });
-
         return;
       }
     }
@@ -39201,11 +39210,9 @@ inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscr
 
   if (typeof structure === 'string') {
     prompts.complete();
-
-    config.domains[answers.__domainIndex].questions.forEach(q => {
+    config.domains[answers.$domainIndex].questions.forEach(q => {
       userPrompts.next(q);
     });
-
     return;
   }
 
@@ -39231,6 +39238,7 @@ inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscr
   console.log(error);
 }, () => {
   componentsPath = componentsPath.split('/').filter(s => s !== '').join('/');
+  answers.$createPath = componentsPath;
   creator(componentsPath, answers, config);
 });
 prompts.next({

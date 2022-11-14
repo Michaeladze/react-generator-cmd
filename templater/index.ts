@@ -44,7 +44,9 @@ let nextKey = undefined;
 let dynamicKey: unknown = undefined;
 
 const answers: IAnswersBase = {
-  __domainIndex: -1
+  $root: config.variables.root,
+  $domainIndex: -1,
+  $createPath: ''
 };
 
 const initialChoices: { name: string }[] = config.domains.map((d: IConfigDomain) => {
@@ -59,8 +61,8 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
     // Terminate
 
-    if (answers.__domainIndex >= 0 && config.domains) {
-      if (q.name === config.domains[answers.__domainIndex].questions[config.domains[answers.__domainIndex].questions.length - 1].name) {
+    if (answers.$domainIndex >= 0 && config.domains) {
+      if (q.name === config.domains[answers.$domainIndex].questions[config.domains[answers.$domainIndex].questions.length - 1].name) {
         userPrompts.complete();
         return;
       }
@@ -70,10 +72,10 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
     if (q.name === Question.Create) {
       const domain = initialChoices.find(({ name }) => name === q.answer);
-      answers.__domainIndex = config.domains.findIndex((d: IConfigDomain) => d.name === domain?.name);
+      answers.$domainIndex = config.domains.findIndex((d: IConfigDomain) => d.name === domain?.name);
 
-      if (answers.__domainIndex >= 0) {
-        const str = config.domains[answers.__domainIndex].structure;
+      if (answers.$domainIndex >= 0) {
+        const str = config.domains[answers.$domainIndex].structure;
         structure = !str || Object.keys(str).length === 0 ? '' : str;
       } else {
         prompts.complete();
@@ -92,7 +94,7 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
         if (typeof structure === 'string') {
           prompts.complete();
-          config.domains[answers.__domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
+          config.domains[answers.$domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
             userPrompts.next(q);
           });
           return;
@@ -151,7 +153,7 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
     if (typeof structure === 'string') {
       prompts.complete();
-      config.domains[answers.__domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
+      config.domains[answers.$domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
         userPrompts.next(q);
       });
       return;
@@ -181,6 +183,7 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
   },
   () => {
     componentsPath = componentsPath.split('/').filter((s: string) => s !== '').join('/');
+    answers.$createPath = componentsPath;
     creator(componentsPath, answers, config);
   });
 

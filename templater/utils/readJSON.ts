@@ -1,34 +1,32 @@
-import {
-  fileExists,
-  readFileSync
-} from './mk';
+import { dynamicRequire } from './dynamicRequire';
+import { fileExists } from './mk';
 
 import { parseConfigQuestions } from './parseonfigQuestions';
 
 import { IConfig } from '../types/config.types';
 
 const defaultConfig: IConfig = {
-  root: './',
+  variables: {
+    root: './'
+  },
   explicit: false,
-  domains: {}
+  domains: []
 };
 
 export function readJSON(): IConfig {
-  const GJSONExists = fileExists('./g2.json');
+  const GJSONExists = fileExists('./g.js');
 
   if (!GJSONExists) {
     return defaultConfig;
   }
 
-  const json = readFileSync('./g2.json', {
-    encoding: 'utf-8'
-  });
+  const json = dynamicRequire('../g.js');
 
   if (!json) {
     return defaultConfig;
   }
 
-  const parsedJSON: IConfig = parseConfigQuestions(JSON.parse(json));
+  const parsedJSON: IConfig = parseConfigQuestions(json);
 
   const result: IConfig = {
     ...defaultConfig,
