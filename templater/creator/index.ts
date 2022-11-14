@@ -19,7 +19,7 @@ export default (componentsPath: string, answers: IAnswersBase, config: IConfig) 
   // console.log(answers);
   // console.log(config);
 
-  config.domains[answers.create].templates.forEach(async ({ name, template }: IConfigComponentTemplates) => {
+  config.domains[answers.__domainIndex].templates.forEach(async ({ name, template }: IConfigComponentTemplates) => {
     try {
       let content = '';
 

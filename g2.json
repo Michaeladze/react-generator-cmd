@@ -2,8 +2,9 @@
   "variables": {
     "root": "./output"
   },
-  "domains": {
-    "component": {
+  "domains": [
+    {
+      "name": "component",
       "structure": {
         "applications":{
           ":appId": {
@@ -73,7 +74,8 @@
         }
       ]
     },
-    "redux": {
+    {
+      "name": "redux",
       "structure": {
         "applications":{
           ":appId": {
@@ -109,5 +111,5 @@
         }
       ]
     }
-  }
+  ]
 }

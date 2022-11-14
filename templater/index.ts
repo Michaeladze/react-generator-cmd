@@ -8,7 +8,8 @@ import {
 import creator from './creator';
 import {
   IConfig,
-  IConfigComponentQuestion
+  IConfigComponentQuestion,
+  IConfigDomain
 } from './types/config.types';
 import { readJSON } from './utils/readJSON';
 
@@ -42,14 +43,14 @@ let componentsPath = config.variables.root;
 let nextKey = undefined;
 let dynamicKey: unknown = undefined;
 
-const answers: IAnswersBase = {};
+const answers: IAnswersBase = {
+  __domainIndex: -1
+};
 
-const initialChoices: { name: string }[] = [];
-
-Object.keys(config.domains).forEach((key: string) => {
-  initialChoices.push({
-    name: key
-  });
+const initialChoices: { name: string }[] = config.domains.map((d: IConfigDomain) => {
+  return {
+    name: d.name
+  };
 });
 
 inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
@@ -58,8 +59,8 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
     // Terminate
 
-    if (answers.create && config.domains) {
-      if (q.name === config.domains[answers.create].questions[config.domains[answers.create].questions.length - 1].name) {
+    if (answers.__domainIndex >= 0 && config.domains) {
+      if (q.name === config.domains[answers.__domainIndex].questions[config.domains[answers.__domainIndex].questions.length - 1].name) {
         userPrompts.complete();
         return;
       }
@@ -69,9 +70,10 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
     if (q.name === Question.Create) {
       const domain = initialChoices.find(({ name }) => name === q.answer);
+      answers.__domainIndex = config.domains.findIndex((d: IConfigDomain) => d.name === domain?.name);
 
-      if (domain) {
-        const str = config.domains[domain.name].structure;
+      if (answers.__domainIndex >= 0) {
+        const str = config.domains[answers.__domainIndex].structure;
         structure = !str || Object.keys(str).length === 0 ? '' : str;
       } else {
         prompts.complete();
@@ -90,7 +92,7 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
         if (typeof structure === 'string') {
           prompts.complete();
-          config.domains[answers.create].questions.forEach((q: IConfigComponentQuestion) => {
+          config.domains[answers.__domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
             userPrompts.next(q);
           });
           return;
@@ -149,7 +151,7 @@ inquirer.prompt(merge(prompts, userPrompts) as any).ui.process.subscribe(
 
     if (typeof structure === 'string') {
       prompts.complete();
-      config.domains[answers.create].questions.forEach((q: IConfigComponentQuestion) => {
+      config.domains[answers.__domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
         userPrompts.next(q);
       });
       return;

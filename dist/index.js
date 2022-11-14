@@ -38966,7 +38966,7 @@ const setVariables = (path, answers, config) => {
   // console.log(componentsPath);
   // console.log(answers);
   // console.log(config);
-  config.domains[answers.create].templates.forEach(async ({
+  config.domains[answers.__domainIndex].templates.forEach(async ({
     name,
     template
   }) => {
@@ -39098,18 +39098,19 @@ let depth = 1;
 let componentsPath = config.variables.root;
 let nextKey = undefined;
 let dynamicKey = undefined;
-const answers = {};
-const initialChoices = [];
-Object.keys(config.domains).forEach(key => {
-  initialChoices.push({
-    name: key
-  });
+const answers = {
+  __domainIndex: -1
+};
+const initialChoices = config.domains.map(d => {
+  return {
+    name: d.name
+  };
 });
 inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscribe(q => {
   answers[q.name] = q.answer; // Terminate
 
-  if (answers.create && config.domains) {
-    if (q.name === config.domains[answers.create].questions[config.domains[answers.create].questions.length - 1].name) {
+  if (answers.__domainIndex >= 0 && config.domains) {
+    if (q.name === config.domains[answers.__domainIndex].questions[config.domains[answers.__domainIndex].questions.length - 1].name) {
       userPrompts.complete();
       return;
     }
@@ -39120,9 +39121,10 @@ inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscr
     const domain = initialChoices.find(({
       name
     }) => name === q.answer);
+    answers.__domainIndex = config.domains.findIndex(d => d.name === (domain === null || domain === void 0 ? void 0 : domain.name));
 
-    if (domain) {
-      const str = config.domains[domain.name].structure;
+    if (answers.__domainIndex >= 0) {
+      const str = config.domains[answers.__domainIndex].structure;
       structure = !str || Object.keys(str).length === 0 ? '' : str;
     } else {
       prompts.complete();
@@ -39141,9 +39143,11 @@ inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscr
 
       if (typeof structure === 'string') {
         prompts.complete();
-        config.domains[answers.create].questions.forEach(q => {
+
+        config.domains[answers.__domainIndex].questions.forEach(q => {
           userPrompts.next(q);
         });
+
         return;
       }
     }
@@ -39197,9 +39201,11 @@ inquirer_default().prompt((0,cjs.merge)(prompts, userPrompts)).ui.process.subscr
 
   if (typeof structure === 'string') {
     prompts.complete();
-    config.domains[answers.create].questions.forEach(q => {
+
+    config.domains[answers.__domainIndex].questions.forEach(q => {
       userPrompts.next(q);
     });
+
     return;
   }
 

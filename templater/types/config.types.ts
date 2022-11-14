@@ -1,10 +1,11 @@
 export interface IConfig {
   variables: IConfigVariables;
   explicit?: boolean;
-  domains: Record<string, IConfigDomain>
+  domains: IConfigDomain[];
 }
 
 export interface IConfigDomain {
+  name: string;
   structure: any;
   templates: IConfigComponentTemplates[];
   questions: IConfigComponentQuestion[];
@@ -13,6 +14,7 @@ export interface IConfigDomain {
 export interface IConfigComponentTemplates {
   name: string;
   template: string;
+  condition?: string;
 }
 
 export interface IConfigComponentQuestion {
