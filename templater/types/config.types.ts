@@ -27,6 +27,8 @@ export interface IConfigComponentQuestion {
   validate?: (input: any) => boolean;
 }
 
-export interface IConfigVariables {
+export interface IConfigVariablesRequired {
   root: string;
 }
+
+export type IConfigVariables = IConfigVariablesRequired & Record<string, string>;
