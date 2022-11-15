@@ -31,3 +31,24 @@ export interface IConfigVariablesRequired {
 }
 
 export type IConfigVariables = IConfigVariablesRequired & Record<string, string>;
+
+export type ITemplateInvoker = (answers: IAnswersBase) => ITemplate;
+
+export interface ITemplate {
+  init: () => string;
+  updates: ITemplateUpdate[]
+}
+
+export interface ITemplateUpdate {
+  startFromLineThatContains: string;
+  searchFor: string;
+  changeWith: string;
+  whenLine: [TemplateUpdateOperator, string];
+}
+
+export enum TemplateUpdateOperator {
+  NotIncludes = 'not includes',
+  Includes = 'includes',
+  Equal = '===',
+  NotEqual = '!=='
+}

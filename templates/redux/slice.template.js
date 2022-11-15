@@ -1,6 +1,7 @@
 module.exports = ({ FileName, sliceName, fieldName, successType, thunkName }) => {
-
-  return `import { createSlice } from '@reduxjs/toolkit';
+  return {
+    init: () => {
+      return `import { createSlice } from '@reduxjs/toolkit';
 import { ${successType} } from './types';
 
 import { ${thunkName} } from './thunk';
@@ -24,4 +25,36 @@ export const ${sliceName}Slice = createSlice({
   },
 });
 `;
+    },
+    updates: [
+      {
+        startFromLineThatContains: 'from \'./types\';',
+        searchFor: '}',
+        changeWith: `, ${successType} }`,
+        whenLine: ['not includes', successType]
+      },
+      {
+        startFromLineThatContains: 'from \'./thunk\';',
+        searchFor: '}',
+        changeWith: `, ${thunkName} }`
+      },
+      {
+        startFromLineThatContains: `export interface I${sliceName}Slice`,
+        searchFor: '}',
+        changeWith: `${fieldName}: ${successType};\n}`
+      },
+      {
+        startFromLineThatContains: `const initialState: I${sliceName}Slice`,
+        searchFor: '};',
+        changeWith: `${fieldName}: {},\n}`
+      },
+      {
+        startFromLineThatContains: 'extraReducers',
+        searchFor: '},',
+        changeWith: `builder.addCase(${thunkName}.fulfilled, (state: I${sliceName}Slice, { payload }) => {
+                      state.${fieldName} = payload;
+                    });`
+      }
+    ]
+  };
 };

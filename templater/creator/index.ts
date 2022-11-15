@@ -1,13 +1,19 @@
 import * as path from 'path';
 
+import { updateFile } from './updateFile';
+
 import { runLinter } from '../../src/runLinter';
 import {
   IConfig,
-  IConfigComponentTemplates
+  IConfigComponentTemplates,
+  ITemplateInvoker
 } from '../types/config.types';
 import { IAnswersBase } from '../types/types';
 import { dynamicRequire } from '../utils/dynamicRequire';
-import { mkFile } from '../utils/mk';
+import {
+  fileExists,
+  mkFile
+} from '../utils/mk';
 
 
 export default (answers: IAnswersBase, config: IConfig) => {
@@ -20,14 +26,6 @@ export default (answers: IAnswersBase, config: IConfig) => {
         return;
       }
 
-      let content = '';
-
-      if (templateConfig.template) {
-        const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
-        const invoker = dynamicRequire(path.resolve(config.variables.root, template));
-        content = invoker(answers);
-      }
-
       let name = '';
 
       if (typeof templateConfig.name === 'string') {
@@ -37,10 +35,26 @@ export default (answers: IAnswersBase, config: IConfig) => {
       }
 
       const componentsPathNext = name.includes(answers.$root) ? '' : answers.$createPath + '/';
-      mkFile(`${componentsPathNext}${name}`, content);
-      runLinter(`${config.variables.root}`);
+
+      if (templateConfig.template) {
+
+        const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
+        const invoker: ITemplateInvoker = dynamicRequire(path.resolve(config.variables.root, template));
+
+        if (fileExists(`${componentsPathNext}${name}`)) {
+          const updates = invoker(answers).updates;
+          updateFile(`${componentsPathNext}${name}`, updates);
+          console.log('updated');
+        } else {
+          const content = invoker(answers).init();
+          mkFile(`${componentsPathNext}${name}`, content);
+          console.log('created');
+        }
+      }
     } catch (e) {
       console.log(e);
     }
   });
+
+  runLinter(`${config.variables.root}`);
 };
