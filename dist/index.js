@@ -38924,14 +38924,14 @@ const updateFile = (path, updates, onUpdate) => {
             for (let l = i; l < lines.length; l++) {
               if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
                 lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-                break;
+                return;
               }
             }
           } else {
             for (let l = i; l >= 0; l--) {
               if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
                 lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-                break;
+                return;
               }
             }
           }
