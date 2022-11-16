@@ -39053,9 +39053,10 @@ const defaultConfig = {
 function readJSON() {
   const location = '../../../';
   const file = external_path_.resolve(__dirname, location, 'g.js');
-  console.log(file);
+  console.log('\x1b[33m%s\x1b[0m', `Reading file ${file}`);
   const GJSONExists = fileExists(file);
   if (!GJSONExists) {
+    console.log('\x1b[33m%s\x1b[0m', 'g.js not found. Using default config.');
     return defaultConfig;
   }
   const json = (0,dynamicRequire/* dynamicRequire */.l)(file);
