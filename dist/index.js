@@ -38875,6 +38875,11 @@ let TemplateUpdateOperator;
   TemplateUpdateOperator["Equal"] = "===";
   TemplateUpdateOperator["NotEqual"] = "!==";
 })(TemplateUpdateOperator || (TemplateUpdateOperator = {}));
+let TemplateUpdateDirection;
+(function (TemplateUpdateDirection) {
+  TemplateUpdateDirection["Up"] = "up";
+  TemplateUpdateDirection["Down"] = "down";
+})(TemplateUpdateDirection || (TemplateUpdateDirection = {}));
 ;// CONCATENATED MODULE: ./templater/creator/checkCondition.ts
 
 const checkCondition = (line, when) => {
@@ -38892,6 +38897,7 @@ const checkCondition = (line, when) => {
 ;// CONCATENATED MODULE: ./templater/creator/updateFile.ts
 
 
+
 const updateFile = (path, updates) => {
   external_fs_.readFile(path, {
     encoding: 'utf8'
@@ -38901,10 +38907,19 @@ const updateFile = (path, updates) => {
       const line = lines[i];
       updates.forEach(u => {
         if (line.includes(u.startFromLineThatContains)) {
-          for (let l = i; l < lines.length; l++) {
-            if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
-              lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-              break;
+          if (!u.direction || u.direction === TemplateUpdateDirection.Down) {
+            for (let l = i; l < lines.length; l++) {
+              if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
+                lines[l] = lines[l].replace(u.searchFor, u.changeWith);
+                break;
+              }
+            }
+          } else {
+            for (let l = i; l >= 0; l--) {
+              if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
+                lines[l] = lines[l].replace(u.searchFor, u.changeWith);
+                break;
+              }
             }
           }
         }
@@ -38994,25 +39009,26 @@ const readFileSync = external_fs_.readFileSync;
       }
       const componentsPathNext = name.includes(answers.$root) ? '' : answers.$createPath + '/';
       if (templateConfig.template) {
+        const filePath = `${componentsPathNext}${name}`;
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
         const invoker = (0,dynamicRequire/* dynamicRequire */.l)(external_path_.resolve(config.variables.root, template));
-        if (fileExists(`${componentsPathNext}${name}`)) {
+        if (fileExists(filePath)) {
           const updates = invoker(answers).updates;
           if (updates) {
-            updateFile(`${componentsPathNext}${name}`, updates);
-            logger.success('Updated file', `${componentsPathNext}${name}`);
+            updateFile(filePath, updates);
+            logger.success('Updated file', filePath);
           }
         } else {
           const content = invoker(answers).init;
-          mkFile(`${componentsPathNext}${name}`, content);
-          logger.success('Created file', `${componentsPathNext}${name}`);
+          mkFile(filePath, content);
+          logger.success('Created file', filePath);
         }
+        runLinter(`${config.variables.root}`);
       }
     } catch (e) {
       logger.error(e);
     }
   });
-  runLinter(`${config.variables.root}`);
 });
 ;// CONCATENATED MODULE: ./templater/utils/basicTypes.ts
 const baseTypes = {
