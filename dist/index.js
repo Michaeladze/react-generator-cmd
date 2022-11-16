@@ -38898,7 +38898,7 @@ const checkCondition = (line, when) => {
 
 
 
-const updateFile = (path, updates) => {
+const updateFile = (path, updates, cb) => {
   external_fs_.readFile(path, {
     encoding: 'utf8'
   }, (err, data) => {
@@ -38929,6 +38929,8 @@ const updateFile = (path, updates) => {
     external_fs_.writeFile(path, content, err => {
       if (err) {
         console.log(err);
+      } else {
+        cb && cb();
       }
     });
   });
@@ -39017,15 +39019,18 @@ const readFileSync = external_fs_.readFileSync;
         if (fileExists(filePath)) {
           const updates = invoker(answers).updates;
           if (updates) {
-            updateFile(filePath, updates);
+            updateFile(filePath, updates, () => {
+              runLinter(filePath);
+            });
             logger.success('Updated file', filePath);
           }
         } else {
           const content = invoker(answers).init;
-          mkFile(filePath, content);
+          mkFile(filePath, content, () => {
+            runLinter(filePath);
+          });
           logger.success('Created file', filePath);
         }
-        runLinter(filePath);
       }
     } catch (e) {
       logger.error(e);
