@@ -255,7 +255,6 @@ inquirer.prompt(concat(prompts, userPrompts)).ui.process.subscribe(
     console.log(error);
   },
   () => {
-    console.log(answers);
     answers.$createPath = answers.$createPath.split('/').filter((s: string) => s !== '').join('/');
     creator(answers, config);
   });

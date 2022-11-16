@@ -40,7 +40,7 @@ export default (answers: IAnswersBase, config: IConfig) => {
 
       if (templateConfig.template) {
 
-        const filePath = path.resolve(componentsPathNext, name);
+        const filePath = path.join(componentsPathNext, name);
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
         const invoker: ITemplateInvoker = dynamicRequire(path.resolve(config.variables.root, template));
 

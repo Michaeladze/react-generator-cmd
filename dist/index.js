@@ -39011,7 +39011,7 @@ const readFileSync = external_fs_.readFileSync;
       }
       const componentsPathNext = name.includes(answers.$root) ? '' : answers.$createPath + '/';
       if (templateConfig.template) {
-        const filePath = external_path_.resolve(componentsPathNext, name);
+        const filePath = external_path_.join(componentsPathNext, name);
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
         const invoker = (0,dynamicRequire/* dynamicRequire */.l)(external_path_.resolve(config.variables.root, template));
         if (fileExists(filePath)) {
@@ -39085,7 +39085,7 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  const location = '../../../';
+  const location = '../';
   const file = external_path_.resolve(__dirname, location, 'g.js');
   logger.info(`Reading file ${file}`);
   const GJSONExists = fileExists(file);
