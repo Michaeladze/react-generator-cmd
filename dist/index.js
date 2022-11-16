@@ -38935,13 +38935,6 @@ const updateFile = (path, updates) => {
 };
 // EXTERNAL MODULE: external "child_process"
 var external_child_process_ = __webpack_require__(32081);
-;// CONCATENATED MODULE: ./src/runLinter.ts
-
-function runLinter(path) {
-  (0,external_child_process_.exec)(`eslint ${path} --fix`);
-}
-// EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
-var dynamicRequire = __webpack_require__(77970);
 ;// CONCATENATED MODULE: ./templater/utils/logger.ts
 const logger = {
   info: (...args) => {
@@ -38954,6 +38947,15 @@ const logger = {
     console.log('\x1b[31m%s\x1b[0m', ...args);
   }
 };
+;// CONCATENATED MODULE: ./src/runLinter.ts
+
+
+function runLinter(path) {
+  logger.info(`Running linter for ${path}`);
+  (0,external_child_process_.exec)(`eslint ${path} --fix`);
+}
+// EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
+var dynamicRequire = __webpack_require__(77970);
 ;// CONCATENATED MODULE: ./templater/utils/mk.ts
 
 const mkDir = path => {
@@ -39023,7 +39025,7 @@ const readFileSync = external_fs_.readFileSync;
           mkFile(filePath, content);
           logger.success('Created file', filePath);
         }
-        runLinter(`${config.variables.root}`);
+        runLinter(filePath);
       }
     } catch (e) {
       logger.error(e);
@@ -39083,7 +39085,7 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  const location = '../../../';
+  const location = '../';
   const file = external_path_.resolve(__dirname, location, 'g.js');
   logger.info(`Reading file ${file}`);
   const GJSONExists = fileExists(file);

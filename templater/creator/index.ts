@@ -57,7 +57,7 @@ export default (answers: IAnswersBase, config: IConfig) => {
           logger.success('Created file', filePath);
         }
 
-        runLinter(`${config.variables.root}`);
+        runLinter(filePath);
       }
     } catch (e) {
       logger.error(e);
