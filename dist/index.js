@@ -38963,10 +38963,9 @@ var dynamicRequire = __webpack_require__(77970);
 ;// CONCATENATED MODULE: ./templater/utils/mk.ts
 
 
-
 const mkDir = filePath => {
   try {
-    const normalizedPath = external_path_.normalize(filePath);
+    const normalizedPath = normalizePath(filePath);
     const pathArr = normalizedPath.split('/').filter(s => s !== '' && s !== '.');
     let p = '.';
     while (pathArr.length > 0) {
@@ -38983,7 +38982,7 @@ const mkDir = filePath => {
 };
 const mkFile = (filePath, data, onCreate) => {
   try {
-    const normalizedPath = external_path_.normalize(filePath);
+    const normalizedPath = normalizePath(filePath);
     if (!external_fs_.existsSync(normalizedPath)) {
       const tmp = normalizedPath.split('/');
       const lastSlash = tmp.lastIndexOf('/');
@@ -39001,7 +39000,7 @@ const mkFile = (filePath, data, onCreate) => {
 };
 const fileExists = filePath => {
   try {
-    const normalizedPath = external_path_.normalize(filePath);
+    const normalizedPath = normalizePath(filePath);
     return external_fs_.existsSync(normalizedPath);
   } catch (e) {
     logger.info(e);
@@ -39012,6 +39011,9 @@ const readDirSync = path => {
   return fs.readdirSync(path);
 };
 const readFileSync = external_fs_.readFileSync;
+const normalizePath = filePath => {
+  return filePath.replace(/\\/g, '/');
+};
 ;// CONCATENATED MODULE: ./templater/creator/index.ts
 
 
