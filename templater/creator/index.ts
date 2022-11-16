@@ -44,11 +44,9 @@ export default (answers: IAnswersBase, config: IConfig) => {
         if (fileExists(`${componentsPathNext}${name}`)) {
           const updates = invoker(answers).updates;
           updateFile(`${componentsPathNext}${name}`, updates);
-          console.log('updated');
         } else {
-          const content = invoker(answers).init();
+          const content = invoker(answers).init;
           mkFile(`${componentsPathNext}${name}`, content);
-          console.log('created');
         }
       }
     } catch (e) {

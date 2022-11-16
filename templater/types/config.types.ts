@@ -35,7 +35,7 @@ export type IConfigVariables = IConfigVariablesRequired & Record<string, string>
 export type ITemplateInvoker = (answers: IAnswersBase) => ITemplate;
 
 export interface ITemplate {
-  init: () => string;
+  init: string;
   updates: ITemplateUpdate[]
 }
 

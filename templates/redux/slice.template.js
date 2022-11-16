@@ -1,7 +1,6 @@
 module.exports = ({ sliceName, fieldName, successType, thunkName }) => {
   return {
-    init: () => {
-      return `import { createSlice } from '@reduxjs/toolkit';
+    init: `import { createSlice } from '@reduxjs/toolkit';
 import { ${successType} } from './types';
 
 import { ${thunkName} } from './thunk';
@@ -24,8 +23,7 @@ export const ${sliceName}Slice = createSlice({
     });
   },
 });
-`;
-    },
+`,
     updates: [
       {
         startFromLineThatContains: 'from \'./types\';',
