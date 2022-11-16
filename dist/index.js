@@ -38963,9 +38963,11 @@ var dynamicRequire = __webpack_require__(77970);
 ;// CONCATENATED MODULE: ./templater/utils/mk.ts
 
 
-const mkDir = path => {
+
+const mkDir = filePath => {
   try {
-    const pathArr = path.split('/').filter(s => s !== '' && s !== '.');
+    const normalizedPath = external_path_.normalize(filePath);
+    const pathArr = normalizedPath.split('/').filter(s => s !== '' && s !== '.');
     let p = '.';
     while (pathArr.length > 0) {
       const folder = pathArr.shift();
@@ -38979,28 +38981,28 @@ const mkDir = path => {
     logger.error('Error in mkDir() function');
   }
 };
-const mkFile = (path, data, onCreate) => {
+const mkFile = (filePath, data, onCreate) => {
   try {
-    if (!external_fs_.existsSync(path)) {
-      const tmp = path.split('/');
+    const normalizedPath = external_path_.normalize(filePath);
+    if (!external_fs_.existsSync(normalizedPath)) {
+      const tmp = normalizedPath.split('/');
       const lastSlash = tmp.lastIndexOf('/');
       const pathToFile = tmp.slice(0, lastSlash).join('/');
-      console.log('mkDir', pathToFile);
       mkDir(pathToFile);
-      console.log('appendFileSync', path);
-      external_fs_.appendFileSync(path, data);
+      external_fs_.appendFileSync(normalizedPath, data);
       onCreate && onCreate();
     } else {
-      logger.info(`File already exists ${path}`);
+      logger.info(`File already exists ${normalizedPath}`);
     }
   } catch (e) {
     logger.info(e);
     logger.error('Error in mkFile() function');
   }
 };
-const fileExists = path => {
+const fileExists = filePath => {
   try {
-    return external_fs_.existsSync(path);
+    const normalizedPath = external_path_.normalize(filePath);
+    return external_fs_.existsSync(normalizedPath);
   } catch (e) {
     logger.info(e);
     logger.error('Error in fileExists() function');
