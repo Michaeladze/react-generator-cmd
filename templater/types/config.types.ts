@@ -43,7 +43,8 @@ export interface ITemplateUpdate {
   startFromLineThatContains: string;
   searchFor: string;
   changeWith: string;
-  whenLine: [TemplateUpdateOperator, string];
+  direction?: TemplateUpdateDirection;
+  whenLine?: [TemplateUpdateOperator, string];
 }
 
 export enum TemplateUpdateOperator {
@@ -51,4 +52,9 @@ export enum TemplateUpdateOperator {
   Includes = 'includes',
   Equal = '===',
   NotEqual = '!=='
+}
+
+export enum TemplateUpdateDirection {
+  Up = 'up',
+  Down = 'down'
 }
