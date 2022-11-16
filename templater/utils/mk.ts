@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 
-import * as path from 'path';
 
 import { logger } from './logger';
 
@@ -8,7 +7,7 @@ import { AnyFunction } from '../types/common.types';
 
 export const mkDir = (filePath: string) => {
   try {
-    const normalizedPath = path.normalize(filePath);
+    const normalizedPath = normalizePath(filePath);
     const pathArr = normalizedPath.split('/').filter((s: string) => s !== '' && s !== '.');
     let p = '.';
 
@@ -29,7 +28,7 @@ export const mkDir = (filePath: string) => {
 
 export const mkFile = (filePath: string, data: string, onCreate?: AnyFunction) => {
   try {
-    const normalizedPath = path.normalize(filePath);
+    const normalizedPath = normalizePath(filePath);
 
     if (!fs.existsSync(normalizedPath)) {
       const tmp = normalizedPath.split('/');
@@ -50,7 +49,7 @@ export const mkFile = (filePath: string, data: string, onCreate?: AnyFunction) =
 
 export const fileExists = (filePath: string) => {
   try {
-    const normalizedPath = path.normalize(filePath);
+    const normalizedPath = normalizePath(filePath);
     return fs.existsSync(normalizedPath);
   } catch (e) {
     logger.info(e);
@@ -63,3 +62,7 @@ export const readDirSync = (path: string) => {
 };
 
 export const readFileSync = fs.readFileSync;
+
+export const normalizePath = (filePath: string): string => {
+  return filePath.replace(/\\/g, '/');
+};
