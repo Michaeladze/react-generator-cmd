@@ -39178,6 +39178,9 @@ inquirer_default().prompt((0,cjs.concat)(prompts, userPrompts)).ui.process.subsc
           isNextQuestionVisible = nextQuestion.when(answers);
         }
       }
+      console.log(q);
+      console.log('isNextQuestionLast', isNextQuestionLast);
+      console.log('isNextQuestionVisible', isNextQuestionVisible);
       if (q.name === lastQuestion.name || isNextQuestionLast && !isNextQuestionVisible) {
         userPrompts.complete();
         return;
@@ -39306,6 +39309,7 @@ inquirer_default().prompt((0,cjs.concat)(prompts, userPrompts)).ui.process.subsc
 }, error => {
   console.log(error);
 }, () => {
+  console.log(answers);
   answers.$createPath = answers.$createPath.split('/').filter(s => s !== '').join('/');
   creator(answers, config);
 });
