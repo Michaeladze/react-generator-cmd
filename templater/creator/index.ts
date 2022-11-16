@@ -10,6 +10,7 @@ import {
 } from '../types/config.types';
 import { IAnswersBase } from '../types/types';
 import { dynamicRequire } from '../utils/dynamicRequire';
+import { logger } from '../utils/logger';
 import {
   fileExists,
   mkFile
@@ -46,14 +47,16 @@ export default (answers: IAnswersBase, config: IConfig) => {
 
           if (updates) {
             updateFile(`${componentsPathNext}${name}`, updates);
+            logger.success('Updated file', `${componentsPathNext}${name}`);
           }
         } else {
           const content = invoker(answers).init;
           mkFile(`${componentsPathNext}${name}`, content);
+          logger.success('Created file', `${componentsPathNext}${name}`);
         }
       }
     } catch (e) {
-      console.log(e);
+      logger.error(e);
     }
   });
 
