@@ -38,7 +38,7 @@ module.exports = {
           'template': '../templates/components/index.template.js'
         },
         {
-          'name': '../../router/index.tsx',
+          'name': './router/index.tsx',
           'template': '../templates/router/index.template.js',
           'when': ({ $createPath }) => $createPath.includes('pages')
         }

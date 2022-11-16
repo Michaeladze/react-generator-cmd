@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import { updateFile } from './updateFile';
 
+import { runLinter } from '../../src/runLinter';
 import {
   IConfig,
   IConfigComponentTemplates,
@@ -40,6 +41,7 @@ export default (answers: IAnswersBase, config: IConfig) => {
       if (templateConfig.template) {
 
         const filePath = path.join(componentsPathNext, name);
+        logger.info(`Creating file ${filePath}`);
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
         const invoker: ITemplateInvoker = dynamicRequire(path.resolve(config.variables.root, template));
 
@@ -49,14 +51,14 @@ export default (answers: IAnswersBase, config: IConfig) => {
           if (updates) {
             updateFile(filePath, updates, () => {
               logger.success('Updated file', filePath);
-              // runLinter(filePath);
+              runLinter(filePath);
             });
           }
         } else {
           const content = invoker(answers).init;
           mkFile(filePath, content, () => {
             logger.success('Created file', filePath);
-            // runLinter(filePath);
+            runLinter(filePath);
           });
         }
       }

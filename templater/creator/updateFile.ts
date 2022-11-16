@@ -7,6 +7,7 @@ import {
   ITemplateUpdate,
   TemplateUpdateDirection
 } from '../types/config.types';
+import { logger } from '../utils/logger';
 
 export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: AnyFunction) => {
   fs.readFile(path, {
@@ -46,7 +47,8 @@ export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: 
 
     fs.writeFile(path, content, (err) => {
       if (err) {
-        console.log(err);
+        logger.info(err);
+        logger.error('Error in updateFile() function');
       } else {
         onUpdate && onUpdate();
       }

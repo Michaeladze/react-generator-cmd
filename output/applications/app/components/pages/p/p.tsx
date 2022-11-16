@@ -1,6 +1,6 @@
 import React from 'react';
-import './Atom.css'; 
-import { useDispatch } from 'react-redux';
+import './p.css'; 
+
 
 
 
@@ -8,9 +8,8 @@ interface IProps {
     
 }
 
-export const Atom: React.FC<IProps> = ({}: IProps) => {
-  const dispatch = useDispatch();
-
+export const p: React.FC<IProps> = ({}: IProps) => {
+  
 
 
   // -------------------------------------------------------------------------------------------------------------------

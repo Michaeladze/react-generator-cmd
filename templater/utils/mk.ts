@@ -20,21 +20,31 @@ export const mkDir = (path: string) => {
 };
 
 export const mkFile = (path: string, data: string, onCreate?: AnyFunction) => {
-  if (!fs.existsSync(path)) {
-    const tmp = path.split('/');
-    const lastSlash = tmp.lastIndexOf('/');
-    const pathToFile = tmp.slice(0, lastSlash).join('/');
-    mkDir(pathToFile);
+  try {
+    if (!fs.existsSync(path)) {
+      const tmp = path.split('/');
+      const lastSlash = tmp.lastIndexOf('/');
+      const pathToFile = tmp.slice(0, lastSlash).join('/');
+      mkDir(pathToFile);
 
-    fs.appendFileSync(path, data);
-    onCreate && onCreate();
-  } else {
-    logger.info(`File already exists ${path}`);
+      fs.appendFileSync(path, data);
+      onCreate && onCreate();
+    } else {
+      logger.info(`File already exists ${path}`);
+    }
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in mkFile() function');
   }
 };
 
 export const fileExists = (path: string) => {
-  return fs.existsSync(path);
+  try {
+    return fs.existsSync(path);
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in fileExists() function');
+  }
 };
 
 export const readDirSync = (path: string) => {
