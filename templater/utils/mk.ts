@@ -15,6 +15,7 @@ export const mkDir = (path: string) => {
 
       if (!fs.existsSync(p)) {
         fs.mkdirSync(p);
+
       }
     }
   } catch (e) {
@@ -29,7 +30,9 @@ export const mkFile = (path: string, data: string, onCreate?: AnyFunction) => {
       const tmp = path.split('/');
       const lastSlash = tmp.lastIndexOf('/');
       const pathToFile = tmp.slice(0, lastSlash).join('/');
+      console.log('mkDir', pathToFile);
       mkDir(pathToFile);
+      console.log('appendFileSync', path);
 
       fs.appendFileSync(path, data);
       onCreate && onCreate();
