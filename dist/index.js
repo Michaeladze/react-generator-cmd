@@ -38985,7 +38985,9 @@ const mkFile = (path, data, onCreate) => {
       const tmp = path.split('/');
       const lastSlash = tmp.lastIndexOf('/');
       const pathToFile = tmp.slice(0, lastSlash).join('/');
+      console.log('mkDir', pathToFile);
       mkDir(pathToFile);
+      console.log('appendFileSync', path);
       external_fs_.appendFileSync(path, data);
       onCreate && onCreate();
     } else {
