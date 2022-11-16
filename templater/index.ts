@@ -91,6 +91,10 @@ inquirer.prompt(concat(prompts, userPrompts)).ui.process.subscribe(
           }
         }
 
+        console.log(q);
+        console.log('isNextQuestionLast', isNextQuestionLast);
+        console.log('isNextQuestionVisible', isNextQuestionVisible);
+
         if (q.name === lastQuestion.name || (isNextQuestionLast && !isNextQuestionVisible)) {
           userPrompts.complete();
           return;
@@ -240,6 +244,7 @@ inquirer.prompt(concat(prompts, userPrompts)).ui.process.subscribe(
     console.log(error);
   },
   () => {
+    console.log(answers);
     answers.$createPath = answers.$createPath.split('/').filter((s: string) => s !== '').join('/');
     creator(answers, config);
   });
