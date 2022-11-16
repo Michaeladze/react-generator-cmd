@@ -5,17 +5,21 @@ import { logger } from './logger';
 import { AnyFunction } from '../types/common.types';
 
 export const mkDir = (path: string) => {
+  try {
+    const pathArr = path.split('/').filter((s: string) => s !== '' && s !== '.');
+    let p = '.';
 
-  const pathArr = path.split('/').filter((s: string) => s !== '' && s !== '.');
-  let p = '.';
+    while (pathArr.length > 0) {
+      const folder = pathArr.shift();
+      p += `/${folder}`;
 
-  while (pathArr.length > 0) {
-    const folder = pathArr.shift();
-    p += `/${folder}`;
-
-    if (!fs.existsSync(p)) {
-      fs.mkdirSync(p);
+      if (!fs.existsSync(p)) {
+        fs.mkdirSync(p);
+      }
     }
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in mkDir() function');
   }
 };
 
