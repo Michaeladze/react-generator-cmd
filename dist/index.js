@@ -38935,8 +38935,8 @@ const updateFile = (path, updates, onUpdate) => {
     });
   });
 };
-// EXTERNAL MODULE: external "child_process"
-var external_child_process_ = __webpack_require__(32081);
+// EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
+var dynamicRequire = __webpack_require__(77970);
 ;// CONCATENATED MODULE: ./templater/utils/logger.ts
 const logger = {
   info: (...args) => {
@@ -38949,15 +38949,6 @@ const logger = {
     console.log('\x1b[31m%s\x1b[0m', ...args);
   }
 };
-;// CONCATENATED MODULE: ./src/runLinter.ts
-
-
-function runLinter(path) {
-  logger.info(`Running linter for ${path}`);
-  (0,external_child_process_.exec)(`eslint ${path} --fix`);
-}
-// EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
-var dynamicRequire = __webpack_require__(77970);
 ;// CONCATENATED MODULE: ./templater/utils/mk.ts
 
 
@@ -38997,7 +38988,6 @@ const readFileSync = external_fs_.readFileSync;
 
 
 
-
 /* harmony default export */ const creator = ((answers, config) => {
   // console.log(answers);
   // console.log(config);
@@ -39022,16 +39012,16 @@ const readFileSync = external_fs_.readFileSync;
           const updates = invoker(answers).updates;
           if (updates) {
             updateFile(filePath, updates, () => {
-              runLinter(filePath);
+              logger.success('Updated file', filePath);
+              // runLinter(filePath);
             });
-            logger.success('Updated file', filePath);
           }
         } else {
           const content = invoker(answers).init;
           mkFile(filePath, content, () => {
-            runLinter(filePath);
+            logger.success('Created file', filePath);
+            // runLinter(filePath);
           });
-          logger.success('Created file', filePath);
         }
       }
     } catch (e) {
