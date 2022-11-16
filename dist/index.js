@@ -38894,7 +38894,20 @@ const checkCondition = (line, when) => {
   };
   return map[when[0]];
 };
+;// CONCATENATED MODULE: ./templater/utils/logger.ts
+const logger = {
+  info: (...args) => {
+    console.log('\x1b[33m%s\x1b[0m', ...args);
+  },
+  success: (...args) => {
+    console.log('\x1b[32m%s\x1b[0m', ...args);
+  },
+  error: (...args) => {
+    console.log('\x1b[31m%s\x1b[0m', ...args);
+  }
+};
 ;// CONCATENATED MODULE: ./templater/creator/updateFile.ts
+
 
 
 
@@ -38928,27 +38941,25 @@ const updateFile = (path, updates, onUpdate) => {
     const content = lines.join('\n');
     external_fs_.writeFile(path, content, err => {
       if (err) {
-        console.log(err);
+        logger.info(err);
+        logger.error('Error in updateFile() function');
       } else {
         onUpdate && onUpdate();
       }
     });
   });
 };
+// EXTERNAL MODULE: external "child_process"
+var external_child_process_ = __webpack_require__(32081);
+;// CONCATENATED MODULE: ./src/runLinter.ts
+
+
+function runLinter(path) {
+  logger.info(`Running linter for ${path}`);
+  (0,external_child_process_.exec)(`eslint ${path} --fix`);
+}
 // EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
 var dynamicRequire = __webpack_require__(77970);
-;// CONCATENATED MODULE: ./templater/utils/logger.ts
-const logger = {
-  info: (...args) => {
-    console.log('\x1b[33m%s\x1b[0m', ...args);
-  },
-  success: (...args) => {
-    console.log('\x1b[32m%s\x1b[0m', ...args);
-  },
-  error: (...args) => {
-    console.log('\x1b[31m%s\x1b[0m', ...args);
-  }
-};
 ;// CONCATENATED MODULE: ./templater/utils/mk.ts
 
 
@@ -38964,25 +38975,36 @@ const mkDir = path => {
   }
 };
 const mkFile = (path, data, onCreate) => {
-  if (!external_fs_.existsSync(path)) {
-    const tmp = path.split('/');
-    const lastSlash = tmp.lastIndexOf('/');
-    const pathToFile = tmp.slice(0, lastSlash).join('/');
-    mkDir(pathToFile);
-    external_fs_.appendFileSync(path, data);
-    onCreate && onCreate();
-  } else {
-    logger.info(`File already exists ${path}`);
+  try {
+    if (!external_fs_.existsSync(path)) {
+      const tmp = path.split('/');
+      const lastSlash = tmp.lastIndexOf('/');
+      const pathToFile = tmp.slice(0, lastSlash).join('/');
+      mkDir(pathToFile);
+      external_fs_.appendFileSync(path, data);
+      onCreate && onCreate();
+    } else {
+      logger.info(`File already exists ${path}`);
+    }
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in mkFile() function');
   }
 };
 const fileExists = path => {
-  return external_fs_.existsSync(path);
+  try {
+    return external_fs_.existsSync(path);
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in fileExists() function');
+  }
 };
 const readDirSync = path => {
   return fs.readdirSync(path);
 };
 const readFileSync = external_fs_.readFileSync;
 ;// CONCATENATED MODULE: ./templater/creator/index.ts
+
 
 
 
@@ -39014,14 +39036,14 @@ const readFileSync = external_fs_.readFileSync;
           if (updates) {
             updateFile(filePath, updates, () => {
               logger.success('Updated file', filePath);
-              // runLinter(filePath);
+              runLinter(filePath);
             });
           }
         } else {
           const content = invoker(answers).init;
           mkFile(filePath, content, () => {
             logger.success('Created file', filePath);
-            // runLinter(filePath);
+            runLinter(filePath);
           });
         }
       }
@@ -39083,7 +39105,7 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  const location = '../';
+  const location = '../../../';
   const file = external_path_.resolve(__dirname, location, 'g.js');
   logger.info(`Reading file ${file}`);
   const GJSONExists = fileExists(file);
