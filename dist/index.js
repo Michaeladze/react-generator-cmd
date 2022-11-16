@@ -39085,7 +39085,7 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  const location = '../';
+  const location = '../../../';
   const file = external_path_.resolve(__dirname, location, 'g.js');
   logger.info(`Reading file ${file}`);
   const GJSONExists = fileExists(file);
