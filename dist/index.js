@@ -38927,6 +38927,18 @@ function runLinter(path) {
 }
 // EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
 var dynamicRequire = __webpack_require__(77970);
+;// CONCATENATED MODULE: ./templater/utils/logger.ts
+const logger = {
+  info: (...args) => {
+    console.log('\x1b[33m%s\x1b[0m', ...args);
+  },
+  success: (...args) => {
+    console.log('\x1b[32m%s\x1b[0m', ...args);
+  },
+  error: (...args) => {
+    console.log('\x1b[31m%s\x1b[0m', ...args);
+  }
+};
 ;// CONCATENATED MODULE: ./templater/utils/mk.ts
 
 const mkDir = path => {
@@ -38964,6 +38976,7 @@ const readFileSync = external_fs_.readFileSync;
 
 
 
+
 /* harmony default export */ const creator = ((answers, config) => {
   // console.log(answers);
   // console.log(config);
@@ -38987,14 +39000,16 @@ const readFileSync = external_fs_.readFileSync;
           const updates = invoker(answers).updates;
           if (updates) {
             updateFile(`${componentsPathNext}${name}`, updates);
+            logger.success('Updated file', `${componentsPathNext}${name}`);
           }
         } else {
           const content = invoker(answers).init;
           mkFile(`${componentsPathNext}${name}`, content);
+          logger.success('Created file', `${componentsPathNext}${name}`);
         }
       }
     } catch (e) {
-      console.log(e);
+      logger.error(e);
     }
   });
   runLinter(`${config.variables.root}`);
@@ -39033,18 +39048,6 @@ const parseArrayType = str => {
 const isBaseType = type => {
   return baseTypes[type] || false;
 };
-;// CONCATENATED MODULE: ./templater/utils/logger.ts
-const logger = {
-  info: (...args) => {
-    console.log('\x1b[33m%s\x1b[0m', ...args);
-  },
-  success: (...args) => {
-    console.log('\x1b[32m%s\x1b[0m', ...args);
-  },
-  error: (...args) => {
-    console.log('\x1b[31m%s\x1b[0m', ...args);
-  }
-};
 ;// CONCATENATED MODULE: ./templater/utils/parseConfigQuestions.ts
 const parseConfigQuestions = config => {
   return {
@@ -39064,11 +39067,9 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  const location = '../';
+  const location = '../../../';
   const file = external_path_.resolve(__dirname, location, 'g.js');
   logger.info(`Reading file ${file}`);
-  logger.success(`Reading file ${file}`);
-  logger.error(`Reading file ${file}`);
   const GJSONExists = fileExists(file);
   if (!GJSONExists) {
     logger.info('g.js not found. Using default config.');
