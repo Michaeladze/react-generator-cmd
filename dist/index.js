@@ -38898,7 +38898,7 @@ const checkCondition = (line, when) => {
 
 
 
-const updateFile = (path, updates, cb) => {
+const updateFile = (path, updates, onUpdate) => {
   external_fs_.readFile(path, {
     encoding: 'utf8'
   }, (err, data) => {
@@ -38930,7 +38930,7 @@ const updateFile = (path, updates, cb) => {
       if (err) {
         console.log(err);
       } else {
-        cb && cb();
+        onUpdate && onUpdate();
       }
     });
   });
@@ -38960,6 +38960,7 @@ function runLinter(path) {
 var dynamicRequire = __webpack_require__(77970);
 ;// CONCATENATED MODULE: ./templater/utils/mk.ts
 
+
 const mkDir = path => {
   const pathArr = path.split('/').filter(s => s !== '' && s !== '.');
   let p = '.';
@@ -38971,15 +38972,16 @@ const mkDir = path => {
     }
   }
 };
-const mkFile = (path, data, cb) => {
+const mkFile = (path, data, onCreate) => {
   if (!external_fs_.existsSync(path)) {
     const tmp = path.split('/');
     const lastSlash = tmp.lastIndexOf('/');
     const pathToFile = tmp.slice(0, lastSlash).join('/');
     mkDir(pathToFile);
     external_fs_.appendFileSync(path, data);
+    onCreate && onCreate();
   } else {
-    cb && cb();
+    logger.info(`File already exists ${path}`);
   }
 };
 const fileExists = path => {
