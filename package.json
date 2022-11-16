@@ -54,7 +54,7 @@
     "inquirer": "^7.3.3",
     "intermock": "^0.2.5",
     "jest": "^27.5.1",
-    "react-generator-cmd": "^5.0.8",
+    "react-generator-cmd": "^5.0.10",
     "react-redux": "^7.2.8",
     "redux": "^4.1.2",
     "redux-actions": "^2.6.5",
