@@ -39085,7 +39085,7 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  const location = '../';
+  const location = '../../../';
   const file = external_path_.resolve(__dirname, location, 'g.js');
   logger.info(`Reading file ${file}`);
   const GJSONExists = fileExists(file);
@@ -39353,7 +39353,6 @@ inquirer_default().prompt((0,cjs.concat)(prompts, userPrompts)).ui.process.subsc
 }, error => {
   console.log(error);
 }, () => {
-  console.log(answers);
   answers.$createPath = answers.$createPath.split('/').filter(s => s !== '').join('/');
   creator(answers, config);
 });
