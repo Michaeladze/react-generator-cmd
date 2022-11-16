@@ -15,10 +15,10 @@ export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: 
   }, (err, data) => {
     const lines: string[] = data.split('\n');
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
 
-      updates.forEach((u: ITemplateUpdate) => {
+    updates.forEach((u: ITemplateUpdate) => {
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
 
         if (line.includes(u.startFromLineThatContains)) {
           if (!u.direction || u.direction === TemplateUpdateDirection.Down) {
@@ -39,9 +39,8 @@ export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: 
             }
           }
         }
-
-      });
-    }
+      }
+    });
 
     const content = lines.join('\n');
 
