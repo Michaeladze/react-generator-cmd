@@ -1,4 +1,4 @@
-module.exports = ({ FileName, sliceName, fieldName, successType, thunkName }) => {
+module.exports = ({ sliceName, fieldName, successType, thunkName }) => {
   return {
     init: () => {
       return `import { createSlice } from '@reduxjs/toolkit';

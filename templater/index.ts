@@ -11,6 +11,11 @@ import {
   IConfigComponentQuestion,
   IConfigDomain
 } from './types/config.types';
+import {
+  parseArrayType,
+  isBaseType,
+  getTestPayload
+} from './utils/basicTypes';
 import { readJSON } from './utils/readJSON';
 
 import { validateJSON } from './utils/validateJSON';
@@ -245,3 +250,9 @@ prompts.next({
   message: 'What needs to be created?',
   choices: initialChoices,
 });
+
+export {
+  parseArrayType,
+  isBaseType,
+  getTestPayload
+};
