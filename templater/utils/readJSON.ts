@@ -32,7 +32,11 @@ export function readJSON(): IConfig {
 
   const result: IConfig = {
     ...defaultConfig,
-    ...parsedJSON
+    ...parsedJSON,
+    variables: {
+      ...parsedJSON.variables,
+      root: path.resolve(__dirname, '../../../', parsedJSON.variables.root)
+    }
   };
 
   return result;

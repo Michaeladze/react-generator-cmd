@@ -39061,7 +39061,11 @@ function readJSON() {
   const parsedJSON = parseConfigQuestions(json);
   const result = {
     ...defaultConfig,
-    ...parsedJSON
+    ...parsedJSON,
+    variables: {
+      ...parsedJSON.variables,
+      root: external_path_.resolve(__dirname, '../../../', parsedJSON.variables.root)
+    }
   };
   return result;
 }
