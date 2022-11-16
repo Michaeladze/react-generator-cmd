@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import { dynamicRequire } from './dynamicRequire';
 import { fileExists } from './mk';
 
@@ -13,13 +15,14 @@ const defaultConfig: IConfig = {
 };
 
 export function readJSON(): IConfig {
-  const GJSONExists = fileExists('./g.js');
+  const file = path.resolve(__dirname, 'g.js');
+  const GJSONExists = fileExists(file);
 
   if (!GJSONExists) {
     return defaultConfig;
   }
 
-  const json = dynamicRequire('../g.js');
+  const json = dynamicRequire(file);
 
   if (!json) {
     return defaultConfig;
