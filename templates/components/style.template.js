@@ -1,3 +1,5 @@
 module.exports = () => {
-  return '';
+  return {
+    init: ''
+  };
 };

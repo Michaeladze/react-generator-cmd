@@ -38985,7 +38985,9 @@ const readFileSync = external_fs_.readFileSync;
         const invoker = (0,dynamicRequire/* dynamicRequire */.l)(external_path_.resolve(config.variables.root, template));
         if (fileExists(`${componentsPathNext}${name}`)) {
           const updates = invoker(answers).updates;
-          updateFile(`${componentsPathNext}${name}`, updates);
+          if (updates) {
+            updateFile(`${componentsPathNext}${name}`, updates);
+          }
         } else {
           const content = invoker(answers).init;
           mkFile(`${componentsPathNext}${name}`, content);
@@ -39049,7 +39051,8 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  const file = external_path_.resolve(__dirname, '../../../g.js');
+  const location = '../';
+  const file = external_path_.resolve(__dirname, location, 'g.js');
   const GJSONExists = fileExists(file);
   if (!GJSONExists) {
     return defaultConfig;
@@ -39061,11 +39064,7 @@ function readJSON() {
   const parsedJSON = parseConfigQuestions(json);
   const result = {
     ...defaultConfig,
-    ...parsedJSON,
-    variables: {
-      ...parsedJSON.variables,
-      root: external_path_.resolve(__dirname, '../../../', parsedJSON.variables.root)
-    }
+    ...parsedJSON
   };
   return result;
 }
@@ -39178,10 +39177,19 @@ inquirer_default().prompt((0,cjs.concat)(prompts, userPrompts)).ui.process.subsc
           isNextQuestionVisible = nextQuestion.when(answers);
         }
       }
-      console.log(q);
-      console.log('isNextQuestionLast', isNextQuestionLast);
-      console.log('isNextQuestionVisible', isNextQuestionVisible);
-      if (q.name === lastQuestion.name || isNextQuestionLast && !isNextQuestionVisible) {
+      const nextQuestions = [];
+      let noMoreVisibleQuestions = false;
+      for (let i = currentQuestionIndex; i < questions.length; i++) {
+        if ((nextQuestion === null || nextQuestion === void 0 ? void 0 : nextQuestion.when) !== undefined) {
+          if (typeof nextQuestion.when === 'boolean') {
+            nextQuestions.push(nextQuestion.when);
+          } else {
+            nextQuestions.push(nextQuestion.when(answers));
+          }
+        }
+      }
+      noMoreVisibleQuestions = prompts.isStopped && nextQuestions.every(isVisible => !isVisible);
+      if (q.name === lastQuestion.name || isNextQuestionLast && !isNextQuestionVisible || noMoreVisibleQuestions) {
         userPrompts.complete();
         return;
       }

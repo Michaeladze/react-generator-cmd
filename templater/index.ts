@@ -91,11 +91,22 @@ inquirer.prompt(concat(prompts, userPrompts)).ui.process.subscribe(
           }
         }
 
-        console.log(q);
-        console.log('isNextQuestionLast', isNextQuestionLast);
-        console.log('isNextQuestionVisible', isNextQuestionVisible);
+        const nextQuestions: boolean[] = [];
+        let noMoreVisibleQuestions = false;
 
-        if (q.name === lastQuestion.name || (isNextQuestionLast && !isNextQuestionVisible)) {
+        for (let i = currentQuestionIndex; i < questions.length; i++) {
+          if (nextQuestion?.when !== undefined) {
+            if (typeof nextQuestion.when === 'boolean') {
+              nextQuestions.push(nextQuestion.when);
+            } else {
+              nextQuestions.push(nextQuestion.when(answers));
+            }
+          }
+        }
+
+        noMoreVisibleQuestions = prompts.isStopped && nextQuestions.every((isVisible: boolean) => !isVisible);
+
+        if (q.name === lastQuestion.name || (isNextQuestionLast && !isNextQuestionVisible) || noMoreVisibleQuestions) {
           userPrompts.complete();
           return;
         }

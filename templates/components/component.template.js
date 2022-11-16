@@ -66,7 +66,8 @@ module.exports = ({ ComponentName, ComponentDetails }) => {
   }
 
 
-  return `import React${childrenImport ? ', { ReactNode } ' : ''} from 'react';
+  return {
+    init: `import React${childrenImport ? ', { ReactNode } ' : ''} from 'react';
 import './${ComponentName}.css'; 
 ${storeImport}
 ${routerDomImport}
@@ -92,5 +93,6 @@ export const ${ComponentName}: React.FC<IProps> = ({${childrenImport ? 'children
     </>
   );
 };
-  `;
+  `
+  };
 };

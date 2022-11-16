@@ -15,7 +15,8 @@ const defaultConfig: IConfig = {
 };
 
 export function readJSON(): IConfig {
-  const file = path.resolve(__dirname, '../../../g.js');
+  const location = '../../../';
+  const file = path.resolve(__dirname, location, 'g.js');
   const GJSONExists = fileExists(file);
 
   if (!GJSONExists) {
@@ -32,11 +33,7 @@ export function readJSON(): IConfig {
 
   const result: IConfig = {
     ...defaultConfig,
-    ...parsedJSON,
-    variables: {
-      ...parsedJSON.variables,
-      root: path.resolve(__dirname, '../../../', parsedJSON.variables.root)
-    }
+    ...parsedJSON
   };
 
   return result;
