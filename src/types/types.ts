@@ -11,7 +11,7 @@ export enum Question {
 }
 
 export enum Answer {
-  Component = 'Component',
+  Component = 'component',
   ReduxState = 'Redux State',
   ReduxSlice = 'Redux Toolkit Slice',
   CreateNew = '[Create New]'
