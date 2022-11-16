@@ -39049,8 +39049,7 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  console.log(external_path_.resolve(__dirname, './g.js'));
-  const file = external_path_.resolve(__dirname, './g.js');
+  const file = external_path_.resolve(__dirname, '../../../g.js');
   const GJSONExists = fileExists(file);
   if (!GJSONExists) {
     return defaultConfig;

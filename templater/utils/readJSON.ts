@@ -15,8 +15,7 @@ const defaultConfig: IConfig = {
 };
 
 export function readJSON(): IConfig {
-  console.log(path.resolve(__dirname, './g.js'));
-  const file = path.resolve(__dirname, './g.js');
+  const file = path.resolve(__dirname, '../../../g.js');
   const GJSONExists = fileExists(file);
 
   if (!GJSONExists) {
