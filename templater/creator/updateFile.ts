@@ -26,7 +26,7 @@ export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: 
 
               if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
                 lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-                break;
+                return;
               }
             }
           } else {
@@ -34,7 +34,7 @@ export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: 
 
               if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
                 lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-                break;
+                return;
               }
             }
           }
