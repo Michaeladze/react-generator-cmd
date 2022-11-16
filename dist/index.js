@@ -38916,9 +38916,9 @@ const updateFile = (path, updates, onUpdate) => {
     encoding: 'utf8'
   }, (err, data) => {
     const lines = data.split('\n');
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      updates.forEach(u => {
+    updates.forEach(u => {
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
         if (line.includes(u.startFromLineThatContains)) {
           if (!u.direction || u.direction === TemplateUpdateDirection.Down) {
             for (let l = i; l < lines.length; l++) {
@@ -38936,8 +38936,8 @@ const updateFile = (path, updates, onUpdate) => {
             }
           }
         }
-      });
-    }
+      }
+    });
     const content = lines.join('\n');
     external_fs_.writeFile(path, content, err => {
       if (err) {
