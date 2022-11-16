@@ -1,3 +1,4 @@
+
 import * as path from 'path';
 
 import { updateFile } from './updateFile';
@@ -39,26 +40,27 @@ export default (answers: IAnswersBase, config: IConfig) => {
 
       if (templateConfig.template) {
 
+        const filePath = `${componentsPathNext}${name}`;
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
         const invoker: ITemplateInvoker = dynamicRequire(path.resolve(config.variables.root, template));
 
-        if (fileExists(`${componentsPathNext}${name}`)) {
+        if (fileExists(filePath)) {
           const updates = invoker(answers).updates;
 
           if (updates) {
-            updateFile(`${componentsPathNext}${name}`, updates);
-            logger.success('Updated file', `${componentsPathNext}${name}`);
+            updateFile(filePath, updates);
+            logger.success('Updated file', filePath);
           }
         } else {
           const content = invoker(answers).init;
-          mkFile(`${componentsPathNext}${name}`, content);
-          logger.success('Created file', `${componentsPathNext}${name}`);
+          mkFile(filePath, content);
+          logger.success('Created file', filePath);
         }
+
+        runLinter(`${config.variables.root}`);
       }
     } catch (e) {
       logger.error(e);
     }
   });
-
-  runLinter(`${config.variables.root}`);
 };
