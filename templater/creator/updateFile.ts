@@ -2,12 +2,13 @@ import * as fs from 'fs';
 
 import { checkCondition } from './checkCondition';
 
+import { AnyFunction } from '../types/common.types';
 import {
   ITemplateUpdate,
   TemplateUpdateDirection
 } from '../types/config.types';
 
-export const updateFile = (path: string, updates: ITemplateUpdate[], cb?: () => any) => {
+export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: AnyFunction) => {
   fs.readFile(path, {
     encoding: 'utf8'
   }, (err, data) => {
@@ -47,7 +48,7 @@ export const updateFile = (path: string, updates: ITemplateUpdate[], cb?: () => 
       if (err) {
         console.log(err);
       } else {
-        cb && cb();
+        onUpdate && onUpdate();
       }
     });
   });

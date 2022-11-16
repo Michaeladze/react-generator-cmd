@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 
+import { logger } from './logger';
+
 import { AnyFunction } from '../types/common.types';
 
 export const mkDir = (path: string) => {
@@ -17,7 +19,7 @@ export const mkDir = (path: string) => {
   }
 };
 
-export const mkFile = (path: string, data: string, cb?: AnyFunction) => {
+export const mkFile = (path: string, data: string, onCreate?: AnyFunction) => {
   if (!fs.existsSync(path)) {
     const tmp = path.split('/');
     const lastSlash = tmp.lastIndexOf('/');
@@ -25,8 +27,9 @@ export const mkFile = (path: string, data: string, cb?: AnyFunction) => {
     mkDir(pathToFile);
 
     fs.appendFileSync(path, data);
+    onCreate && onCreate();
   } else {
-    cb && cb();
+    logger.info(`File already exists ${path}`);
   }
 };
 

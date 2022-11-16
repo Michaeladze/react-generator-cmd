@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.js && cp cli.js dist",
     "g1": "node ./dist/index.js",
-    "g": "node src/index.ts",
+    "g": "node_modules/.bin/g",
     "release": "release-it --no-git.requireCleanWorkingDir"
   },
   "bin": {
@@ -54,7 +54,7 @@
     "inquirer": "^7.3.3",
     "intermock": "^0.2.5",
     "jest": "^27.5.1",
-    "react-generator-cmd": "^5.0.19",
+    "react-generator-cmd": "^5.0.20",
     "react-redux": "^7.2.8",
     "redux": "^4.1.2",
     "redux-actions": "^2.6.5",
