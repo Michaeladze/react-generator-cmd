@@ -38964,14 +38964,19 @@ var dynamicRequire = __webpack_require__(77970);
 
 
 const mkDir = path => {
-  const pathArr = path.split('/').filter(s => s !== '' && s !== '.');
-  let p = '.';
-  while (pathArr.length > 0) {
-    const folder = pathArr.shift();
-    p += `/${folder}`;
-    if (!external_fs_.existsSync(p)) {
-      external_fs_.mkdirSync(p);
+  try {
+    const pathArr = path.split('/').filter(s => s !== '' && s !== '.');
+    let p = '.';
+    while (pathArr.length > 0) {
+      const folder = pathArr.shift();
+      p += `/${folder}`;
+      if (!external_fs_.existsSync(p)) {
+        external_fs_.mkdirSync(p);
+      }
     }
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in mkDir() function');
   }
 };
 const mkFile = (path, data, onCreate) => {
