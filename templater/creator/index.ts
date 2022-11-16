@@ -48,16 +48,18 @@ export default (answers: IAnswersBase, config: IConfig) => {
           const updates = invoker(answers).updates;
 
           if (updates) {
-            updateFile(filePath, updates);
+            updateFile(filePath, updates, () => {
+              runLinter(filePath);
+            });
             logger.success('Updated file', filePath);
           }
         } else {
           const content = invoker(answers).init;
-          mkFile(filePath, content);
+          mkFile(filePath, content, () => {
+            runLinter(filePath);
+          });
           logger.success('Created file', filePath);
         }
-
-        runLinter(filePath);
       }
     } catch (e) {
       logger.error(e);

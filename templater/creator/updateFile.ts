@@ -7,7 +7,7 @@ import {
   TemplateUpdateDirection
 } from '../types/config.types';
 
-export const updateFile = (path: string, updates: ITemplateUpdate[]) => {
+export const updateFile = (path: string, updates: ITemplateUpdate[], cb?: () => any) => {
   fs.readFile(path, {
     encoding: 'utf8'
   }, (err, data) => {
@@ -46,6 +46,8 @@ export const updateFile = (path: string, updates: ITemplateUpdate[]) => {
     fs.writeFile(path, content, (err) => {
       if (err) {
         console.log(err);
+      } else {
+        cb && cb();
       }
     });
   });
