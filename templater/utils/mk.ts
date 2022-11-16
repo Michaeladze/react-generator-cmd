@@ -1,12 +1,15 @@
 import * as fs from 'fs';
 
+import * as path from 'path';
+
 import { logger } from './logger';
 
 import { AnyFunction } from '../types/common.types';
 
-export const mkDir = (path: string) => {
+export const mkDir = (filePath: string) => {
   try {
-    const pathArr = path.split('/').filter((s: string) => s !== '' && s !== '.');
+    const normalizedPath = path.normalize(filePath);
+    const pathArr = normalizedPath.split('/').filter((s: string) => s !== '' && s !== '.');
     let p = '.';
 
     while (pathArr.length > 0) {
@@ -24,20 +27,20 @@ export const mkDir = (path: string) => {
   }
 };
 
-export const mkFile = (path: string, data: string, onCreate?: AnyFunction) => {
+export const mkFile = (filePath: string, data: string, onCreate?: AnyFunction) => {
   try {
-    if (!fs.existsSync(path)) {
-      const tmp = path.split('/');
+    const normalizedPath = path.normalize(filePath);
+
+    if (!fs.existsSync(normalizedPath)) {
+      const tmp = normalizedPath.split('/');
       const lastSlash = tmp.lastIndexOf('/');
       const pathToFile = tmp.slice(0, lastSlash).join('/');
-      console.log('mkDir', pathToFile);
       mkDir(pathToFile);
-      console.log('appendFileSync', path);
 
-      fs.appendFileSync(path, data);
+      fs.appendFileSync(normalizedPath, data);
       onCreate && onCreate();
     } else {
-      logger.info(`File already exists ${path}`);
+      logger.info(`File already exists ${normalizedPath}`);
     }
   } catch (e) {
     logger.info(e);
@@ -45,9 +48,10 @@ export const mkFile = (path: string, data: string, onCreate?: AnyFunction) => {
   }
 };
 
-export const fileExists = (path: string) => {
+export const fileExists = (filePath: string) => {
   try {
-    return fs.existsSync(path);
+    const normalizedPath = path.normalize(filePath);
+    return fs.existsSync(normalizedPath);
   } catch (e) {
     logger.info(e);
     logger.error('Error in fileExists() function');
