@@ -38856,7 +38856,7 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 
-// UNUSED EXPORTS: getTestPayload, isBaseType, parseArrayType
+// UNUSED EXPORTS: capitalize, getTestPayload, isBaseType, parseArrayType
 
 // EXTERNAL MODULE: ./node_modules/inquirer/lib/inquirer.js
 var inquirer = __webpack_require__(96062);
@@ -38894,6 +38894,24 @@ const checkCondition = (line, when) => {
   };
   return map[when[0]];
 };
+;// CONCATENATED MODULE: ./templater/creator/fixCommasInFile.ts
+const fixCommasInFile = lines => {
+  const fileLines = [...lines];
+  for (let i = 0; i < fileLines.length; i++) {
+    const trimmedLine = fileLines[i].trimStart();
+    if (trimmedLine[0] === ',') {
+      fileLines[i] = fileLines[i].replace(',', '');
+      const prevLine = fileLines[i - 1];
+      if (prevLine) {
+        const trimmedPrevLine = prevLine.trimEnd();
+        if (trimmedPrevLine[trimmedPrevLine.length - 1] !== ',') {
+          fileLines[i - 1] = fileLines[i - 1] + ',';
+        }
+      }
+    }
+  }
+  return fileLines;
+};
 ;// CONCATENATED MODULE: ./templater/utils/logger.ts
 const logger = {
   info: (...args) => {
@@ -38904,10 +38922,131 @@ const logger = {
   },
   error: (...args) => {
     console.log('\x1b[31m%s\x1b[0m', ...args);
+  },
+  dev: (...args) => {
+    console.log('\x1b[36m%s\x1b[0m', ...args);
   }
 };
-;// CONCATENATED MODULE: ./templater/creator/updateFile.ts
+;// CONCATENATED MODULE: ./templater/creator/insert.ts
 
+
+
+
+const insert = (data, updates) => {
+  const lines = data.split('\n');
+  updates_loop: for (let j = 0; j < updates.length; j++) {
+    const u = updates[j];
+    logger.info('=====================');
+    if (!u.direction) {
+      u.direction = TemplateUpdateDirection.Down;
+    }
+    const indexes = findIndexes(lines, u);
+    const [fromIndex, toIndex] = indexes;
+    if (u.direction === TemplateUpdateDirection.Down) {
+      if (checkInsertCondition(lines, indexes, u)) {
+        for (let i = fromIndex; i < toIndex; i++) {
+          if (checkCondition(lines[i], u.searchFor)) {
+            lines[i] = lines[i].replace(u.searchFor[1], u.changeWith);
+            continue updates_loop;
+          }
+        }
+      }
+    } else {
+      logger.dev('updates', u);
+      if (checkInsertCondition(lines, indexes, u)) {
+        for (let i = fromIndex; i >= toIndex; i--) {
+          if (checkCondition(lines[i], u.searchFor)) {
+            lines[i] = lines[i].replace(u.searchFor[1], u.changeWith);
+            continue updates_loop;
+          }
+        }
+      }
+    }
+  }
+  return fixCommasInFile(lines).join('\n');
+};
+function checkInsertCondition(lines, indexes, u) {
+  const [fromIndex, toIndex] = findIndexes(lines, u);
+
+  // [1] Single line
+  if (fromIndex === toIndex) {
+    return checkCondition(lines[fromIndex], u.when);
+  }
+
+  // [2] Multiple lines
+  if (u.direction === TemplateUpdateDirection.Down) {
+    for (let i = fromIndex; i < toIndex; i++) {
+      if (!checkCondition(lines[i], u.when)) {
+        return false;
+      }
+    }
+  } else {
+    for (let i = fromIndex; i >= toIndex; i--) {
+      if (!checkCondition(lines[i], u.when)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+function findIndexes(lines, u) {
+  const indexes = [-1, -1];
+  const isDown = u.direction === TemplateUpdateDirection.Down;
+  if (isDown) {
+    if (u.fromLine === undefined) {
+      indexes[0] = 0;
+    }
+    if (u.toLine === undefined) {
+      indexes[1] = lines.length - 1;
+    }
+  } else {
+    if (u.fromLine === undefined) {
+      indexes[0] = lines.length - 1;
+    }
+    if (u.toLine === undefined) {
+      indexes[1] = 0;
+    }
+  }
+  if (indexes[0] !== -1 && indexes[1] !== -1) {
+    return indexes;
+  }
+  function checkIndexes(lines, i, u, indexes) {
+    if (indexes[0] === -1 && u.fromLine && checkCondition(lines[i], u.fromLine)) {
+      indexes[0] = i;
+    }
+    if (indexes[1] === -1 && u.toLine && checkCondition(lines[i], u.toLine)) {
+      indexes[1] = i;
+    }
+    return indexes[0] !== -1 && indexes[1] !== -1;
+  }
+  if (isDown) {
+    for (let i = 0; i < lines.length; i++) {
+      if (checkIndexes(lines, i, u, indexes)) {
+        return indexes;
+      }
+    }
+    if (indexes[0] === -1) {
+      indexes[0] = 0;
+    }
+    if (indexes[1] === -1) {
+      indexes[1] = lines.length - 1;
+    }
+  } else {
+    for (let i = lines.length - 1; i >= 0; i--) {
+      if (checkIndexes(lines, i, u, indexes)) {
+        return indexes;
+      }
+    }
+    if (indexes[0] === -1) {
+      indexes[0] = lines.length - 1;
+    }
+    if (indexes[1] === -1) {
+      indexes[1] = 0;
+    }
+  }
+  return indexes;
+}
+;// CONCATENATED MODULE: ./templater/creator/updateFile.ts
 
 
 
@@ -38915,30 +39054,12 @@ const updateFile = (path, updates, onUpdate) => {
   external_fs_.readFile(path, {
     encoding: 'utf8'
   }, (err, data) => {
-    const lines = data.split('\n');
-    updates.forEach(u => {
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        if (line.includes(u.startFromLineThatContains)) {
-          if (!u.direction || u.direction === TemplateUpdateDirection.Down) {
-            for (let l = i; l < lines.length; l++) {
-              if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
-                lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-                return;
-              }
-            }
-          } else {
-            for (let l = i; l >= 0; l--) {
-              if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
-                lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-                return;
-              }
-            }
-          }
-        }
-      }
-    });
-    const content = lines.join('\n');
+    if (err) {
+      logger.info(err);
+      logger.error('Error in updateFile() function');
+      return;
+    }
+    const content = insert(data, updates);
     external_fs_.writeFile(path, content, err => {
       if (err) {
         logger.info(err);
@@ -39039,18 +39160,19 @@ const normalizePath = filePath => {
       const componentsPathNext = name.includes(answers.$root) ? '' : answers.$createPath + '/';
       if (templateConfig.template) {
         const filePath = external_path_.join(componentsPathNext, name);
-        logger.info(`Creating file ${filePath}`);
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
         const invoker = (0,dynamicRequire/* dynamicRequire */.l)(external_path_.resolve(config.variables.root, template));
         if (fileExists(filePath)) {
           const updates = invoker(answers).updates;
           if (updates) {
+            logger.info(`Updating file ${filePath}`);
             updateFile(filePath, updates, () => {
               logger.success('Updated file', filePath);
               runLinter(filePath);
             });
           }
         } else {
+          logger.info(`Creating file ${filePath}`);
           const content = invoker(answers).init;
           mkFile(filePath, content, () => {
             logger.success('Created file', filePath);
@@ -39116,7 +39238,7 @@ const defaultConfig = {
   domains: []
 };
 function readJSON() {
-  const location = '../../../';
+  const location = '../';
   const file = external_path_.resolve(__dirname, location, 'g.js');
   logger.info(`Reading file ${file}`);
   const GJSONExists = fileExists(file);
@@ -39185,6 +39307,7 @@ let Answer;
   Answer["CreateNew"] = "[Create New]";
 })(Answer || (Answer = {}));
 ;// CONCATENATED MODULE: ./templater/index.ts
+
 
 
 

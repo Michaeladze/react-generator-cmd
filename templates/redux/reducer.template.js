@@ -1,15 +1,43 @@
 module.exports = ({ FileName, sliceName, reducerName }) => {
-  return `import { combineReducers } from 'redux';
 
-import { ${sliceName}Slice } from './${FileName}/slice';
+  const importSliceString = `import { ${sliceName}Slice } from './${FileName}/slice';`;
+  const sliceString = `[${sliceName}Slice.name]: ${sliceName}Slice.reducer,`;
+  const reducerString = `${reducerName}: LocalRootReduxState;`;
+
+  return {
+    init: `import { combineReducers } from 'redux';
+
+${importSliceString}
 
 export const reducer = combineReducers({
-  [${sliceName}Slice.name]: ${sliceName}Slice.reducer,
+  ${sliceString}
 });
 
 type LocalRootReduxState = ReturnType<typeof reducer>;
 
 export type RootReduxState = {
-  ${reducerName}: LocalRootReduxState;
-};`;
+  ${reducerString}
+};
+`,
+    updates: [
+      {
+        searchFor: ['includes', 'slice\';'],
+        changeWith: `slice';\n${importSliceString}`,
+        when: ['not includes', sliceString],
+      },
+      {
+        fromLine: ['includes', 'combineReducers'],
+        searchFor: ['includes', '});'],
+        changeWith: `${sliceString}\n});`,
+        when: ['not includes', sliceString],
+
+      },
+      {
+        fromLine: ['includes', 'export type RootReduxState'],
+        searchFor: ['includes', '};'],
+        changeWith: `${reducerString}\n};`,
+        when: ['not includes', reducerString],
+      }
+    ]
+  };
 };

@@ -41,7 +41,7 @@ export default (answers: IAnswersBase, config: IConfig) => {
       if (templateConfig.template) {
 
         const filePath = path.join(componentsPathNext, name);
-        logger.info(`Creating file ${filePath}`);
+
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
         const invoker: ITemplateInvoker = dynamicRequire(path.resolve(config.variables.root, template));
 
@@ -49,12 +49,14 @@ export default (answers: IAnswersBase, config: IConfig) => {
           const updates = invoker(answers).updates;
 
           if (updates) {
+            logger.info(`Updating file ${filePath}`);
             updateFile(filePath, updates, () => {
               logger.success('Updated file', filePath);
               runLinter(filePath);
             });
           }
         } else {
+          logger.info(`Creating file ${filePath}`);
           const content = invoker(answers).init;
           mkFile(filePath, content, () => {
             logger.success('Created file', filePath);

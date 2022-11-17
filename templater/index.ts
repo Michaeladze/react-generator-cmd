@@ -16,6 +16,7 @@ import {
   isBaseType,
   getTestPayload
 } from './utils/basicTypes';
+import { capitalize } from './utils/capitalize';
 import { readJSON } from './utils/readJSON';
 
 import { validateJSON } from './utils/validateJSON';
@@ -269,5 +270,6 @@ prompts.next({
 export {
   parseArrayType,
   isBaseType,
-  getTestPayload
+  getTestPayload,
+  capitalize
 };

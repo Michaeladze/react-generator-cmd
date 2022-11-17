@@ -1,6 +1,6 @@
 import { TemplateUpdateOperator } from '../types/config.types';
 
-export const checkCondition = (line: string, when: [TemplateUpdateOperator, string] | undefined): boolean => {
+export const checkCondition = (line: string, when?: [TemplateUpdateOperator, string] | undefined): boolean => {
   if (when === undefined) {
     return true;
   }

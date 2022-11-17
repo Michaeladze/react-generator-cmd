@@ -1,9 +1,14 @@
 module.exports = ({ sliceName, fieldName, successType, thunkName }) => {
+
+  const asyncBuilderString = `builder.addCase(${thunkName}.fulfilled, (state: I${sliceName}Slice, { payload }) => {
+  state.${fieldName} = payload;
+});`;
+
   return {
     init: `import { createSlice } from '@reduxjs/toolkit';
 import { ${successType} } from './types';
 
-import { ${thunkName} } from './thunk';
+import { ${thunkName} } from './thunks';
 
 export interface I${sliceName}Slice {
   ${fieldName}: ${successType};
@@ -18,40 +23,39 @@ export const ${sliceName}Slice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(${thunkName}.fulfilled, (state: I${sliceName}Slice, { payload }) => {
-      state.${fieldName} = payload;
-    });
+    ${asyncBuilderString}
   },
 });
 `,
     updates: [
       {
-        startFromLineThatContains: 'from \'./types\';',
-        searchFor: '}',
+        fromLine: ['includes', './types'],
+        direction: 'up',
+        searchFor: ['includes', '}'],
         changeWith: `, ${successType} }`,
-        whenLine: ['not includes', successType]
+        when: ['not includes', successType],
       },
       {
-        startFromLineThatContains: 'from \'./thunk\';',
-        searchFor: '}',
-        changeWith: `, ${thunkName} }`
+        fromLine: ['includes', './thunks'],
+        direction: 'up',
+        searchFor: ['includes', '}'],
+        changeWith: `, ${thunkName} }`,
+        when: ['not includes', thunkName],
       },
       {
-        startFromLineThatContains: `export interface I${sliceName}Slice`,
-        searchFor: '}',
+        fromLine: ['includes', `export interface I${sliceName}Slice`],
+        searchFor: ['includes', '}'],
         changeWith: `${fieldName}: ${successType};\n}`
       },
       {
-        startFromLineThatContains: `const initialState: I${sliceName}Slice`,
-        searchFor: '};',
+        fromLine: ['includes', 'const initialState'],
+        searchFor: ['includes', '};'],
         changeWith: `${fieldName}: {},\n}`
       },
       {
-        startFromLineThatContains: 'extraReducers',
-        searchFor: '},',
-        changeWith: `builder.addCase(${thunkName}.fulfilled, (state: I${sliceName}Slice, { payload }) => {
-                      state.${fieldName} = payload;
-                    });`
+        fromLine: ['includes', 'extraReducers'],
+        searchFor: ['includes', '});'],
+        changeWith: `});\n${asyncBuilderString}`
       }
     ]
   };

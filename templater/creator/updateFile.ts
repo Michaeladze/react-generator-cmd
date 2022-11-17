@@ -1,48 +1,24 @@
 import * as fs from 'fs';
 
-import { checkCondition } from './checkCondition';
+
+import { insert } from './insert';
 
 import { AnyFunction } from '../types/common.types';
-import {
-  ITemplateUpdate,
-  TemplateUpdateDirection
-} from '../types/config.types';
+import { ITemplateUpdate } from '../types/config.types';
 import { logger } from '../utils/logger';
 
 export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: AnyFunction) => {
   fs.readFile(path, {
     encoding: 'utf8'
   }, (err, data) => {
-    const lines: string[] = data.split('\n');
 
+    if (err) {
+      logger.info(err);
+      logger.error('Error in updateFile() function');
+      return;
+    }
 
-    updates.forEach((u: ITemplateUpdate) => {
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-
-        if (line.includes(u.startFromLineThatContains)) {
-          if (!u.direction || u.direction === TemplateUpdateDirection.Down) {
-            for (let l = i; l < lines.length; l++) {
-
-              if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
-                lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-                return;
-              }
-            }
-          } else {
-            for (let l = i; l >= 0; l--) {
-
-              if (lines[l].includes(u.searchFor) && checkCondition(lines[l], u.whenLine)) {
-                lines[l] = lines[l].replace(u.searchFor, u.changeWith);
-                return;
-              }
-            }
-          }
-        }
-      }
-    });
-
-    const content = lines.join('\n');
+    const content = insert(data, updates);
 
     fs.writeFile(path, content, (err) => {
       if (err) {

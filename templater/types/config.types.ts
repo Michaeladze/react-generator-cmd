@@ -40,11 +40,12 @@ export interface ITemplate {
 }
 
 export interface ITemplateUpdate {
-  startFromLineThatContains: string;
-  searchFor: string;
-  changeWith: string;
+  fromLine?: [TemplateUpdateOperator, string],
+  toLine?: [TemplateUpdateOperator, string],
   direction?: TemplateUpdateDirection;
-  whenLine?: [TemplateUpdateOperator, string];
+  searchFor: [TemplateUpdateOperator, string],
+  changeWith: string;
+  when?: [TemplateUpdateOperator, string];
 }
 
 export enum TemplateUpdateOperator {
@@ -58,3 +59,5 @@ export enum TemplateUpdateDirection {
   Up = 'up',
   Down = 'down'
 }
+
+export type IIndexes = [number, number];

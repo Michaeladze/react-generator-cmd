@@ -1,8 +1,7 @@
-module.exports = ({ fieldName, reducerName, sliceName, successType }) => {
+module.exports = ({ successType }) => {
 
-  const selectorString = `export const use${fieldName}Selector = () => {
-  return useSelector<RootReduxState, ${successType}>((store: RootReduxState) =>
-    store.${reducerName}.${sliceName}.${fieldName});
+  const selectorString = `export const use${successType}Selector = () => {
+  return useSelector<RootReduxState, ${successType}>((store: RootReduxState) => store.${successType}.${successType}.${successType});
 };`;
 
   return {

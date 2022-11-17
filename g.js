@@ -4,6 +4,22 @@ module.exports = {
   },
   'domains': [
     {
+      'name': 'test',
+      'templates': [
+        {
+          'name': 'test.js',
+          'template': '../templates/test.js'
+        }
+      ],
+      'questions': [
+        {
+          'name': 'successType',
+          'message': 'Field?',
+          'type': 'input'
+        }
+      ]
+    },
+    {
       'name': 'component',
       'structure': {
         'applications': {
@@ -111,26 +127,26 @@ module.exports = {
           'name': ({ FileName }) => `redux/${FileName}/slice.ts`,
           'template': '../templates/redux/slice.template.js'
         },
-        // {
-        //   'name': ({ FileName }) => `redux/${FileName}/selectors.ts`,
-        //   'template': '../templates/redux/selector.template.js'
-        // },
-        // {
-        //   'name': ({ FileName }) => `redux/${FileName}/thunks.ts`,
-        //   'template': '../templates/redux/thunk.template.js'
-        // },
-        // {
-        //   'name': ({ FileName }) => `redux/${FileName}/types.ts`,
-        //   'template': '../templates/redux/types.template.js'
-        // },
-        // {
-        //   'name': ({ FileName }) => `redux/${FileName}/services.ts`,
-        //   'template': '../templates/redux/service.template.js'
-        // },
-        // {
-        //   'name': () => 'redux/reducer.ts',
-        //   'template': '../templates/redux/reducer.template.js'
-        // }
+        {
+          'name': ({ FileName }) => `redux/${FileName}/selectors.ts`,
+          'template': '../templates/redux/selector.template.js'
+        },
+        {
+          'name': ({ FileName }) => `redux/${FileName}/thunks.ts`,
+          'template': '../templates/redux/thunk.template.js'
+        },
+        {
+          'name': ({ FileName }) => `redux/${FileName}/types.ts`,
+          'template': '../templates/redux/types.template.js'
+        },
+        {
+          'name': ({ FileName }) => `redux/${FileName}/services.ts`,
+          'template': '../templates/redux/service.template.js'
+        },
+        {
+          'name': () => 'redux/reducer.ts',
+          'template': '../templates/redux/reducer.template.js'
+        }
       ],
       'questions': [
         {
@@ -156,6 +172,11 @@ module.exports = {
         {
           'name': 'thunkName',
           'message': 'How to name thunk?',
+          'type': 'input'
+        },
+        {
+          'name': 'serviceNamespace',
+          'message': 'What service namespace?',
           'type': 'input'
         },
         {

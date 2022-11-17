@@ -1,13 +1,32 @@
-module.exports = ({ FileName, successType, thunkName }) => {
-  return `import { createAsyncThunk } from '@reduxjs/toolkit';
-import { UARApi } from './services';
-import { ${successType} } from './types';
+module.exports = ({ successType, thunkName, serviceNamespace }) => {
 
-export const ${thunkName} = createAsyncThunk<${successType}>(
+  const serviceString = `export const ${thunkName} = createAsyncThunk<${successType}>(
   'uar/${thunkName}',
   async (): Promise<${successType}> => {
-    return await UARApi.${thunkName}();
+    return await ${serviceNamespace}.${thunkName}();
   },
-);
-`;
+);`;
+
+  return {
+    init: `import { createAsyncThunk } from '@reduxjs/toolkit';
+import { ${serviceNamespace} } from './services';
+import { ${successType} } from './types';
+
+${serviceString}
+`,
+    updates: [
+      {
+        direction: 'up',
+        searchFor: ['includes', ');'],
+        changeWith: `);\n\n${serviceString}`
+      },
+      {
+        fromLine: ['includes', './types'],
+        direction: 'up',
+        searchFor: ['includes', '}'],
+        changeWith: `, ${successType} }`,
+        when: ['not includes', successType],
+      }
+    ]
+  };
 };
