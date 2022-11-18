@@ -8,6 +8,16 @@ export const baseTypes: Record<string, boolean> = {
   undefined: true
 };
 
+export const baseTypesArray: string[] = [
+  'number',
+  'string',
+  'boolean',
+  'any',
+  'void',
+  'null',
+  'undefined'
+];
+
 export const basicTypesTestPayload: Record<string, any> = {
   number: 1,
   string: '\'Test\'',

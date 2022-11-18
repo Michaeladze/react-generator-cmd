@@ -7,7 +7,7 @@ module.exports = {
       'name': 'test',
       'templates': [
         {
-          'name': 'test.js',
+          'name': 'test.ts',
           'template': '../templates/test.js'
         }
       ],

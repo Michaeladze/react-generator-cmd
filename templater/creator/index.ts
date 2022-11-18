@@ -1,6 +1,7 @@
 
 import * as path from 'path';
 
+import { createFile } from './createFile';
 import { updateFile } from './updateFile';
 
 import { runLinter } from '../../src/runLinter';
@@ -12,10 +13,7 @@ import {
 import { IAnswersBase } from '../types/types';
 import { dynamicRequire } from '../utils/dynamicRequire';
 import { logger } from '../utils/logger';
-import {
-  fileExists,
-  mkFile
-} from '../utils/mk';
+import { fileExists } from '../utils/mk';
 
 
 export default (answers: IAnswersBase, config: IConfig) => {
@@ -58,7 +56,7 @@ export default (answers: IAnswersBase, config: IConfig) => {
         } else {
           logger.info(`Creating file ${filePath}`);
           const content = invoker(answers).init;
-          mkFile(filePath, content, () => {
+          createFile(filePath, content, () => {
             logger.success('Created file', filePath);
             runLinter(filePath);
           });

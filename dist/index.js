@@ -38865,8 +38865,206 @@ var inquirer_default = /*#__PURE__*/__webpack_require__.n(inquirer);
 var cjs = __webpack_require__(72872);
 // EXTERNAL MODULE: external "path"
 var external_path_ = __webpack_require__(71017);
+;// CONCATENATED MODULE: ./templater/utils/basicTypes.ts
+const baseTypes = {
+  number: true,
+  string: true,
+  boolean: true,
+  any: true,
+  void: true,
+  null: true,
+  undefined: true
+};
+const baseTypesArray = (/* unused pure expression or super */ null && (['number', 'string', 'boolean', 'any', 'void', 'null', 'undefined']));
+const basicTypesTestPayload = {
+  number: 1,
+  string: '\'Test\'',
+  boolean: true,
+  any: true,
+  void: undefined,
+  null: null,
+  undefined
+};
+const getTestPayload = type => {
+  if (type.includes('[]')) {
+    return '[]';
+  }
+  if (type === '') {
+    return undefined;
+  }
+  return `${basicTypesTestPayload[type] || `{} as ${type}`}`;
+};
+const parseArrayType = str => {
+  return str.replace('[]', '');
+};
+const isBaseType = type => {
+  return baseTypes[type] || false;
+};
+;// CONCATENATED MODULE: ./templater/utils/logger.ts
+const logger = {
+  info: (...args) => {
+    console.log('\x1b[33m%s\x1b[0m', ...args);
+  },
+  success: (...args) => {
+    console.log('\x1b[32m%s\x1b[0m', ...args);
+  },
+  error: (...args) => {
+    console.log('\x1b[31m%s\x1b[0m', ...args);
+  },
+  dev: (...args) => {
+    console.log('\x1b[36m%s\x1b[0m', ...args);
+  }
+};
+;// CONCATENATED MODULE: ./templater/creator/fixFile.ts
+
+
+const fixFile = lines => {
+  const fileLines = [...lines];
+
+  // [1] Fix basic types imports
+  for (let i = fileLines.length - 1; i >= 0; i--) {
+    try {
+      if (fileLines[i].includes('import')) {
+        const indexes = [-1, -1];
+        let singleString = '';
+        indexes[0] = i;
+        for (let j = i; j < fileLines.length; j++) {
+          for (let l = 0; l < fileLines[j].length; l++) {
+            singleString += fileLines[j][l];
+          }
+          if (fileLines[j].includes('from')) {
+            indexes[1] = j;
+            break;
+          }
+        }
+        let index = 0;
+        const items = ['', '', ''];
+        for (let j = 0; j < singleString.length; j++) {
+          const c = singleString[j];
+          if (c === '}') {
+            index = 2;
+          }
+          items[index] += c;
+          if (c === '{') {
+            index = 1;
+          }
+        }
+        items[1] = items[1].split(',').map(s => s.trim()).filter(s => s.slice(-2) === '[]' ? !baseTypes[s.substring(0, s.length - 2)] : !baseTypes[s]).map(s => s.slice(-2) === '[]' ? s.substring(0, s.length - 2) : s).join(',');
+        if (indexes[0] !== -1 && indexes[1] !== -1) {
+          const importString = items[1].trim() === '' ? '' : items.join(' ');
+          fileLines.splice(indexes[0], indexes[1] - indexes[0] + 1, importString);
+        }
+      }
+    } catch (e) {
+      logger.dev('Error in fixFileAfterInsertion [1]');
+      logger.error(e);
+    }
+  }
+
+  // [2] Fix lines, that start with a comma
+  try {
+    for (let i = 0; i < fileLines.length; i++) {
+      const trimmedLine = fileLines[i].trimStart();
+      if (trimmedLine[0] === ',') {
+        fileLines[i] = fileLines[i].replace(',', '');
+        const prevLine = fileLines[i - 1];
+        if (prevLine) {
+          const trimmedPrevLine = prevLine.trimEnd();
+          if (trimmedPrevLine[trimmedPrevLine.length - 1] !== ',') {
+            fileLines[i - 1] = fileLines[i - 1] + ',';
+          }
+        }
+      }
+    }
+  } catch (e) {
+    logger.dev('Error in fixFileAfterInsertion [1]');
+  }
+  return fileLines;
+};
+// EXTERNAL MODULE: external "child_process"
+var external_child_process_ = __webpack_require__(32081);
+;// CONCATENATED MODULE: ./src/runLinter.ts
+
+
+function runLinter(path) {
+  logger.info(`Running linter for ${path}`);
+  (0,external_child_process_.exec)(`eslint ${path} --fix`);
+}
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __webpack_require__(57147);
+;// CONCATENATED MODULE: ./templater/utils/mk.ts
+
+
+const mkDir = filePath => {
+  try {
+    const normalizedPath = normalizePath(filePath);
+    const pathArr = normalizedPath.split('/').filter(s => s !== '' && s !== '.');
+    let p = '.';
+    while (pathArr.length > 0) {
+      const folder = pathArr.shift();
+      p += `/${folder}`;
+      if (!external_fs_.existsSync(p)) {
+        external_fs_.mkdirSync(p);
+      }
+    }
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in mkDir() function');
+  }
+};
+const mkFile = (filePath, data, onCreate) => {
+  try {
+    const normalizedPath = normalizePath(filePath);
+    if (!external_fs_.existsSync(normalizedPath)) {
+      const tmp = normalizedPath.split('/');
+      const lastSlash = tmp.lastIndexOf('/');
+      const pathToFile = tmp.slice(0, lastSlash).join('/');
+      mkDir(pathToFile);
+      external_fs_.appendFileSync(normalizedPath, data);
+      onCreate && onCreate();
+    } else {
+      logger.info(`File already exists ${normalizedPath}`);
+    }
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in mkFile() function');
+  }
+};
+const fileExists = filePath => {
+  try {
+    const normalizedPath = normalizePath(filePath);
+    return external_fs_.existsSync(normalizedPath);
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in fileExists() function');
+  }
+};
+const readDirSync = path => {
+  return fs.readdirSync(path);
+};
+const readFileSync = external_fs_.readFileSync;
+const normalizePath = filePath => {
+  return filePath.replace(/\\/g, '/');
+};
+;// CONCATENATED MODULE: ./templater/creator/createFile.ts
+
+
+
+
+const createFile = (filePath, content, onCreate) => {
+  try {
+    const lines = content.split('\n');
+    const fixedLines = fixFile(lines);
+    const fixedContent = fixedLines.join('\n');
+    mkFile(filePath, fixedContent, () => {
+      logger.success('Created file', filePath);
+      runLinter(filePath);
+    });
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in createFile() function');
+  }
+};
 ;// CONCATENATED MODULE: ./templater/types/config.types.ts
 let TemplateUpdateOperator;
 (function (TemplateUpdateOperator) {
@@ -38894,41 +39092,7 @@ const checkCondition = (line, when) => {
   };
   return map[when[0]];
 };
-;// CONCATENATED MODULE: ./templater/creator/fixCommasInFile.ts
-const fixCommasInFile = lines => {
-  const fileLines = [...lines];
-  for (let i = 0; i < fileLines.length; i++) {
-    const trimmedLine = fileLines[i].trimStart();
-    if (trimmedLine[0] === ',') {
-      fileLines[i] = fileLines[i].replace(',', '');
-      const prevLine = fileLines[i - 1];
-      if (prevLine) {
-        const trimmedPrevLine = prevLine.trimEnd();
-        if (trimmedPrevLine[trimmedPrevLine.length - 1] !== ',') {
-          fileLines[i - 1] = fileLines[i - 1] + ',';
-        }
-      }
-    }
-  }
-  return fileLines;
-};
-;// CONCATENATED MODULE: ./templater/utils/logger.ts
-const logger = {
-  info: (...args) => {
-    console.log('\x1b[33m%s\x1b[0m', ...args);
-  },
-  success: (...args) => {
-    console.log('\x1b[32m%s\x1b[0m', ...args);
-  },
-  error: (...args) => {
-    console.log('\x1b[31m%s\x1b[0m', ...args);
-  },
-  dev: (...args) => {
-    console.log('\x1b[36m%s\x1b[0m', ...args);
-  }
-};
 ;// CONCATENATED MODULE: ./templater/creator/insert.ts
-
 
 
 
@@ -38936,7 +39100,6 @@ const insert = (data, updates) => {
   const lines = data.split('\n');
   updates_loop: for (let j = 0; j < updates.length; j++) {
     const u = updates[j];
-    logger.info('=====================');
     if (!u.direction) {
       u.direction = TemplateUpdateDirection.Down;
     }
@@ -38952,7 +39115,6 @@ const insert = (data, updates) => {
         }
       }
     } else {
-      logger.dev('updates', u);
       if (checkInsertCondition(lines, indexes, u)) {
         for (let i = fromIndex; i >= toIndex; i--) {
           if (checkCondition(lines[i], u.searchFor)) {
@@ -38963,7 +39125,7 @@ const insert = (data, updates) => {
       }
     }
   }
-  return fixCommasInFile(lines).join('\n');
+  return fixFile(lines).join('\n');
 };
 function checkInsertCondition(lines, indexes, u) {
   const [fromIndex, toIndex] = findIndexes(lines, u);
@@ -39070,72 +39232,10 @@ const updateFile = (path, updates, onUpdate) => {
     });
   });
 };
-// EXTERNAL MODULE: external "child_process"
-var external_child_process_ = __webpack_require__(32081);
-;// CONCATENATED MODULE: ./src/runLinter.ts
-
-
-function runLinter(path) {
-  logger.info(`Running linter for ${path}`);
-  (0,external_child_process_.exec)(`eslint ${path} --fix`);
-}
 // EXTERNAL MODULE: ./templater/utils/dynamicRequire.ts
 var dynamicRequire = __webpack_require__(77970);
-;// CONCATENATED MODULE: ./templater/utils/mk.ts
-
-
-const mkDir = filePath => {
-  try {
-    const normalizedPath = normalizePath(filePath);
-    const pathArr = normalizedPath.split('/').filter(s => s !== '' && s !== '.');
-    let p = '.';
-    while (pathArr.length > 0) {
-      const folder = pathArr.shift();
-      p += `/${folder}`;
-      if (!external_fs_.existsSync(p)) {
-        external_fs_.mkdirSync(p);
-      }
-    }
-  } catch (e) {
-    logger.info(e);
-    logger.error('Error in mkDir() function');
-  }
-};
-const mkFile = (filePath, data, onCreate) => {
-  try {
-    const normalizedPath = normalizePath(filePath);
-    if (!external_fs_.existsSync(normalizedPath)) {
-      const tmp = normalizedPath.split('/');
-      const lastSlash = tmp.lastIndexOf('/');
-      const pathToFile = tmp.slice(0, lastSlash).join('/');
-      mkDir(pathToFile);
-      external_fs_.appendFileSync(normalizedPath, data);
-      onCreate && onCreate();
-    } else {
-      logger.info(`File already exists ${normalizedPath}`);
-    }
-  } catch (e) {
-    logger.info(e);
-    logger.error('Error in mkFile() function');
-  }
-};
-const fileExists = filePath => {
-  try {
-    const normalizedPath = normalizePath(filePath);
-    return external_fs_.existsSync(normalizedPath);
-  } catch (e) {
-    logger.info(e);
-    logger.error('Error in fileExists() function');
-  }
-};
-const readDirSync = path => {
-  return fs.readdirSync(path);
-};
-const readFileSync = external_fs_.readFileSync;
-const normalizePath = filePath => {
-  return filePath.replace(/\\/g, '/');
-};
 ;// CONCATENATED MODULE: ./templater/creator/index.ts
+
 
 
 
@@ -39174,7 +39274,7 @@ const normalizePath = filePath => {
         } else {
           logger.info(`Creating file ${filePath}`);
           const content = invoker(answers).init;
-          mkFile(filePath, content, () => {
+          createFile(filePath, content, () => {
             logger.success('Created file', filePath);
             runLinter(filePath);
           });
@@ -39185,40 +39285,6 @@ const normalizePath = filePath => {
     }
   });
 });
-;// CONCATENATED MODULE: ./templater/utils/basicTypes.ts
-const baseTypes = {
-  number: true,
-  string: true,
-  boolean: true,
-  any: true,
-  void: true,
-  null: true,
-  undefined: true
-};
-const basicTypesTestPayload = {
-  number: 1,
-  string: '\'Test\'',
-  boolean: true,
-  any: true,
-  void: undefined,
-  null: null,
-  undefined
-};
-const getTestPayload = type => {
-  if (type.includes('[]')) {
-    return '[]';
-  }
-  if (type === '') {
-    return undefined;
-  }
-  return `${basicTypesTestPayload[type] || `{} as ${type}`}`;
-};
-const parseArrayType = str => {
-  return str.replace('[]', '');
-};
-const isBaseType = type => {
-  return baseTypes[type] || false;
-};
 ;// CONCATENATED MODULE: ./templater/utils/parseConfigQuestions.ts
 const parseConfigQuestions = config => {
   return {

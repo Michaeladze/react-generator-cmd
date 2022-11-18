@@ -1,6 +1,6 @@
 import { checkCondition } from './checkCondition';
 
-import { fixCommasInFile } from './fixCommasInFile';
+import { fixFile } from './fixFile';
 
 import {
   IIndexes,
@@ -44,7 +44,7 @@ export const insert = (data: string, updates: ITemplateUpdate[]): string => {
     }
   }
 
-  return fixCommasInFile(lines).join('\n');
+  return fixFile(lines).join('\n');
 };
 
 function checkInsertCondition(lines: string[], indexes: IIndexes, u: ITemplateUpdate): boolean {

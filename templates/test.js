@@ -5,10 +5,7 @@ module.exports = ({ successType }) => {
 };`;
 
   return {
-    init: `import { useSelector } from 'react-redux';
-import { ${successType} } from './types';
-
-import { RootReduxState } from '../reducer';
+    init: `import { ${successType} } from './types';
 
 ${selectorString}
 `,
