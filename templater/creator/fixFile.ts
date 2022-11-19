@@ -12,25 +12,9 @@ export const fixFile = (fileContent: string): string[] => {
   fixBasicTypeImports(fileLines);
   fixBasicTypeExports(fileLines);
   fixLinesThatStartWithComma(fileLines);
-  removeEmptyLinesFromStart(fileLines);
 
   return fileLines;
 };
-
-function removeEmptyLinesFromStart(fileLines: string[]) {
-  try {
-    if (!fileLines) {
-      return;
-    }
-
-    while (fileLines[0] && fileLines[0].trim() === '') {
-      fileLines.shift();
-    }
-  } catch (e) {
-    logger.dev('Error in removeEmptyLinesFromStart');
-    logger.error(e);
-  }
-}
 
 function fixBasicTypeExports(fileLines: string[]) {
   try {
@@ -154,6 +138,11 @@ function fixBasicTypeImports(fileLines: string[]) {
           }
         }
 
+        if (items[1] === '') {
+          continue;
+        }
+
+
         items[1] = items[1]
           .split(',')
           .map((s: string) => s.trim())
@@ -163,7 +152,7 @@ function fixBasicTypeImports(fileLines: string[]) {
 
         if (indexes[0] !== -1 && indexes[1] !== -1) {
           const importString = items[1].trim() === '' ? '' : items.join(' ');
-          fileLines.splice(indexes[0], indexes[1] - indexes[0] + 1, importString);
+          fileLines.splice(indexes[0], indexes[1] - indexes[0] + 1, '\n' + importString);
         }
       }
     } catch (e) {

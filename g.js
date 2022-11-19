@@ -48,23 +48,23 @@ module.exports = {
           'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.tsx`,
           'template': '../templates/components/component.template.js'
         },
-        {
-          'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.css`,
-          'template': '../templates/components/style.template.js'
-        },
-        {
-          'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.test.tsx`,
-          'template': '../templates/components/tests.template.js'
-        },
-        {
-          'name': ({ ComponentName }) => `${ComponentName}/index.ts`,
-          'template': '../templates/components/index.template.js'
-        },
-        {
-          'name': './router/index.tsx',
-          'template': '../templates/router/index.template.js',
-          'when': ({ $createPath }) => $createPath.includes('pages')
-        }
+        // {
+        //   'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.css`,
+        //   'template': '../templates/components/style.template.js'
+        // },
+        // {
+        //   'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.test.tsx`,
+        //   'template': '../templates/components/tests.template.js'
+        // },
+        // {
+        //   'name': ({ ComponentName }) => `${ComponentName}/index.ts`,
+        //   'template': '../templates/components/index.template.js'
+        // },
+        // {
+        //   'name': './router/index.tsx',
+        //   'template': '../templates/router/index.template.js',
+        //   'when': ({ $createPath }) => $createPath.includes('pages')
+        // }
       ],
       'questions': [
         {

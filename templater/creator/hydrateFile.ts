@@ -8,7 +8,7 @@ import { logger } from '../utils/logger';
 export const hydrateFile = (filePath: string, content: string, onComplete?: AnyFunction) => {
   try {
     const fixedLines = fixFile(content);
-    const fixedContent = fixedLines.join('\n');
+    const fixedContent = fixedLines.join('\n').trim();
 
     fs.writeFile(filePath, fixedContent, (e) => {
       if (e) {

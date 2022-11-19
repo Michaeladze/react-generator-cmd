@@ -18,7 +18,7 @@ export const updateFile = (path: string, updates: ITemplateUpdate[], onComplete?
       return;
     }
 
-    const content = insert(data, updates);
+    const content = insert(data, updates).trim();
 
     fs.writeFile(path, content, (err) => {
       if (err) {

@@ -8,7 +8,7 @@ export const createFile = (filePath: string, content: string, onComplete?: AnyFu
   try {
 
     const fixedLines = fixFile(content);
-    const fixedContent = fixedLines.join('\n');
+    const fixedContent = fixedLines.join('\n').trim();
 
     mkFile(filePath, fixedContent, () => {
       onComplete && onComplete();
