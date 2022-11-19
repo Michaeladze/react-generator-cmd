@@ -12,38 +12,53 @@ export const fixFile = (fileContent: string): string[] => {
   fixBasicTypeImports(fileLines);
   fixBasicTypeExports(fileLines);
   fixLinesThatStartWithComma(fileLines);
+  removeEmptyLinesFromStart(fileLines);
 
   return fileLines;
 };
 
-function fixBasicTypeExports(fileLines: string[]) {
-
-  const typeExportsCount: Record<string, number> = {};
-
-  for (let i = 0; i < fileLines.length; i++) {
-    const exportsInterface = fileLines[i].includes('export interface');
-    const exportsType = fileLines[i].includes('export type');
-
-    if (!exportsInterface && !exportsType) {
-      continue;
+function removeEmptyLinesFromStart(fileLines: string[]) {
+  try {
+    if (!fileLines) {
+      return;
     }
 
-    const split = fileLines[i].split(' ');
+    while (fileLines[0] && fileLines[0].trim() === '') {
+      fileLines.shift();
+    }
+  } catch (e) {
+    logger.dev('Error in removeEmptyLinesFromStart');
+    logger.error(e);
+  }
+}
 
-    if (split && split[2]) {
-      const type = isArrayType(split[2]) ? split[2].substring(0, split[2].length - 2) : split[2];
+function fixBasicTypeExports(fileLines: string[]) {
+  try {
+    const typeExportsCount: Record<string, number> = {};
 
-      if (typeExportsCount[type] === undefined) {
-        typeExportsCount[type] = 0;
+    for (let i = 0; i < fileLines.length; i++) {
+      const exportsInterface = fileLines[i].includes('export interface');
+      const exportsType = fileLines[i].includes('export type');
+
+      if (!exportsInterface && !exportsType) {
+        continue;
       }
 
-      typeExportsCount[type]++;
+      const split = fileLines[i].split(' ');
+
+      if (split && split[2]) {
+        const type = isArrayType(split[2]) ? split[2].substring(0, split[2].length - 2) : split[2];
+
+        if (typeExportsCount[type] === undefined) {
+          typeExportsCount[type] = 0;
+        }
+
+        typeExportsCount[type]++;
+      }
     }
-  }
 
-  for (let i = fileLines.length - 1; i >= 0; i--) {
+    for (let i = fileLines.length - 1; i >= 0; i--) {
 
-    try {
       const exportsInterface = fileLines[i].includes('export interface');
       const exportsType = fileLines[i].includes('export type');
 
@@ -94,10 +109,10 @@ function fixBasicTypeExports(fileLines: string[]) {
           }
         }
       }
-    } catch (e) {
-      logger.dev('Error in fixBasicTypeExports');
-      logger.error(e);
     }
+  } catch (e) {
+    logger.dev('Error in fixBasicTypeExports');
+    logger.error(e);
   }
 }
 

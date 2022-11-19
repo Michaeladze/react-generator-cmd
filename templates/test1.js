@@ -15,13 +15,23 @@ ${successTypeString}
         direction: 'up',
         searchFor: ['includes', '}'],
         changeWith: `}\n\n${pendingTypeString}`,
-        when: ['not includes', pendingType]
+        when: ['not includes', pendingType],
+        fallback: {
+          direction: 'up',
+          searchFor: ['includes', ''],
+          changeWith: `\n${pendingTypeString}`
+        }
       },
       {
         direction: 'up',
         searchFor: ['includes', '}'],
         changeWith: `}\n\n${successTypeString}`,
-        when: ['not includes', successType]
+        when: ['not includes', successType],
+        fallback: {
+          direction: 'up',
+          searchFor: ['includes', ''],
+          changeWith: `\n${successTypeString}`
+        }
       }
     ]
   };

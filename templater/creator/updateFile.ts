@@ -7,7 +7,7 @@ import { AnyFunction } from '../types/common.types';
 import { ITemplateUpdate } from '../types/config.types';
 import { logger } from '../utils/logger';
 
-export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: AnyFunction) => {
+export const updateFile = (path: string, updates: ITemplateUpdate[], onComplete?: AnyFunction) => {
   fs.readFile(path, {
     encoding: 'utf8'
   }, (err, data) => {
@@ -25,7 +25,7 @@ export const updateFile = (path: string, updates: ITemplateUpdate[], onUpdate?: 
         logger.info(err);
         logger.error('Error in updateFile() function');
       } else {
-        onUpdate && onUpdate();
+        onComplete && onComplete();
       }
     });
   });

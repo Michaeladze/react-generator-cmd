@@ -15,11 +15,13 @@ module.exports = {
         {
           'name': 'pendingType',
           'message': 'Field?',
+          'default': 'void',
           'type': 'input'
         },
         {
           'name': 'successType',
           'message': 'Field?',
+          'default': 'void',
           'type': 'input'
         }
       ]
