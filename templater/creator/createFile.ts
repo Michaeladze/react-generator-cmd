@@ -8,8 +8,7 @@ import { mkFile } from '../utils/mk';
 export const createFile = (filePath: string, content: string, onCreate?: AnyFunction) => {
   try {
 
-    const lines = content.split('\n');
-    const fixedLines = fixFile(lines);
+    const fixedLines = fixFile(content);
     const fixedContent = fixedLines.join('\n');
 
     mkFile(filePath, fixedContent, () => {

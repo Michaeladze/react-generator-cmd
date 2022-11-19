@@ -2,9 +2,9 @@ import { IIndexes } from '../types/config.types';
 import { baseTypes } from '../utils/basicTypes';
 import { logger } from '../utils/logger';
 
-export const fixFile = (lines: string[]): string[] => {
+export const fixFile = (fileContent: string): string[] => {
 
-  const fileLines: string[] = [...lines];
+  const fileLines: string[] = fileContent.split('\n');
 
   // [1] Fix basic types imports
   for (let i = fileLines.length - 1; i >= 0; i--) {
@@ -43,6 +43,8 @@ export const fixFile = (lines: string[]): string[] => {
             index = 1;
           }
         }
+
+        console.log(items);
 
         items[1] = items[1]
           .split(',')

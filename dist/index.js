@@ -38918,8 +38918,8 @@ const logger = {
 ;// CONCATENATED MODULE: ./templater/creator/fixFile.ts
 
 
-const fixFile = lines => {
-  const fileLines = [...lines];
+const fixFile = fileContent => {
+  const fileLines = fileContent.split('\n');
 
   // [1] Fix basic types imports
   for (let i = fileLines.length - 1; i >= 0; i--) {
@@ -38949,6 +38949,7 @@ const fixFile = lines => {
             index = 1;
           }
         }
+        console.log(items);
         items[1] = items[1].split(',').map(s => s.trim()).filter(s => s.slice(-2) === '[]' ? !baseTypes[s.substring(0, s.length - 2)] : !baseTypes[s]).map(s => s.slice(-2) === '[]' ? s.substring(0, s.length - 2) : s).join(',');
         if (indexes[0] !== -1 && indexes[1] !== -1) {
           const importString = items[1].trim() === '' ? '' : items.join(' ');
@@ -39053,8 +39054,7 @@ const normalizePath = filePath => {
 
 const createFile = (filePath, content, onCreate) => {
   try {
-    const lines = content.split('\n');
-    const fixedLines = fixFile(lines);
+    const fixedLines = fixFile(content);
     const fixedContent = fixedLines.join('\n');
     mkFile(filePath, fixedContent, () => {
       logger.success('Created file', filePath);
@@ -39105,6 +39105,10 @@ const insert = (data, updates) => {
     }
     const indexes = findIndexes(lines, u);
     const [fromIndex, toIndex] = indexes;
+    if ((fromIndex === -1 || toIndex === -1) && u.fallback) {
+      updates.push(u.fallback);
+      continue;
+    }
     if (u.direction === TemplateUpdateDirection.Down) {
       if (checkInsertCondition(lines, indexes, u)) {
         for (let i = fromIndex; i < toIndex; i++) {
@@ -39125,7 +39129,8 @@ const insert = (data, updates) => {
       }
     }
   }
-  return fixFile(lines).join('\n');
+  const fileContent = lines.join('\n');
+  return fixFile(fileContent).join('\n');
 };
 function checkInsertCondition(lines, indexes, u) {
   const [fromIndex, toIndex] = findIndexes(lines, u);
@@ -39187,25 +39192,30 @@ function findIndexes(lines, u) {
         return indexes;
       }
     }
-    if (indexes[0] === -1) {
-      indexes[0] = 0;
-    }
-    if (indexes[1] === -1) {
-      indexes[1] = lines.length - 1;
-    }
+
+    // if (indexes[0] === -1) {
+    //   indexes[0] = 0;
+    // }
+    //
+    // if (indexes[1] === -1) {
+    //   indexes[1] = lines.length - 1;
+    // }
   } else {
     for (let i = lines.length - 1; i >= 0; i--) {
       if (checkIndexes(lines, i, u, indexes)) {
         return indexes;
       }
     }
-    if (indexes[0] === -1) {
-      indexes[0] = lines.length - 1;
-    }
-    if (indexes[1] === -1) {
-      indexes[1] = 0;
-    }
+
+    // if (indexes[0] === -1) {
+    //   indexes[0] = lines.length - 1;
+    // }
+    //
+    // if (indexes[1] === -1) {
+    //   indexes[1] = 0;
+    // }
   }
+
   return indexes;
 }
 ;// CONCATENATED MODULE: ./templater/creator/updateFile.ts

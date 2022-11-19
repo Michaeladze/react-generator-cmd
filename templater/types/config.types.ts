@@ -46,6 +46,7 @@ export interface ITemplateUpdate {
   searchFor: [TemplateUpdateOperator, string],
   changeWith: string;
   when?: [TemplateUpdateOperator, string];
+  fallback?: ITemplateUpdate;
 }
 
 export enum TemplateUpdateOperator {

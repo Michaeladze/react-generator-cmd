@@ -1,5 +1,6 @@
 import { checkCondition } from './checkCondition';
 
+
 import { fixFile } from './fixFile';
 
 import {
@@ -21,6 +22,11 @@ export const insert = (data: string, updates: ITemplateUpdate[]): string => {
 
     const indexes: IIndexes = findIndexes(lines, u);
     const [fromIndex, toIndex] = indexes;
+
+    if ((fromIndex === -1 || toIndex === -1) && u.fallback) {
+      updates.push(u.fallback);
+      continue;
+    }
 
     if (u.direction === TemplateUpdateDirection.Down) {
       if (checkInsertCondition(lines, indexes, u)) {
@@ -44,7 +50,8 @@ export const insert = (data: string, updates: ITemplateUpdate[]): string => {
     }
   }
 
-  return fixFile(lines).join('\n');
+  const fileContent = lines.join('\n');
+  return fixFile(fileContent).join('\n');
 };
 
 function checkInsertCondition(lines: string[], indexes: IIndexes, u: ITemplateUpdate): boolean {
@@ -118,13 +125,13 @@ function findIndexes(lines: string[], u: ITemplateUpdate): IIndexes {
       }
     }
 
-    if (indexes[0] === -1) {
-      indexes[0] = 0;
-    }
-
-    if (indexes[1] === -1) {
-      indexes[1] = lines.length - 1;
-    }
+    // if (indexes[0] === -1) {
+    //   indexes[0] = 0;
+    // }
+    //
+    // if (indexes[1] === -1) {
+    //   indexes[1] = lines.length - 1;
+    // }
   } else {
     for (let i = lines.length - 1; i >= 0; i--) {
       if (checkIndexes(lines, i, u, indexes)) {
@@ -132,13 +139,13 @@ function findIndexes(lines: string[], u: ITemplateUpdate): IIndexes {
       }
     }
 
-    if (indexes[0] === -1) {
-      indexes[0] = lines.length - 1;
-    }
-
-    if (indexes[1] === -1) {
-      indexes[1] = 0;
-    }
+    // if (indexes[0] === -1) {
+    //   indexes[0] = lines.length - 1;
+    // }
+    //
+    // if (indexes[1] === -1) {
+    //   indexes[1] = 0;
+    // }
   }
 
   return indexes;
