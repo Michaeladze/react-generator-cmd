@@ -5,6 +5,15 @@ module.exports = {
   'domains': [
     {
       'name': 'test',
+      'structure': {
+        'applications': {
+          ':appId': {
+            'pages': {
+              ':id': ''
+            }
+          }
+        }
+      },
       'templates': [
         {
           'name': 'test.ts',

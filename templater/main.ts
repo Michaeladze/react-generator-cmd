@@ -133,13 +133,13 @@ export const main = () => {
           throw new Error('Could not define the domain');
         }
 
-        const currentKeys = Object.keys(structure);
-
-        if (currentKeys.length === 1) {
-          nextKey = currentKeys[0];
-          answers.$createPath += `/${nextKey}`;
-          structure = structure[nextKey];
-        }
+        // const currentKeys = Object.keys(structure);
+        //
+        // if (currentKeys.length === 1) {
+        //   nextKey = currentKeys[0];
+        //   answers.$createPath += `/${nextKey}`;
+        //   structure = structure[nextKey];
+        // }
 
         try {
           if (typeof structure === 'string') {
@@ -155,12 +155,13 @@ export const main = () => {
 
         try {
           const keys = structure ? Object.keys(structure) : [];
+          console.log(structure);
           dynamicKey = keys.find((k) => k[0] === ':') || undefined;
 
           prompts.next({
             type: 'list',
             name: `components_${depth}`,
-            message: 'Where to create a component?',
+            message: 'Where to create a file?',
             choices: () => {
               if (dynamicKey) {
                 let dir: string[] = [];
@@ -202,11 +203,11 @@ export const main = () => {
         const keys = structure ? Object.keys(structure) : [];
         dynamicKey = keys.find((k) => k[0] === ':') || undefined;
 
-        if (keys.length === 1 && !dynamicKey) {
-          nextKey = keys[0];
-          answers.$createPath += `/${nextKey}`;
-          structure = structure[nextKey];
-        }
+        // if (keys.length === 1 && !dynamicKey) {
+        //   nextKey = keys[0];
+        //   answers.$createPath += `/${nextKey}`;
+        //   structure = structure[nextKey];
+        // }
       } catch (e) {
         throw new Error('Could not generate dynamic structure');
       }
@@ -227,7 +228,7 @@ export const main = () => {
         prompts.next({
           type: 'list',
           name: `components_${depth}`,
-          message: 'Where to create a component?',
+          message: 'Where to create a file?',
           choices: () => {
             if (dynamicKey) {
               let dir: string[] = [];
