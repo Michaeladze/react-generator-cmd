@@ -155,7 +155,6 @@ export const main = () => {
 
         try {
           const keys = structure ? Object.keys(structure) : [];
-          console.log(structure);
           dynamicKey = keys.find((k) => k[0] === ':') || undefined;
 
           prompts.next({
