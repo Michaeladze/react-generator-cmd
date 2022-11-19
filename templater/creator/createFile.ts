@@ -10,6 +10,10 @@ export const createFile = (filePath: string, content: string, onComplete?: AnyFu
     const fixedLines = fixFile(content);
     const fixedContent = fixedLines.join('\n').trim();
 
+    if (fixedContent === '') {
+      return;
+    }
+
     mkFile(filePath, fixedContent, () => {
       onComplete && onComplete();
     });
