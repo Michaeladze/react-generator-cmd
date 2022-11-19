@@ -44,6 +44,10 @@ export const parseArrayType = (str: string): string => {
   return str.replace('[]', '');
 };
 
+export const isArrayType = (type: string): boolean => {
+  return type.slice(-2) === '[]';
+};
+
 export const isBaseType = (type: string): boolean => {
-  return baseTypes[type] || false;
+  return (isArrayType(type) ? baseTypes[type.substring(0, type.length - 2)] : baseTypes[type]) || false;
 };

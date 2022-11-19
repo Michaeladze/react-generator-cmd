@@ -1,12 +1,107 @@
 import { IIndexes } from '../types/config.types';
-import { baseTypes } from '../utils/basicTypes';
+import {
+  isArrayType,
+  isBaseType
+} from '../utils/basicTypes';
 import { logger } from '../utils/logger';
+import { isValidParenthesis } from '../utils/validParenthesis';
 
 export const fixFile = (fileContent: string): string[] => {
 
   const fileLines: string[] = fileContent.split('\n');
+  fixBasicTypeImports(fileLines);
+  fixBasicTypeExports(fileLines);
+  fixLinesThatStartWithComma(fileLines);
 
-  // [1] Fix basic types imports
+  return fileLines;
+};
+
+function fixBasicTypeExports(fileLines: string[]) {
+
+  const typeExportsCount: Record<string, number> = {};
+
+  for (let i = 0; i < fileLines.length; i++) {
+    const exportsInterface = fileLines[i].includes('export interface');
+    const exportsType = fileLines[i].includes('export type');
+
+    if (!exportsInterface && !exportsType) {
+      continue;
+    }
+
+    const split = fileLines[i].split(' ');
+
+    if (split && split[2]) {
+      const type = isArrayType(split[2]) ? split[2].substring(0, split[2].length - 2) : split[2];
+
+      if (typeExportsCount[type] === undefined) {
+        typeExportsCount[type] = 0;
+      }
+
+      typeExportsCount[type]++;
+    }
+  }
+
+  for (let i = fileLines.length - 1; i >= 0; i--) {
+
+    try {
+      const exportsInterface = fileLines[i].includes('export interface');
+      const exportsType = fileLines[i].includes('export type');
+
+      if (!exportsInterface && !exportsType) {
+        continue;
+      }
+
+      const indexes: IIndexes = [-1, -1];
+      let singleString = '';
+
+      indexes[0] = i;
+
+      indexes_loop:
+      for (let j = i; j < fileLines.length; j++) {
+        for (let l = 0; l < fileLines[j].length; l++) {
+          singleString += fileLines[j][l];
+
+          if (exportsInterface && fileLines[j][l] === '}' && isValidParenthesis(singleString)) {
+            indexes[1] = j;
+            break indexes_loop;
+          }
+
+          if (exportsType && fileLines[j][l] === ';') {
+            indexes[1] = j;
+            break indexes_loop;
+          }
+        }
+      }
+
+      const splitExport = singleString.split(' ');
+      let type = splitExport[2];
+
+      if (indexes[0] !== -1 && indexes[1] !== -1) {
+        if (isBaseType(type)) {
+          fileLines.splice(indexes[0], indexes[1] - indexes[0] + 1);
+          continue;
+        }
+
+        if (isArrayType(type)) {
+          type = type.replace('[]', '');
+
+          if (typeExportsCount[type] > 1) {
+            fileLines.splice(indexes[0], indexes[1] - indexes[0] + 1);
+            typeExportsCount[type]--;
+          } else {
+            splitExport[2] = type;
+            fileLines.splice(indexes[0], indexes[1] - indexes[0] + 1, splitExport.join(' '));
+          }
+        }
+      }
+    } catch (e) {
+      logger.dev('Error in fixBasicTypeExports');
+      logger.error(e);
+    }
+  }
+}
+
+function fixBasicTypeImports(fileLines: string[]) {
   for (let i = fileLines.length - 1; i >= 0; i--) {
 
     try {
@@ -47,8 +142,8 @@ export const fixFile = (fileContent: string): string[] => {
         items[1] = items[1]
           .split(',')
           .map((s: string) => s.trim())
-          .filter((s: string) => s.slice(-2) === '[]' ? !baseTypes[s.substring(0, s.length - 2)] : !baseTypes[s])
-          .map((s: string) => s.slice(-2) === '[]' ? s.substring(0, s.length - 2) : s)
+          .filter((s: string) => !isBaseType(s))
+          .map((s: string) => isArrayType(s) ? s.substring(0, s.length - 2) : s)
           .join(',');
 
         if (indexes[0] !== -1 && indexes[1] !== -1) {
@@ -57,12 +152,13 @@ export const fixFile = (fileContent: string): string[] => {
         }
       }
     } catch (e) {
-      logger.dev('Error in fixFileAfterInsertion [1]');
+      logger.dev('Error in fixBasicTypeImports');
       logger.error(e);
     }
   }
+}
 
-  // [2] Fix lines, that start with a comma
+function fixLinesThatStartWithComma(fileLines: string[]) {
   try {
     for (let i = 0; i < fileLines.length; i++) {
       const trimmedLine = fileLines[i].trimStart();
@@ -82,8 +178,6 @@ export const fixFile = (fileContent: string): string[] => {
       }
     }
   } catch (e) {
-    logger.dev('Error in fixFileAfterInsertion [1]');
+    logger.dev('Error in fixLinesThatStartWithComma');
   }
-
-  return fileLines;
-};
+}

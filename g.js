@@ -8,10 +8,15 @@ module.exports = {
       'templates': [
         {
           'name': 'test.ts',
-          'template': '../templates/test.js'
+          'template': '../templates/test1.js'
         }
       ],
       'questions': [
+        {
+          'name': 'pendingType',
+          'message': 'Field?',
+          'type': 'input'
+        },
         {
           'name': 'successType',
           'message': 'Field?',
