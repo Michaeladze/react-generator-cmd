@@ -44,8 +44,6 @@ export const fixFile = (fileContent: string): string[] => {
           }
         }
 
-        console.log(items);
-
         items[1] = items[1]
           .split(',')
           .map((s: string) => s.trim())
