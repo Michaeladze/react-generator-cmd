@@ -45,7 +45,7 @@ export interface ITemplateUpdate {
   direction?: TemplateUpdateDirection;
   searchFor: [TemplateUpdateOperator, string],
   changeWith: string;
-  when?: [TemplateUpdateOperator, string];
+  when?: [TemplateUpdateOperator, string] | boolean;
   fallback?: ITemplateUpdate;
 }
 

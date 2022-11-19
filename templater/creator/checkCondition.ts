@@ -1,8 +1,12 @@
 import { TemplateUpdateOperator } from '../types/config.types';
 
-export const checkCondition = (line: string, when?: [TemplateUpdateOperator, string] | undefined): boolean => {
+export const checkCondition = (line: string, when?: [TemplateUpdateOperator, string] | boolean): boolean => {
   if (when === undefined) {
     return true;
+  }
+
+  if (typeof when === 'boolean') {
+    return when;
   }
 
   const map: Record<TemplateUpdateOperator, boolean> = {
