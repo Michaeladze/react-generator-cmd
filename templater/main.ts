@@ -261,3 +261,5 @@ export const main = () => {
     choices: initialChoices,
   });
 };
+
+main();
