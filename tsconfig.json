@@ -18,10 +18,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": false,
+    "noEmit": true,
     "declaration": true
   },
   "include": [
-    "src/index.ts"
+    "src/index.ts",
+    "src/main.ts",
   ]
 }
