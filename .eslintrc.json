@@ -290,9 +290,7 @@
           "caseInsensitive": true
         }
       }
-    ],
-    "modules-newline/import-declaration-newline": "error",
-    "modules-newline/export-declaration-newline": "error"
+    ]
   }
 }
 

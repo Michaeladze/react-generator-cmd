@@ -18,7 +18,7 @@ export const basicTypesTestPayload: Record<string, any> = {
   undefined
 };
 
-export const getTestPayload = (type: string): string | undefined => {
+export const getTypeValue = (type: string): string | undefined => {
   if (type.includes('[]')) {
     return '[]';
   }
@@ -34,6 +34,6 @@ export const isArrayType = (type: string): boolean => {
   return type.slice(-2) === '[]';
 };
 
-export const isBaseType = (type: string): boolean => {
+export const isPrimitiveType = (type: string): boolean => {
   return (isArrayType(type) ? baseTypes[type.substring(0, type.length - 2)] : baseTypes[type]) || false;
 };

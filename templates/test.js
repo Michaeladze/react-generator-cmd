@@ -1,4 +1,4 @@
-import { capitalize, getTestPayload } from 'react-generator-cmd';
+import { capitalize } from 'react-generator-cmd';
 
 export default ({ pendingType, successType }) => {
   const selectorString = `export const use${capitalize(successType)}Selector = () => {

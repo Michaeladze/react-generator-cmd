@@ -1,7 +1,11 @@
-import { getTestPayload } from './utils/basicTypes';
+import {
+  getTypeValue, isPrimitiveType, isArrayType
+} from './utils/basicTypes';
 import { capitalize } from './utils/capitalize';
 
 export {
-  getTestPayload,
-  capitalize
+  getTypeValue,
+  capitalize,
+  isPrimitiveType,
+  isArrayType
 };
