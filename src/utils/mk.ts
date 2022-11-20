@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 
-
 import { logger } from './logger';
 
 import { AnyFunction } from '../types/common.types';

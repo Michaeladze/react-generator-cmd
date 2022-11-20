@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 
-import { logger } from '../templater/utils/logger';
+import { logger } from './logger';
 
 export function runLinter(path: string) {
   logger.info(`Running linter for ${path}`);

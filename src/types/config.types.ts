@@ -1,35 +1,64 @@
+import { IAnswersBase } from './types';
+
 export interface IConfig {
-  root: string;
+  variables: IConfigVariables;
+  domains: IConfigDomain[];
+}
+
+export interface IConfigDomain {
+  name: string;
   structure: any;
-  css: IConfigCss;
-  redux: IConfigRedux;
-  testAlias: IConfigTests;
-  explicit: boolean;
-  router: IConfigRouter;
-  applications: string;
+  templates: IConfigComponentTemplates[];
+  questions: IConfigComponentQuestion[];
 }
 
-export enum IConfigCss {
-  Css = 'css',
-  Scss = 'scss',
-  Less = 'less',
-  Styled = 'styled'
+export interface IConfigComponentTemplates {
+  name: string | ((answers: IAnswersBase) => string);
+  template: string | ((answers: IAnswersBase) => string);
+  when?: (answers: IAnswersBase) => boolean;
 }
 
-export interface IConfigRedux {
-  folder: string;
-  mainApplication: string;
-  registerDependents: boolean;
-  serviceFolder?: string;
-  typesFolder?: string;
+export interface IConfigComponentQuestion {
+  name: string;
+  message: string;
+  type: string;
+  validate?: (input: any) => boolean;
+  when?: boolean | ((answers: IAnswersBase) => boolean);
 }
 
-export enum IConfigTests {
-  Test = 'test',
-  Spec = 'spec'
+export interface IConfigVariablesRequired {
+  root: string;
 }
 
-export interface IConfigRouter {
-  path: string;
-  pageAlias: string;
+export type IConfigVariables = IConfigVariablesRequired & Record<string, string>;
+
+export type ITemplateInvoker = (answers: IAnswersBase) => ITemplate;
+
+export interface ITemplate {
+  init: string;
+  updates: ITemplateUpdate[]
 }
+
+export interface ITemplateUpdate {
+  fromLine?: [TemplateUpdateOperator, string],
+  toLine?: [TemplateUpdateOperator, string],
+  direction?: TemplateUpdateDirection;
+  searchFor: [TemplateUpdateOperator, string],
+  changeWith: string;
+  when?: [TemplateUpdateOperator, string] | boolean;
+  fallback?: ITemplateUpdate;
+}
+
+export enum TemplateUpdateOperator {
+  NotIncludes = 'not includes',
+  Includes = 'includes',
+  Equal = '===',
+  NotEqual = '!=='
+}
+
+export enum TemplateUpdateDirection {
+  Up = 'up',
+  Down = 'down'
+}
+
+export type IIndexes = [number, number];

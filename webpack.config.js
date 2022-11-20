@@ -3,8 +3,8 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-    main: path.resolve(__dirname, './templater/main.ts'),
-    index: path.resolve(__dirname, './templater/index.ts'),
+    main: path.resolve(__dirname, './src/main.ts'),
+    index: path.resolve(__dirname, './src/index.ts'),
   },
   target: 'node',
   resolve: {

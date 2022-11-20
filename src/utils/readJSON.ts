@@ -4,8 +4,6 @@ import { dynamicRequire } from './dynamicRequire';
 import { logger } from './logger';
 import { fileExists } from './mk';
 
-import { parseConfigQuestions } from './parseConfigQuestions';
-
 import { IConfig } from '../types/config.types';
 
 const defaultConfig: IConfig = {
@@ -32,11 +30,9 @@ export function readJSON(): IConfig {
     return defaultConfig;
   }
 
-  const parsedJSON: IConfig = parseConfigQuestions(json);
-
   const result: IConfig = {
     ...defaultConfig,
-    ...parsedJSON
+    ...json
   };
 
   return result;

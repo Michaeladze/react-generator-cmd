@@ -6,7 +6,6 @@ import { createFile } from './createFile';
 import { hydrateFile } from './hydrateFile';
 import { updateFile } from './updateFile';
 
-import { runLinter } from '../../src/runLinter';
 import {
   IConfig,
   IConfigComponentTemplates,
@@ -16,6 +15,7 @@ import { IAnswersBase } from '../types/types';
 import { dynamicRequire } from '../utils/dynamicRequire';
 import { logger } from '../utils/logger';
 import { fileExists } from '../utils/mk';
+import { runLinter } from '../utils/runLinter';
 
 
 export default (answers: IAnswersBase, config: IConfig) => {

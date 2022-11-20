@@ -10,18 +10,17 @@ import {
   IConfigComponentQuestion,
   IConfigDomain
 } from './types/config.types';
-import { readJSON } from './utils/readJSON';
-import { validateJSON } from './utils/validateJSON';
-
-import {
-  fileExists,
-  readDirSync
-} from '../src/mk';
 import {
   Answer,
   IAnswersBase,
   Question
-} from '../src/types/types';
+} from './types/types';
+import {
+  fileExists,
+  readDirSync
+} from './utils/mk';
+import { readJSON } from './utils/readJSON';
+import { validateJSON } from './utils/validateJSON';
 
 
 export const main = () => {
