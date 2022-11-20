@@ -1,4 +1,6 @@
-import { capitalize } from 'react-generator-cmd';
+import {
+  capitalize, getTypeValue
+} from 'react-generator-cmd';
 
 export default ({ pendingType, successType }) => {
   const selectorString = `export const use${capitalize(successType)}Selector = () => {
@@ -11,8 +13,8 @@ export default ({ pendingType, successType }) => {
     init: `import { useSelector } from 'react-redux';
 import { RootReduxState } from '../reducer';
 
-const pending: ${pendingType} = ${getTestPayload(pendingType)};
-const success: ${successType} = ${getTestPayload(successType)};
+const pending: ${pendingType} = ${getTypeValue(pendingType)};
+const success: ${successType} = ${getTypeValue(successType)};
 
 ${importSuccessType}
 

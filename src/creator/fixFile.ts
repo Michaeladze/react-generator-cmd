@@ -1,7 +1,7 @@
 import { IIndexes } from '../types/config.types';
 import {
   isArrayType,
-  isBaseType
+  isPrimitiveType
 } from '../utils/basicTypes';
 import { logger } from '../utils/logger';
 import { isValidParenthesis } from '../utils/validParenthesis';
@@ -76,7 +76,7 @@ function fixBasicTypeExports(fileLines: string[]) {
       let type = splitExport[2];
 
       if (indexes[0] !== -1 && indexes[1] !== -1) {
-        if (isBaseType(type)) {
+        if (isPrimitiveType(type)) {
           fileLines.splice(indexes[0], indexes[1] - indexes[0] + 1);
           continue;
         }
@@ -146,7 +146,7 @@ function fixBasicTypeImports(fileLines: string[]) {
         items[1] = items[1]
           .split(',')
           .map((s: string) => s.trim())
-          .filter((s: string) => !isBaseType(s))
+          .filter((s: string) => !isPrimitiveType(s))
           .map((s: string) => isArrayType(s) ? s.substring(0, s.length - 2) : s)
           .join(',');
 
