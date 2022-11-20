@@ -1,10 +1,7 @@
-import A from 'react-generator-cmd';
+import { capitalize, getTestPayload } from 'react-generator-cmd';
 
-export default ({ successType }) => {
-
-  console.log(A);
-
-  const selectorString = `export const use${A.capitalize(successType)}Selector = () => {
+export default ({ pendingType, successType }) => {
+  const selectorString = `export const use${capitalize(successType)}Selector = () => {
   return useSelector<RootReduxState, ${successType}>((store: RootReduxState) => store.${successType}.${successType}.${successType});
 };`;
 
@@ -13,6 +10,9 @@ export default ({ successType }) => {
   return {
     init: `import { useSelector } from 'react-redux';
 import { RootReduxState } from '../reducer';
+
+const pending: ${pendingType} = ${getTestPayload(pendingType)};
+const success: ${successType} = ${getTestPayload(successType)};
 
 ${importSuccessType}
 
