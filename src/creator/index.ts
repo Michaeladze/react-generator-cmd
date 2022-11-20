@@ -43,7 +43,7 @@ export default (answers: IAnswersBase, config: IConfig) => {
         const filePath = path.join(componentsPathNext, name);
 
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
-        const invoker: ITemplateInvoker = dynamicImport(path.resolve(config.variables.root, template));
+        const invoker: ITemplateInvoker = (await dynamicImport(path.resolve(config.variables.root, template))).default;
 
         if (fileExists(filePath)) {
 
