@@ -25,8 +25,8 @@ export const routes: RouteObject[] = [
         changeWith: `));\n${routeImport}`
       },
       {
-        fromLine: ['includes', '];'],
         direction: 'up',
+        fromLine: ['includes', '];'],
         searchFor: ['includes', '];'],
         changeWith: `${routeDeclaration}\n];`
       }

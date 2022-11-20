@@ -27,7 +27,7 @@ export default {
     path: path.resolve('./dist'),
     filename: '[name].js',
     libraryTarget: 'module',
-    chunkFormat: 'module'
+    chunkFormat: 'module',
   },
   optimization: {
     minimize: false

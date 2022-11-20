@@ -19,10 +19,14 @@ import { runLinter } from '../utils/runLinter';
 
 
 export default (answers: IAnswersBase, config: IConfig) => {
-  // console.log(answers);
-  // console.log(config);
+  const templates = config.domains[answers.$domainIndex].templates;
 
-  config.domains[answers.$domainIndex].templates.forEach(async (templateConfig: IConfigComponentTemplates) => {
+  if (!templates || templates.length === 0) {
+    logger.info('Could not find any templates');
+    return;
+  }
+
+  templates.forEach(async (templateConfig: IConfigComponentTemplates) => {
     try {
       if (templateConfig.when && !templateConfig.when(answers)) {
         return;
@@ -56,11 +60,16 @@ export default (answers: IAnswersBase, config: IConfig) => {
 
             if (data && data.trim() === '') {
               logger.info(`Re-init file ${filePath}`);
-              const content = invoker(answers).init;
-              hydrateFile(filePath, content, () => {
-                logger.success('Created file', filePath);
-                runLinter(filePath);
-              });
+              try {
+                const content = invoker(answers).init;
+                hydrateFile(filePath, content, () => {
+                  logger.success('Created file', filePath);
+                  runLinter(filePath);
+                });
+              } catch (e) {
+                logger.info(e);
+                logger.error('Error occurred in template', template);
+              }
             } else {
               const updates = invoker(answers).updates;
 
@@ -75,11 +84,17 @@ export default (answers: IAnswersBase, config: IConfig) => {
           });
         } else {
           logger.info(`Creating file ${filePath}`);
-          const content = invoker(answers).init;
-          createFile(filePath, content, () => {
-            logger.success('Created file', filePath);
-            runLinter(filePath);
-          });
+
+          try {
+            const content = invoker(answers).init;
+            createFile(filePath, content, () => {
+              logger.success('Created file', filePath);
+              runLinter(filePath);
+            });
+          } catch (e) {
+            logger.info(e);
+            logger.error('Error occurred in template', template);
+          }
         }
       }
     } catch (e) {

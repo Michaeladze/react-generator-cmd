@@ -15,6 +15,7 @@ import {
   IAnswersBase,
   Question
 } from './types/types';
+import { logger } from './utils/logger';
 import {
   fileExists,
   readDirSync
@@ -28,7 +29,7 @@ export const main = async () => {
   const isValidConfig = validateJSON(config);
 
   if (!isValidConfig) {
-    console.error('Invalid config');
+    logger.error('Invalid config');
     process.exit(0);
   }
 
@@ -68,6 +69,13 @@ export const main = async () => {
       try {
         if (answers.$domainIndex >= 0 && config.domains) {
           const questions = config.domains[answers.$domainIndex].questions;
+
+          if (!questions || questions.length === 0) {
+            logger.info('No additional questions.');
+            userPrompts.complete();
+            return;
+          }
+
           const lastQuestion = questions[questions.length - 1];
 
           // next question is invisible and is last question
@@ -106,7 +114,8 @@ export const main = async () => {
           }
         }
       } catch (e) {
-        throw new Error('could not terminate');
+        logger.info(e);
+        logger.error('Could not terminate');
       }
 
       // -----------------------------------------------------------------------------------------------------------------
@@ -129,27 +138,30 @@ export const main = async () => {
             return;
           }
         } catch (e) {
-          throw new Error('Could not define the domain');
+          logger.info(e);
+          logger.error('Could not define the domain');
         }
-
-        // const currentKeys = Object.keys(structure);
-        //
-        // if (currentKeys.length === 1) {
-        //   nextKey = currentKeys[0];
-        //   answers.$createPath += `/${nextKey}`;
-        //   structure = structure[nextKey];
-        // }
 
         try {
           if (typeof structure === 'string') {
             prompts.complete();
-            config.domains[answers.$domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
+
+            const questions = config.domains[answers.$domainIndex].questions;
+
+            if (!questions || questions.length === 0) {
+              logger.info('No additional questions.');
+              userPrompts.complete();
+              return;
+            }
+
+            questions.forEach((q: IConfigComponentQuestion) => {
               userPrompts.next(q);
             });
             return;
           }
         } catch (e) {
-          throw new Error('Could not complete prompts');
+          logger.info(e);
+          logger.error('Could not complete prompts [1]');
         }
 
         try {
@@ -175,7 +187,8 @@ export const main = async () => {
             }
           });
         } catch (e) {
-          throw new Error('1');
+          logger.info(e);
+          logger.error('Could not determine where to create a file.');
         }
 
         return;
@@ -200,26 +213,31 @@ export const main = async () => {
 
         const keys = structure ? Object.keys(structure) : [];
         dynamicKey = keys.find((k) => k[0] === ':') || undefined;
-
-        // if (keys.length === 1 && !dynamicKey) {
-        //   nextKey = keys[0];
-        //   answers.$createPath += `/${nextKey}`;
-        //   structure = structure[nextKey];
-        // }
       } catch (e) {
-        throw new Error('Could not generate dynamic structure');
+        logger.info(e);
+        logger.error('Could not generate dynamic structure');
       }
 
       try {
         if (typeof structure === 'string') {
           prompts.complete();
-          config.domains[answers.$domainIndex].questions.forEach((q: IConfigComponentQuestion) => {
+
+          const questions = config.domains[answers.$domainIndex].questions;
+
+          if (!questions || questions.length === 0) {
+            logger.info('No additional questions.');
+            userPrompts.complete();
+            return;
+          }
+
+          questions.forEach((q: IConfigComponentQuestion) => {
             userPrompts.next(q);
           });
           return;
         }
       } catch (e) {
-        throw new Error('Could not complete prompts');
+        logger.info(e);
+        logger.error('Could not complete prompts [2]');
       }
 
       try {
@@ -242,7 +260,8 @@ export const main = async () => {
           }
         });
       } catch (e) {
-        throw new Error('Could not generate dynamic structure');
+        logger.info(e);
+        logger.error('Could not generate dynamic structure');
       }
     },
     (error) => {

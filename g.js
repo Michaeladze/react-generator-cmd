@@ -4,6 +4,9 @@ export default {
   },
   'domains': [
     {
+      'name': 'test'
+    },
+    {
       'name': 'component',
       'structure': {
         'applications': {
