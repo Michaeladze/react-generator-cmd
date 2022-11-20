@@ -1,4 +1,4 @@
-module.exports = ({ pendingType, successType }) => {
+export default ({ pendingType, successType }) => {
   const pendingTypeString = `export interface ${pendingType} {
 }`;
   const successTypeString = `export interface ${successType} {

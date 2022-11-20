@@ -1,4 +1,4 @@
-module.exports = ({ ComponentName, ComponentDetails }) => {
+export default ({ ComponentName, ComponentDetails }) => {
 
   let storeImport = '';
   let routerDomImport = '';

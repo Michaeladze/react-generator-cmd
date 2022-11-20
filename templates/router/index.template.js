@@ -1,4 +1,4 @@
-module.exports = ({ ComponentName, routePath }) => {
+export default ({ ComponentName, routePath }) => {
 
   return {
     init: `import React, { lazy, Suspense } from 'react';

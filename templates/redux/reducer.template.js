@@ -1,4 +1,4 @@
-module.exports = ({ FileName, sliceName, reducerName }) => {
+export default ({ FileName, sliceName, reducerName }) => {
 
   const importSliceString = `import { ${sliceName}Slice } from './${FileName}/slice';`;
   const sliceString = `[${sliceName}Slice.name]: ${sliceName}Slice.reducer,`;

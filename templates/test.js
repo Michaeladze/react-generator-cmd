@@ -1,4 +1,4 @@
-module.exports = ({ successType }) => {
+export default ({ successType }) => {
 
   const selectorString = `export const use${successType}Selector = () => {
   return useSelector<RootReduxState, ${successType}>((store: RootReduxState) => store.${successType}.${successType}.${successType});

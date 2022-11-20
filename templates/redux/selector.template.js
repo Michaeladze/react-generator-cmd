@@ -1,4 +1,4 @@
-module.exports = ({ fieldName, reducerName, sliceName, successType }) => {
+export default ({ fieldName, reducerName, sliceName, successType }) => {
 
   const selectorString = `export const use${fieldName}Selector = () => {
   return useSelector<RootReduxState, ${successType}>((store: RootReduxState) =>

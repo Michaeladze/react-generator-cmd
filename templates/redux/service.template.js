@@ -1,4 +1,4 @@
-module.exports = ({ serviceNamespace, thunkName, pendingType, successType }) => {
+export default ({ serviceNamespace, thunkName, pendingType, successType }) => {
 
   const serviceString = `async ${thunkName}(payload: ${pendingType}): Promise<${successType}> {
     return await fetch('${thunkName}');

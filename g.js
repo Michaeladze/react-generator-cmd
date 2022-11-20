@@ -1,23 +1,14 @@
-module.exports = {
+export default {
   'variables': {
     'root': './output'
   },
   'domains': [
     {
       'name': 'test',
-      'structure': {
-        'applications': {
-          ':appId': {
-            'pages': {
-              ':id': ''
-            }
-          }
-        }
-      },
       'templates': [
         {
           'name': 'test.ts',
-          'template': '../templates/test1.js'
+          'template': '../templates/test.js'
         }
       ],
       'questions': [

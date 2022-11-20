@@ -1,14 +1,15 @@
-const path = require('path');
+import path from 'path';
 
-module.exports = {
+export default {
   mode: 'production',
   entry: {
-    index: path.resolve(__dirname, './src/main.ts')
+    index: path.resolve('./src/index.ts'),
+    main: path.resolve('./src/main.ts')
   },
   target: 'node',
   resolve: {
     extensions: ['.js', '.ts'],
-    modules: [__dirname, 'node_modules']
+    modules: ['node_modules']
   },
   module: {
     rules: [
@@ -17,16 +18,21 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         },
-        exclude: [path.resolve(__dirname, 'node_modules'), /(spec|test)\.(js|ts)$/]
+        exclude: [path.resolve('./node_modules'), /(spec|test)\.(js|ts)$/]
       }
     ]
   },
   externals: [/(node_modules|main\..*\.js)/, ],
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].js'
+    path: path.resolve('./dist'),
+    filename: '[name].js',
+    libraryTarget: 'module',
+    chunkFormat: 'module'
   },
   optimization: {
     minimize: false
   },
+  experiments: {
+    outputModule: true
+  }
 };

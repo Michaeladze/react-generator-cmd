@@ -12,7 +12,7 @@ import {
   ITemplateInvoker
 } from '../types/config.types';
 import { IAnswersBase } from '../types/types';
-import { dynamicRequire } from '../utils/dynamicRequire';
+import { dynamicImport } from '../utils/dynamicImport';
 import { logger } from '../utils/logger';
 import { fileExists } from '../utils/mk';
 import { runLinter } from '../utils/runLinter';
@@ -43,7 +43,7 @@ export default (answers: IAnswersBase, config: IConfig) => {
         const filePath = path.join(componentsPathNext, name);
 
         const template = typeof templateConfig.template === 'string' ? templateConfig.template : templateConfig.template(answers);
-        const invoker: ITemplateInvoker = dynamicRequire(path.resolve(config.variables.root, template));
+        const invoker: ITemplateInvoker = dynamicImport(path.resolve(config.variables.root, template));
 
         if (fileExists(filePath)) {
 

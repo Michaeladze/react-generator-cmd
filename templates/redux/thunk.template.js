@@ -1,4 +1,4 @@
-module.exports = ({ successType, thunkName, serviceNamespace }) => {
+export default ({ successType, thunkName, serviceNamespace }) => {
 
   const serviceString = `export const ${thunkName} = createAsyncThunk<${successType}>(
   'uar/${thunkName}',

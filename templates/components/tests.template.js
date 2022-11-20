@@ -1,4 +1,4 @@
-module.exports = ({ ComponentName }) => {
+export default ({ ComponentName }) => {
 
   return {
     init: `import React from 'react';

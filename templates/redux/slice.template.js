@@ -1,4 +1,4 @@
-module.exports = ({ sliceName, fieldName, successType, thunkName }) => {
+export default ({ sliceName, fieldName, successType, thunkName }) => {
 
   const asyncBuilderString = `builder.addCase(${thunkName}.fulfilled, (state: I${sliceName}Slice, { payload }) => {
   state.${fieldName} = payload;
