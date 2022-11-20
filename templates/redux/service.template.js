@@ -1,7 +1,7 @@
-export default ({ serviceNamespace, thunkName, pendingType, successType }) => {
+export default ({ serviceNamespace, actionsName, pendingType, successType }) => {
 
-  const serviceString = `async ${thunkName}(payload: ${pendingType}): Promise<${successType}> {
-    return await fetch('${thunkName}');
+  const serviceString = `async ${actionsName}(payload: ${pendingType}): Promise<${successType}> {
+    return await fetch('${actionsName}');
   },`;
 
   return {

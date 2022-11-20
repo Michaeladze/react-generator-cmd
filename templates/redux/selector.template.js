@@ -1,17 +1,21 @@
+import { capitalize } from 'react-generator-cmd';
+
 export default ({ fieldName, reducerName, sliceName, successType }) => {
 
-  const selectorString = `export const use${fieldName}Selector = () => {
+  const importSuccessType = `import { ${successType} } from './types';`;
+
+  const selectorString = `export const use${capitalize(fieldName)}Selector = () => {
   return useSelector<RootReduxState, ${successType}>((store: RootReduxState) =>
     store.${reducerName}.${sliceName}.${fieldName});
 };`;
 
   return {
     init: `import { useSelector } from 'react-redux';
-import { ${successType} } from './types';
-
 import { RootReduxState } from '../reducer';
 
-${selectorString}
+${importSuccessType}
+
+${selectorString} 
 `,
     updates: [
       {
@@ -19,7 +23,7 @@ ${selectorString}
         direction: 'up',
         searchFor: ['includes', '}'],
         changeWith: `, ${successType} }`,
-        when: ['not includes', successType],
+        when: ['not includes', successType]
       },
       {
         direction: 'up',

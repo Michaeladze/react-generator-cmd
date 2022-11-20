@@ -68,7 +68,7 @@ export default ({ ComponentName, ComponentDetails }) => {
 
   return {
     init: `import React${childrenImport ? ', { ReactNode } ' : ''} from 'react';
-import './${ComponentName}.css'; 
+import './${ComponentName}.less'; 
 ${storeImport}
 ${routerDomImport}
 ${formImport}
@@ -82,11 +82,11 @@ export const ${ComponentName}: React.FC<IProps> = ({${childrenImport ? 'children
 
 
   // -------------------------------------------------------------------------------------------------------------------
-    
+     
   ${formTemplate}
 
   return (
-    <>
+    <div className='${ComponentName.toLowerCase()}-component'>
       ${formImport ? `<FormProvider { ...form }>
 
       </FormProvider>` : ''}${outlet}

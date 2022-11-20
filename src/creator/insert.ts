@@ -8,6 +8,7 @@ import {
   ITemplateUpdate,
   TemplateUpdateDirection
 } from '../types/config.types';
+import { logger } from '../utils/logger';
 
 export const insert = (data: string, updates: ITemplateUpdate[]): string => {
   const lines: string[] = data.split('\n');
@@ -23,12 +24,15 @@ export const insert = (data: string, updates: ITemplateUpdate[]): string => {
     const indexes: IIndexes = findIndexes(lines, u);
     const [fromIndex, toIndex] = indexes;
 
-    if ((fromIndex === -1 || toIndex === -1) && u.fallback) {
-      updates.push({
-        ...u,
-        ...u.fallback,
-        fallback: u.fallback.fallback || undefined
-      });
+    if (fromIndex === -1 || toIndex === -1) {
+      if (u.fallback) {
+        updates.push({
+          ...u,
+          ...u.fallback,
+          fallback: u.fallback.fallback || undefined
+        });
+      }
+
       continue;
     }
 
@@ -59,26 +63,31 @@ export const insert = (data: string, updates: ITemplateUpdate[]): string => {
 };
 
 function checkInsertCondition(lines: string[], indexes: IIndexes, u: ITemplateUpdate): boolean {
-  const [fromIndex, toIndex]: IIndexes = findIndexes(lines, u);
+  try {
+    const [fromIndex, toIndex]: IIndexes = findIndexes(lines, u);
 
-  // [1] Single line
-  if (fromIndex === toIndex) {
-    return checkCondition(lines[fromIndex], u.when);
-  }
+    // [1] Single line
+    if (fromIndex === toIndex) {
+      return checkCondition(lines[fromIndex], u.when);
+    }
 
-  // [2] Multiple lines
-  if (u.direction === TemplateUpdateDirection.Down) {
-    for (let i = fromIndex; i < toIndex; i++) {
-      if (!checkCondition(lines[i], u.when)) {
-        return false;
+    // [2] Multiple lines
+    if (u.direction === TemplateUpdateDirection.Down) {
+      for (let i = fromIndex; i < toIndex; i++) {
+        if (!checkCondition(lines[i], u.when)) {
+          return false;
+        }
+      }
+    } else {
+      for (let i = fromIndex; i >= toIndex; i--) {
+        if (!checkCondition(lines[i], u.when)) {
+          return false;
+        }
       }
     }
-  } else {
-    for (let i = fromIndex; i >= toIndex; i--) {
-      if (!checkCondition(lines[i], u.when)) {
-        return false;
-      }
-    }
+  } catch (e) {
+    logger.info(e);
+    logger.error('Error in checkInsertCondition() function');
   }
 
   return true;

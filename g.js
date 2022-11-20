@@ -4,29 +4,6 @@ export default {
   },
   'domains': [
     {
-      'name': 'test',
-      'templates': [
-        {
-          'name': 'test.ts',
-          'template': '../templates/test.js'
-        }
-      ],
-      'questions': [
-        {
-          'name': 'pendingType',
-          'message': 'Field?',
-          'default': 'void',
-          'type': 'input'
-        },
-        {
-          'name': 'successType',
-          'message': 'Field?',
-          'default': 'void',
-          'type': 'input'
-        }
-      ]
-    },
-    {
       'name': 'component',
       'structure': {
         'applications': {
@@ -36,10 +13,9 @@ export default {
               'features': {
                 ':id': ''
               },
-              'pages': '',
-              'layouts': '',
               'popups': ''
-            }
+            },
+            'pages': '',
           }
         }
       },
@@ -48,23 +24,23 @@ export default {
           'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.tsx`,
           'template': '../templates/components/component.template.js'
         },
-        // {
-        //   'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.css`,
-        //   'template': '../templates/components/style.template.js'
-        // },
-        // {
-        //   'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.test.tsx`,
-        //   'template': '../templates/components/tests.template.js'
-        // },
-        // {
-        //   'name': ({ ComponentName }) => `${ComponentName}/index.ts`,
-        //   'template': '../templates/components/index.template.js'
-        // },
-        // {
-        //   'name': './router/index.tsx',
-        //   'template': '../templates/router/index.template.js',
-        //   'when': ({ $createPath }) => $createPath.includes('pages')
-        // }
+        {
+          'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.less`,
+          'template': '../templates/components/style.template.js'
+        },
+        {
+          'name': ({ ComponentName }) => `${ComponentName}/${ComponentName}.test.tsx`,
+          'template': '../templates/components/tests.template.js'
+        },
+        {
+          'name': ({ ComponentName }) => `${ComponentName}/index.ts`,
+          'template': '../templates/components/index.template.js'
+        },
+        {
+          'name': '../router/index.tsx',
+          'template': '../templates/router/index.template.js',
+          'when': ({ $createPath }) => $createPath.includes('pages')
+        }
       ],
       'questions': [
         {
@@ -106,13 +82,6 @@ export default {
           'type': 'input',
           'validate': (input) => input !== '',
           'when': (answers) => Object.values(answers).some((v) => v === 'pages')
-        },
-        {
-          'name': 'withReducer',
-          'message': 'Use reducer?',
-          'type': 'confirm',
-          'default': true,
-          'when': (answers) => Object.values(answers).some((v) => v === 'pages')
         }
       ]
     },
@@ -121,46 +90,41 @@ export default {
       'structure': {
         'applications': {
           ':appId': {
-            'components': {
-              'pages': {
-                ':id': ''
-              }
+            'pages': {
+              ':page': ''
             }
           }
         }
       },
       'templates': [
         {
-          'name': ({ FileName }) => `redux/${FileName}/slice.ts`,
+          'name': ({ sliceName }) => `./redux/${sliceName}/slice.ts`,
           'template': '../templates/redux/slice.template.js'
         },
         {
-          'name': ({ FileName }) => `redux/${FileName}/selectors.ts`,
+          'name': ({ sliceName }) => `./redux/${sliceName}/selectors.ts`,
           'template': '../templates/redux/selector.template.js'
         },
         {
-          'name': ({ FileName }) => `redux/${FileName}/thunks.ts`,
-          'template': '../templates/redux/thunk.template.js'
+          'name': ({ sliceName }) => `./redux/${sliceName}/thunks.ts`,
+          'template': '../templates/redux/thunk.template.js',
+          'when': (answers) => answers.async === true
         },
         {
-          'name': ({ FileName }) => `redux/${FileName}/types.ts`,
+          'name': ({ sliceName }) => `/redux/${sliceName}/types.ts`,
           'template': '../templates/redux/types.template.js'
         },
         {
-          'name': ({ FileName }) => `redux/${FileName}/services.ts`,
-          'template': '../templates/redux/service.template.js'
+          'name': ({ sliceName }) => `./redux/${sliceName}/services.ts`,
+          'template': '../templates/redux/service.template.js',
+          'when': (answers) => answers.async === true
         },
         {
-          'name': () => 'redux/reducer.ts',
+          'name': () => './redux/reducer.ts',
           'template': '../templates/redux/reducer.template.js'
         }
       ],
       'questions': [
-        {
-          'name': 'FileName',
-          'message': 'How to name file?',
-          'type': 'input'
-        },
         {
           'name': 'reducerName',
           'message': 'How to name reducer?',
@@ -172,29 +136,38 @@ export default {
           'type': 'input'
         },
         {
+          'name': 'async',
+          'message': 'Is action async?',
+          'type': 'confirm'
+        },
+        {
           'name': 'fieldName',
           'message': 'How to name field?',
           'type': 'input'
         },
         {
-          'name': 'thunkName',
-          'message': 'How to name thunk?',
+          'name': 'actionsName',
+          'message': 'How to name actions?',
           'type': 'input'
         },
         {
           'name': 'serviceNamespace',
           'message': 'What service namespace?',
-          'type': 'input'
+          'type': 'input',
+          'when': (answers) => answers.async === true
         },
         {
           'name': 'pendingType',
           'message': 'Payload type?',
-          'type': 'input'
+          'type': 'input',
+          'default': 'void',
+          'when': (answers) => answers.async === true
         },
         {
           'name': 'successType',
           'message': 'Response type',
-          'type': 'input'
+          'type': 'input',
+          'default': 'void'
         }
       ]
     }

@@ -1,9 +1,9 @@
-export default ({ successType, thunkName, serviceNamespace }) => {
+export default ({ successType, actionsName, serviceNamespace }) => {
 
-  const serviceString = `export const ${thunkName} = createAsyncThunk<${successType}>(
-  'uar/${thunkName}',
+  const serviceString = `export const ${actionsName} = createAsyncThunk<${successType}>(
+  'uar/${actionsName}',
   async (): Promise<${successType}> => {
-    return await ${serviceNamespace}.${thunkName}();
+    return await ${serviceNamespace}.${actionsName}();
   },
 );`;
 

@@ -1,8 +1,8 @@
-export default ({ FileName, sliceName, reducerName }) => {
+export default ({ sliceName, reducerName }) => {
 
-  const importSliceString = `import { ${sliceName}Slice } from './${FileName}/slice';`;
+  const importSliceString = `import { ${sliceName}Slice } from './${sliceName}/slice';`;
   const sliceString = `[${sliceName}Slice.name]: ${sliceName}Slice.reducer,`;
-  const reducerString = `${reducerName}: LocalRootReduxState;`;
+  const reducerString = `${reducerName}: ReturnType<typeof reducer>;`;
 
   return {
     init: `import { combineReducers } from 'redux';
@@ -12,8 +12,6 @@ ${importSliceString}
 export const reducer = combineReducers({
   ${sliceString}
 });
-
-type LocalRootReduxState = ReturnType<typeof reducer>;
 
 export type RootReduxState = {
   ${reducerString}

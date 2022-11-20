@@ -1,17 +1,35 @@
 export default ({ ComponentName, routePath }) => {
 
+  const routeImport = `const ${ComponentName} = lazy(() => import('../pages/${ComponentName}'));`;
+
+  const routeDeclaration = `{
+        path: '${routePath}',
+        element: <${ComponentName} />,
+    },`;
+
   return {
     init: `import React, { lazy, Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
 
-const ${ComponentName} = lazy(() => import('../components/pages/${ComponentName}'));
+${routeImport}
 
 export const routes: RouteObject[] = [
-    {
-        path: '${routePath}',
-        element: <${ComponentName} />,
-    }
+    ${routeDeclaration}
 ];
-`
+`,
+    updates: [
+      {
+        direction: 'up',
+        fromLine: ['includes', 'lazy(() =>'],
+        searchFor: ['includes', '));'],
+        changeWith: `));\n${routeImport}`
+      },
+      {
+        fromLine: ['includes', '];'],
+        direction: 'up',
+        searchFor: ['includes', '];'],
+        changeWith: `${routeDeclaration}\n];`
+      }
+    ]
   };
 };

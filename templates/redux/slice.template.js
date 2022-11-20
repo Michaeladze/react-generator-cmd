@@ -1,6 +1,12 @@
-export default ({ sliceName, fieldName, successType, thunkName }) => {
+import {
+  capitalize, getTypeValue
+} from 'react-generator-cmd';
 
-  const asyncBuilderString = `builder.addCase(${thunkName}.fulfilled, (state: I${sliceName}Slice, { payload }) => {
+export default ({ sliceName, fieldName, successType, actionsName }) => {
+
+  const ISlice = `I${capitalize(sliceName)}Slice`;
+
+  const asyncBuilderString = `builder.addCase(${actionsName}.fulfilled, (state: ${ISlice}, { payload }) => {
   state.${fieldName} = payload;
 });`;
 
@@ -8,14 +14,14 @@ export default ({ sliceName, fieldName, successType, thunkName }) => {
     init: `import { createSlice } from '@reduxjs/toolkit';
 import { ${successType} } from './types';
 
-import { ${thunkName} } from './thunks';
+import { ${actionsName} } from './thunks';
 
-export interface I${sliceName}Slice {
+export interface ${ISlice} {
   ${fieldName}: ${successType};
 }
 
-const initialState: I${sliceName}Slice = {
-  ${fieldName}: {},
+const initialState: ${ISlice} = {
+  ${fieldName}: ${getTypeValue(successType)},
 };
 
 export const ${sliceName}Slice = createSlice({
@@ -39,8 +45,8 @@ export const ${sliceName}Slice = createSlice({
         fromLine: ['includes', './thunks'],
         direction: 'up',
         searchFor: ['includes', '}'],
-        changeWith: `, ${thunkName} }`,
-        when: ['not includes', thunkName],
+        changeWith: `, ${actionsName} }`,
+        when: ['not includes', actionsName],
       },
       {
         fromLine: ['includes', `export interface I${sliceName}Slice`],
