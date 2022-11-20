@@ -1,6 +1,10 @@
+import A from 'react-generator-cmd';
+
 export default ({ successType }) => {
 
-  const selectorString = `export const use${successType}Selector = () => {
+  console.log(A);
+
+  const selectorString = `export const use${A.capitalize(successType)}Selector = () => {
   return useSelector<RootReduxState, ${successType}>((store: RootReduxState) => store.${successType}.${successType}.${successType});
 };`;
 
