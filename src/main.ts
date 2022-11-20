@@ -23,8 +23,8 @@ import { readJSON } from './utils/readJSON';
 import { validateJSON } from './utils/validateJSON';
 
 
-export const main = () => {
-  const config: IConfig = readJSON();
+export const main = async () => {
+  const config: IConfig = await readJSON();
   const isValidConfig = validateJSON(config);
 
   if (!isValidConfig) {

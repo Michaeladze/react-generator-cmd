@@ -17,10 +17,9 @@ const defaultConfig: IConfig = {
   domains: []
 };
 
-export function readJSON(): IConfig {
-  const location = '../';
-  console.log(process.argv);
-  const file = path.resolve(__dirname, 'g.js');
+export async function readJSON(): Promise<IConfig> {
+
+  const file = path.resolve('./g.js');
   logger.info(`Reading file ${file}`);
   const GJSONExists = fileExists(file);
 
@@ -29,7 +28,7 @@ export function readJSON(): IConfig {
     return defaultConfig;
   }
 
-  const json = dynamicImport(file);
+  const json = (await dynamicImport(file)).default;
 
   if (!json) {
     return defaultConfig;
